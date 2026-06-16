@@ -1050,6 +1050,11 @@
       word-break: break-word;
     }
 
+
+    .sid-list-card small + small {
+      margin-top: 4px;
+    }
+
     .sid-list-card small {
       display: block;
       color: rgba(220, 231, 255, 0.54);
@@ -1113,6 +1118,18 @@
     .sid-action-btn.edit {
       border-color: rgba(255, 200, 87, 0.42);
       color: #ffd37c;
+    }
+
+
+    .sid-action-btn.remove {
+      border-color: rgba(255, 76, 110, 0.46);
+      color: #ff6f8b;
+      background: rgba(255, 76, 110, 0.045);
+    }
+
+    .sid-action-btn.remove:hover {
+      background: rgba(255, 76, 110, 0.13);
+      box-shadow: 0 0 18px rgba(255, 76, 110, 0.2);
     }
 
     .sid-action-btn:hover {
@@ -1604,7 +1621,7 @@
     </div>
 
     <div class="footer-note">
-      Security note: This is only the starting frontend design. Real secret data should be protected with Supabase Auth/RLS or a secure backend. Do not keep passwords, service_role keys, or secret data inside HTML/JavaScript. Demo user ID: zayanzabit. Demo test password: Zayan@123.
+      Security note: This is only the starting frontend design. Real secret data should be protected with Supabase Auth/RLS or a secure backend. Do not keep passwords, service_role keys, or secret data inside HTML/JavaScript. Demo user ID: zayanzabit. Demo test password: Zayan@123. Data save/list uses Supabase sid_data table.
     </div>
   </section>
 
@@ -1636,6 +1653,11 @@
         <div class="sid-field">
           <label for="accountUser">Account User</label>
           <input id="accountUser" type="text" placeholder="Enter account user name" autocomplete="off" />
+        </div>
+
+        <div class="sid-field">
+          <label for="mobileNo">Mobile Number</label>
+          <input id="mobileNo" type="text" placeholder="Enter mobile number" autocomplete="off" />
         </div>
 
         <div class="sid-field">
@@ -1701,14 +1723,14 @@
         </div>
 
         <div class="form-actions">
-          <button type="submit" class="sid-save" id="sidSaveBtn">Save Demo Entry</button>
+          <button type="submit" class="sid-save" id="sidSaveBtn">Save Data</button>
           <button type="button" class="sid-clear" id="sidClearBtn">Clear Form</button>
         </div>
       </form>
 
       <div class="sid-preview" id="sidPreview">
         [SID] Account Informations panel ready...<br>
-        [SYS] Fill data and press Save Demo Entry to preview.
+        [SYS] Fill data and press Save Data to send Supabase table.
       </div>
     </div>
   </section>
@@ -1718,7 +1740,7 @@
       <div class="sid-title-wrap">
         <div class="top-tag"><span class="pulse"></span> SID Data List</div>
         <h2 class="dark-title">SID Data List</h2>
-        <p class="dark-subtitle">Saved account information list • View and edit available</p>
+        <p class="dark-subtitle">Saved account information list • View, edit and remove available</p>
       </div>
       <div class="sid-nav-group">
         <button class="sid-back" id="listBackBtn">← Dashboard</button>
@@ -1753,6 +1775,8 @@
     </div>
   </section>
 
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
   <script>
     const canvas = document.getElementById("matrixCanvas");
@@ -1842,10 +1866,55 @@
     const welcomeText = document.getElementById("welcomeText");
     const logoutBtn = document.getElementById("logoutBtn");
     const codeStrip = document.getElementById("codeStrip");
-    const SID_STORAGE_KEY = "zayan_secure_sid_entries";
+    const SUPABASE_URL = "https://neifnbpbzyoyvipbftwq.supabase.co";
+    const SUPABASE_PUBLISHABLE_KEY = "sb_publishable_ZGiMSERlIw57pJDxEM210Q_WA4Nm3pg";
+    const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY);
+
     let sidRecords = [];
     let editingSidId = null;
     let viewingSidId = null;
+
+
+    function recordFromDb(row) {
+      return {
+        id: row.id,
+        accountNo: row.account_no || "",
+        accountUser: row.account_user || "",
+        mobileNo: row.mobile_no || "",
+        dob: row.dob || "",
+        fatherName: row.father_name || "",
+        motherName: row.mother_name || "",
+        address: row.address || "",
+        slotNo: row.slot_no || "",
+        pinNo: row.pin_code || "",
+        accountStatus: row.account_status || "Active",
+        simBalance: row.sim_balance === null || row.sim_balance === undefined ? "" : String(row.sim_balance),
+        simExpiry: row.sim_recharge_expiry || "",
+        rocketName: row.rocket_account_name || "",
+        lastUses: row.last_uses_month || "",
+        updatedAt: row.updated_at || ""
+      };
+    }
+
+    function recordToDb(record) {
+      return {
+        account_no: record.accountNo,
+        account_user: record.accountUser || null,
+        mobile_no: record.mobileNo || null,
+        dob: record.dob || null,
+        father_name: record.fatherName || null,
+        mother_name: record.motherName || null,
+        address: record.address || null,
+        slot_no: record.slotNo || null,
+        pin_code: record.pinNo || null,
+        account_status: record.accountStatus || "Active",
+        sim_balance: record.simBalance === "" ? null : Number(record.simBalance),
+        sim_recharge_expiry: record.simExpiry || null,
+        rocket_account_name: record.rocketName || null,
+        last_uses_month: record.lastUses || null
+      };
+    }
+
 
     const bootLines = [
       "&gt; scanning encrypted tunnel...",
@@ -2061,16 +2130,57 @@
       sidViewPage.classList.remove("active");
     }
 
-    function loadSidRecords() {
-      try {
-        sidRecords = JSON.parse(localStorage.getItem(SID_STORAGE_KEY) || "[]");
-      } catch (error) {
+    async function loadSidRecords() {
+      const { data, error } = await supabaseClient
+        .from("sid_data")
+        .select("*")
+        .order("created_at", { ascending: false });
+
+      if (error) {
+        console.error("Supabase load error:", error);
         sidRecords = [];
+        if (sidListWrap) {
+          sidListWrap.innerHTML = `<div class="empty-list">Supabase load error:<br>${escapeHtml(error.message)}</div>`;
+        }
+        return false;
       }
+
+      sidRecords = (data || []).map(recordFromDb);
+      return true;
     }
 
-    function saveSidRecords() {
-      localStorage.setItem(SID_STORAGE_KEY, JSON.stringify(sidRecords));
+    async function saveSidRecordToSupabase(record) {
+      const payload = recordToDb(record);
+
+      if (editingSidId) {
+        const { error } = await supabaseClient
+          .from("sid_data")
+          .update(payload)
+          .eq("id", editingSidId);
+
+        if (error) throw error;
+        return editingSidId;
+      }
+
+      const { data, error } = await supabaseClient
+        .from("sid_data")
+        .insert(payload)
+        .select("id")
+        .single();
+
+      if (error) throw error;
+      return data.id;
+    }
+
+
+    async function deleteSidRecordFromSupabase(recordId) {
+      const { error } = await supabaseClient
+        .from("sid_data")
+        .delete()
+        .eq("id", recordId);
+
+      if (error) throw error;
+      return true;
     }
 
     function getFieldValue(id) {
@@ -2084,7 +2194,7 @@
     function clearSidForm() {
       sidEntryForm.reset();
       editingSidId = null;
-      sidSaveBtn.textContent = "Save Demo Entry";
+      sidSaveBtn.textContent = "Save Data";
       pinNo.type = "password";
       pinEyeBtn.textContent = "👁";
       updateAccountStatusView();
@@ -2098,10 +2208,11 @@
 
       if (options.mode === "edit" && options.record) {
         editingSidId = options.record.id;
-        sidSaveBtn.textContent = "Update Demo Entry";
+        sidSaveBtn.textContent = "Update Data";
         setFieldValue("slotNo", options.record.slotNo);
         setFieldValue("accountNo", options.record.accountNo);
         setFieldValue("accountUser", options.record.accountUser);
+        setFieldValue("mobileNo", options.record.mobileNo);
         document.getElementById("dob").value = options.record.dob || "";
         setFieldValue("fatherName", options.record.fatherName);
         setFieldValue("motherName", options.record.motherName);
@@ -2114,7 +2225,7 @@
         document.getElementById("address").value = options.record.address || "";
         updateAccountStatusView();
         updateExpiryStatusView();
-        sidPreview.innerHTML = `[EDIT MODE] Updating Account No: ${escapeHtml(options.record.accountNo || "-")}<br>[SYS] Change data and press Update Demo Entry.`;
+        sidPreview.innerHTML = `[EDIT MODE] Updating Account No: ${escapeHtml(options.record.accountNo || "-")}<br>[SYS] Change data and press Update Data.`;
       } else if (options.reset !== false) {
         clearSidForm();
       }
@@ -2125,10 +2236,11 @@
       }, 160);
     }
 
-    function openSidListPage() {
+    async function openSidListPage() {
       hideAllSecurePages();
-      renderSidList();
       sidListPage.classList.add("active");
+      sidListWrap.innerHTML = "<div class='empty-list'>Loading Supabase data...</div>";
+      await renderSidList();
     }
 
     function openSidViewPage(recordId) {
@@ -2215,8 +2327,9 @@
       return "<span class='sid-pill active'>✓ Valid</span>";
     }
 
-    function renderSidList() {
-      loadSidRecords();
+    async function renderSidList() {
+      const ok = await loadSidRecords();
+      if (!ok) return;
 
       if (!sidRecords.length) {
         sidListWrap.innerHTML = "<div class='empty-list'>No SID data found.<br>Click <b>Add Sid Data →</b> to create your first entry.</div>";
@@ -2229,6 +2342,8 @@
             <small>Account No</small>
             <strong>${escapeHtml(record.accountNo || "-")}</strong>
             <small>${escapeHtml(record.accountUser ? "User: " + record.accountUser : "User: -")}</small>
+            <small>${escapeHtml(record.mobileNo ? "Mobile No: " + record.mobileNo : "Mobile No: -")}</small>
+            <small>${escapeHtml(record.slotNo ? "Slot No: " + record.slotNo : "Slot No: -")}</small>
           </div>
           <div>
             <small>Last Uses</small>
@@ -2239,6 +2354,7 @@
           <div class="sid-card-actions">
             <button class="sid-action-btn view" type="button" data-action="view" data-id="${record.id}">View</button>
             <button class="sid-action-btn edit" type="button" data-action="edit" data-id="${record.id}">Edit</button>
+            <button class="sid-action-btn remove" type="button" data-action="remove" data-id="${record.id}">Remove</button>
           </div>
         </div>
       `).join("");
@@ -2255,6 +2371,10 @@
           <div class="view-mini">
             <span>Account User</span>
             <strong>${escapeHtml(record.accountUser || "-")}</strong>
+          </div>
+          <div class="view-mini">
+            <span>Mobile Number</span>
+            <strong>${escapeHtml(record.mobileNo || "-")}</strong>
           </div>
           <div class="view-mini">
             <span>Last Uses</span>
@@ -2306,7 +2426,7 @@
         </div>
 
         <div class="view-note">
-          Demo view only. Real secret data should be loaded from a protected database/backend, not stored in public HTML.
+          Data loaded from Supabase sid_data table. For real protection, enable RLS again before storing sensitive data.
         </div>
       `;
     }
@@ -2329,7 +2449,7 @@
       if (record) openSidPage({ mode: "edit", record });
     });
 
-    sidListWrap.addEventListener("click", (event) => {
+    sidListWrap.addEventListener("click", async (event) => {
       const button = event.target.closest("button[data-action]");
       if (!button) return;
 
@@ -2344,6 +2464,23 @@
       if (button.dataset.action === "edit") {
         openSidPage({ mode: "edit", record });
       }
+
+      if (button.dataset.action === "remove") {
+        const confirmRemove = confirm(`Remove this SID data from Supabase?\n\nAccount No: ${record.accountNo || "-"}`);
+        if (!confirmRemove) return;
+
+        try {
+          button.disabled = true;
+          button.textContent = "Removing...";
+          await deleteSidRecordFromSupabase(id);
+          await renderSidList();
+        } catch (error) {
+          console.error("Supabase delete error:", error);
+          alert("Supabase delete error: " + error.message);
+          button.disabled = false;
+          button.textContent = "Remove";
+        }
+      }
     });
 
     pinEyeBtn.addEventListener("click", () => {
@@ -2356,7 +2493,7 @@
     accountStatus.addEventListener("change", updateAccountStatusView);
     simExpiry.addEventListener("change", updateExpiryStatusView);
 
-    sidEntryForm.addEventListener("submit", (event) => {
+    sidEntryForm.addEventListener("submit", async (event) => {
       event.preventDefault();
 
       const accountNoValue = getFieldValue("accountNo");
@@ -2371,6 +2508,7 @@
         slotNo: getFieldValue("slotNo"),
         accountNo: accountNoValue,
         accountUser: getFieldValue("accountUser"),
+        mobileNo: getFieldValue("mobileNo"),
         dob: document.getElementById("dob").value,
         fatherName: getFieldValue("fatherName"),
         motherName: getFieldValue("motherName"),
@@ -2386,28 +2524,35 @@
 
       updateAccountStatusView();
       updateExpiryStatusView();
-      loadSidRecords();
 
-      if (editingSidId) {
-        sidRecords = sidRecords.map((item) => item.id === editingSidId ? formData : item);
-      } else {
-        sidRecords.unshift(formData);
-      }
+      try {
+        sidSaveBtn.disabled = true;
+        sidSaveBtn.textContent = editingSidId ? "Updating..." : "Saving...";
 
-      saveSidRecords();
-      editingSidId = null;
-      sidSaveBtn.textContent = "Save Demo Entry";
-      renderSidList();
+        const savedId = await saveSidRecordToSupabase(formData);
+        formData.id = savedId;
+        editingSidId = null;
+        sidSaveBtn.textContent = "Save Data";
 
-      sidPreview.innerHTML = [
-        "<span class='ok'>[SAVED]</span> Account Informations saved to SID Data List.",
+        await renderSidList();
+
+        sidPreview.innerHTML = [
+        "<span class='ok'>[SAVED]</span> Account Informations saved to Supabase SID Data List.",
         `[DATA] Account No: ${escapeHtml(formData.accountNo || "-")}`,
         `[DATA] Account User: ${escapeHtml(formData.accountUser || "-")}`,
+        `[DATA] Mobile No: ${escapeHtml(formData.mobileNo || "-")}`,
         `[DATA] DOB: ${escapeHtml(formatDate(formData.dob))}`,
         `[DATA] Last Uses: ${escapeHtml(formatMonth(formData.lastUses))}`,
         `[DATA] Status: ${escapeHtml(formData.accountStatus)}`,
         "[NEXT] Open SID Data List → to view/edit."
       ].join("<br>");
+      } catch (error) {
+        console.error("Supabase save error:", error);
+        sidPreview.innerHTML = `<span class='warn'>[SUPABASE ERROR]</span> ${escapeHtml(error.message)}`;
+      } finally {
+        sidSaveBtn.disabled = false;
+        if (!editingSidId) sidSaveBtn.textContent = "Save Data";
+      }
     });
 
     sidClearBtn.addEventListener("click", () => {
@@ -2415,7 +2560,6 @@
       document.getElementById("slotNo").focus();
     });
 
-    loadSidRecords();
     renderSidList();
     updateAccountStatusView();
     updateExpiryStatusView();
