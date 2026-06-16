@@ -784,6 +784,34 @@
       box-shadow: 0 0 22px rgba(0, 245, 255, 0.23), inset 0 0 18px rgba(0, 245, 255, 0.05);
     }
 
+
+    .sid-field textarea {
+      width: 100%;
+      min-height: 94px;
+      border: 1px solid rgba(0, 245, 255, 0.34);
+      background: rgba(0, 0, 0, 0.38);
+      color: #fff;
+      border-radius: 14px;
+      outline: none;
+      padding: 14px 15px;
+      font-size: 15px;
+      letter-spacing: 0.6px;
+      line-height: 1.5;
+      resize: vertical;
+      transition: 0.25s ease;
+    }
+
+    .sid-field textarea:focus {
+      border-color: var(--cyan);
+      box-shadow: 0 0 22px rgba(0, 245, 255, 0.23), inset 0 0 18px rgba(0, 245, 255, 0.05);
+    }
+
+    .required-star {
+      color: var(--red);
+      margin-left: 4px;
+      text-shadow: 0 0 10px rgba(255, 47, 109, 0.48);
+    }
+
     .pin-wrap {
       position: relative;
     }
@@ -1601,8 +1629,28 @@
         </div>
 
         <div class="sid-field">
-          <label for="accountNo">Account No.</label>
-          <input id="accountNo" type="text" placeholder="Enter account no." autocomplete="off" />
+          <label for="accountNo">Account No. <span class="required-star">*</span></label>
+          <input id="accountNo" type="text" placeholder="Enter account no. (mandatory)" autocomplete="off" />
+        </div>
+
+        <div class="sid-field">
+          <label for="accountUser">Account User</label>
+          <input id="accountUser" type="text" placeholder="Enter account user name" autocomplete="off" />
+        </div>
+
+        <div class="sid-field">
+          <label for="dob">DOB</label>
+          <input id="dob" type="date" />
+        </div>
+
+        <div class="sid-field">
+          <label for="fatherName">Father Name</label>
+          <input id="fatherName" type="text" placeholder="Enter father name" autocomplete="off" />
+        </div>
+
+        <div class="sid-field">
+          <label for="motherName">Mother Name</label>
+          <input id="motherName" type="text" placeholder="Enter mother name" autocomplete="off" />
         </div>
 
         <div class="sid-field">
@@ -1645,6 +1693,11 @@
         <div class="sid-field">
           <label for="lastUses">Last Uses</label>
           <input id="lastUses" type="month" />
+        </div>
+
+        <div class="sid-field full">
+          <label for="address">Address</label>
+          <textarea id="address" placeholder="Enter address"></textarea>
         </div>
 
         <div class="form-actions">
@@ -2048,12 +2101,17 @@
         sidSaveBtn.textContent = "Update Demo Entry";
         setFieldValue("slotNo", options.record.slotNo);
         setFieldValue("accountNo", options.record.accountNo);
+        setFieldValue("accountUser", options.record.accountUser);
+        document.getElementById("dob").value = options.record.dob || "";
+        setFieldValue("fatherName", options.record.fatherName);
+        setFieldValue("motherName", options.record.motherName);
         pinNo.value = options.record.pinNo || "";
         accountStatus.value = options.record.accountStatus || "Active";
         setFieldValue("simBalance", options.record.simBalance);
         simExpiry.value = options.record.simExpiry || "";
         setFieldValue("rocketName", options.record.rocketName);
         document.getElementById("lastUses").value = options.record.lastUses || "";
+        document.getElementById("address").value = options.record.address || "";
         updateAccountStatusView();
         updateExpiryStatusView();
         sidPreview.innerHTML = `[EDIT MODE] Updating Account No: ${escapeHtml(options.record.accountNo || "-")}<br>[SYS] Change data and press Update Demo Entry.`;
@@ -2170,6 +2228,7 @@
           <div>
             <small>Account No</small>
             <strong>${escapeHtml(record.accountNo || "-")}</strong>
+            <small>${escapeHtml(record.accountUser ? "User: " + record.accountUser : "User: -")}</small>
           </div>
           <div>
             <small>Last Uses</small>
@@ -2194,12 +2253,20 @@
 
         <div class="view-top-grid">
           <div class="view-mini">
+            <span>Account User</span>
+            <strong>${escapeHtml(record.accountUser || "-")}</strong>
+          </div>
+          <div class="view-mini">
             <span>Last Uses</span>
             <strong>${escapeHtml(formatMonth(record.lastUses))}</strong>
           </div>
           <div class="view-mini">
             <span>Account Status</span>
             <strong>${statusPill(record)}</strong>
+          </div>
+          <div class="view-mini">
+            <span>DOB</span>
+            <strong>${escapeHtml(formatDate(record.dob))}</strong>
           </div>
           <div class="view-mini">
             <span>SIM Recharge Expiry</span>
@@ -2217,12 +2284,24 @@
             <strong>${escapeHtml(record.simBalance || "-")}</strong>
           </div>
           <div class="detail-box">
+            <span>Father Name</span>
+            <strong>${escapeHtml(record.fatherName || "-")}</strong>
+          </div>
+          <div class="detail-box">
+            <span>Mother Name</span>
+            <strong>${escapeHtml(record.motherName || "-")}</strong>
+          </div>
+          <div class="detail-box">
             <span>Rocket Account Name</span>
             <strong>${escapeHtml(record.rocketName || "-")}</strong>
           </div>
           <div class="detail-box">
             <span>PIN</span>
             <strong>${escapeHtml(maskPinForPreview(record.pinNo || "")) || "-"}</strong>
+          </div>
+          <div class="detail-box full">
+            <span>Address</span>
+            <strong>${escapeHtml(record.address || "-")}</strong>
           </div>
         </div>
 
@@ -2280,16 +2359,28 @@
     sidEntryForm.addEventListener("submit", (event) => {
       event.preventDefault();
 
+      const accountNoValue = getFieldValue("accountNo");
+      if (!accountNoValue) {
+        sidPreview.innerHTML = "<span class='warn'>[REQUIRED]</span> Account No. is mandatory. Other fields can be empty.";
+        document.getElementById("accountNo").focus();
+        return;
+      }
+
       const formData = {
         id: editingSidId || `sid_${Date.now()}_${Math.random().toString(16).slice(2)}`,
         slotNo: getFieldValue("slotNo"),
-        accountNo: getFieldValue("accountNo"),
+        accountNo: accountNoValue,
+        accountUser: getFieldValue("accountUser"),
+        dob: document.getElementById("dob").value,
+        fatherName: getFieldValue("fatherName"),
+        motherName: getFieldValue("motherName"),
         pinNo: pinNo.value.trim(),
         accountStatus: accountStatus.value,
         simBalance: getFieldValue("simBalance"),
         simExpiry: simExpiry.value,
         rocketName: getFieldValue("rocketName"),
         lastUses: document.getElementById("lastUses").value,
+        address: document.getElementById("address").value.trim(),
         updatedAt: new Date().toISOString()
       };
 
@@ -2311,6 +2402,8 @@
       sidPreview.innerHTML = [
         "<span class='ok'>[SAVED]</span> Account Informations saved to SID Data List.",
         `[DATA] Account No: ${escapeHtml(formData.accountNo || "-")}`,
+        `[DATA] Account User: ${escapeHtml(formData.accountUser || "-")}`,
+        `[DATA] DOB: ${escapeHtml(formatDate(formData.dob))}`,
         `[DATA] Last Uses: ${escapeHtml(formatMonth(formData.lastUses))}`,
         `[DATA] Status: ${escapeHtml(formData.accountStatus)}`,
         "[NEXT] Open SID Data List → to view/edit."
