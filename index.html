@@ -1412,8 +1412,8 @@
     <div class="danger-triangle">
       <div class="skull-alert">
         <span class="skull">☠</span>
-        <strong>Wrong Password</strong>
-        <span>Intrusion Attempt Detected</span>
+        <strong id="alertTitle">Wrong Password</strong>
+        <span id="alertSubtitle">Intrusion Attempt Detected</span>
       </div>
     </div>
   </div>
@@ -1757,6 +1757,8 @@
     const form = document.getElementById("secureLoginForm");
     const loginPanel = document.querySelector(".login-panel");
     const intrusionAlert = document.getElementById("intrusionAlert");
+    const alertTitle = document.getElementById("alertTitle");
+    const alertSubtitle = document.getElementById("alertSubtitle");
     const DEMO_USER_ID = "zayanzabit";
     const DEMO_PASSWORD = "Zayan@123";
     const loginShell = document.getElementById("loginShell");
@@ -1823,10 +1825,8 @@
       }
 
       if (user.toLowerCase() !== DEMO_USER_ID) {
-        setTerminal([
-          "<span class='warn'>[DENIED] Unknown user ID.</span>",
-          "[SYS] Allowed demo user ID: zayanzabit"
-        ]);
+        triggerWrongPassword("Wrong User ID", "Unknown Operator Detected", "Wrong user ID detected.");
+        username.value = "";
         username.focus();
         return;
       }
@@ -1942,8 +1942,11 @@
       noise.stop(audioCtx.currentTime + 0.55);
     }
 
-    function triggerWrongPassword() {
+    function triggerWrongPassword(title = "Wrong Password", subtitle = "Intrusion Attempt Detected", terminalMessage = "Wrong password detected.") {
       playWrongPasswordSound();
+
+      alertTitle.textContent = title;
+      alertSubtitle.textContent = subtitle;
 
       loginPanel.classList.remove("shake");
       void loginPanel.offsetWidth;
@@ -1951,7 +1954,7 @@
 
       intrusionAlert.classList.add("active");
       setTerminal([
-        "<span class='warn'>[ALERT] Wrong password detected.</span>",
+        `<span class='warn'>[ALERT] ${escapeHtml(terminalMessage)}</span>`,
         "<span class='warn'>[LOCK] Intrusion pattern blocked.</span>",
         "[SYS] Red binary shield activated..."
       ]);
@@ -1978,7 +1981,7 @@
       }
 
       if (password.value !== DEMO_PASSWORD) {
-        triggerWrongPassword();
+        triggerWrongPassword("Wrong Password", "Intrusion Attempt Detected", "Wrong password detected.");
         password.value = "";
         password.focus();
         return;
