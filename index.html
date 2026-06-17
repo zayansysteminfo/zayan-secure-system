@@ -1358,6 +1358,85 @@
       .login-head { margin-bottom: 18px; }
     }
 
+
+    .management-page {
+      display: none;
+      z-index: 4;
+      width: min(920px, 100%);
+      padding: 34px;
+      background: linear-gradient(145deg, rgba(4, 15, 28, 0.86), rgba(3, 7, 16, 0.82));
+      border: 1px solid var(--line);
+      box-shadow: var(--shadow), inset 0 0 30px rgba(0, 245, 255, 0.05);
+      backdrop-filter: blur(12px);
+      border-radius: 20px;
+      overflow: hidden;
+      position: relative;
+    }
+
+    .management-page.active {
+      display: block;
+    }
+
+    .management-page::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      border-radius: inherit;
+      padding: 1px;
+      background: linear-gradient(130deg, rgba(0, 245, 255, 0.68), rgba(0, 255, 136, 0.12), rgba(255, 47, 109, 0.5), rgba(155, 92, 255, 0.42));
+      -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+      -webkit-mask-composite: xor;
+      mask-composite: exclude;
+      pointer-events: none;
+    }
+
+    .module.management-module {
+      border-color: rgba(0, 245, 255, 0.72);
+      background:
+        linear-gradient(135deg, rgba(0, 245, 255, 0.09), rgba(155, 92, 255, 0.07)),
+        rgba(0, 0, 0, 0.08);
+      min-height: 132px;
+    }
+
+    .module.management-module::after {
+      content: "OPEN →";
+      color: rgba(0, 245, 255, 0.95);
+    }
+
+    .module.management-module::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      transform: translateX(-120%);
+      background: linear-gradient(90deg, transparent, rgba(0, 245, 255, 0.18), transparent);
+      animation: sidSweep 2.1s linear infinite;
+    }
+
+    .dashboard .module-grid,
+    .management-page .module-grid {
+      grid-template-columns: repeat(2, minmax(220px, 1fr));
+    }
+
+    @media (max-width: 980px) {
+      .management-page {
+        width: 100%;
+        min-height: auto;
+        max-height: none;
+      }
+    }
+
+    @media (max-width: 620px) {
+      .management-page {
+        border-radius: 16px;
+        padding: 16px;
+      }
+
+      .dashboard .module-grid,
+      .management-page .module-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
     .footer-note {
       margin-top: 20px;
       padding: 12px 14px;
@@ -1667,17 +1746,19 @@
         <div class="step-dot" id="stepTwoDot"></div>
       </div>
 
-      <form id="secureLoginForm">
+            <form id="secureLoginForm" autocomplete="off">
+        <input type="text" name="fake_username" autocomplete="username" style="position:absolute; left:-9999px; opacity:0; height:0; width:0;" tabindex="-1" />
+        <input type="password" name="fake_password" autocomplete="new-password" style="position:absolute; left:-9999px; opacity:0; height:0; width:0;" tabindex="-1" />
         <div class="field-area">
           <div class="field-card" id="usernameStep">
             <label for="username">Enter Your User Name</label>
-            <input id="username" type="text" autocomplete="off" placeholder="Enter user name" />
+            <input id="username" name="zayan_user_field" type="text" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="Enter user name" />
             <button class="primary-btn" type="button" id="usernameBtn">Verify User</button>
           </div>
 
           <div class="field-card hidden" id="passwordStep">
             <label for="password">Enter User Password</label>
-            <input id="password" type="password" autocomplete="current-password" placeholder="••••••••••••" />
+            <input id="password" name="zayan_pass_field" type="password" autocomplete="new-password" readonly onfocus="this.removeAttribute('readonly');" placeholder="••••••••••••" />
             <button class="primary-btn" type="submit">Access System</button>
             <button class="ghost-btn" type="button" id="backBtn">Back To User Name</button>
           </div>
@@ -1703,6 +1784,30 @@
     </div>
 
     <div class="module-grid">
+      <div class="module management-module" id="managementModule">
+        <strong>AC/SID Management</strong>
+        <span>→ Open SID account management section.</span>
+      </div>
+    </div>
+
+    <div class="footer-note">
+      Security note: Data save/list uses Supabase sid_data table. Demo test password: Zayan@123. For real secret data, enable RLS/Auth again before final use.
+    </div>
+  </section>
+
+
+
+  <section class="management-page" id="managementPage">
+    <div class="dashboard-head">
+      <div>
+        <div class="top-tag"><span class="pulse"></span> Management</div>
+        <h2>AC/SID Management</h2>
+        <p>Choose your SID data action below.</p>
+      </div>
+      <button class="logout" id="managementBackBtn">← Dashboard</button>
+    </div>
+
+    <div class="module-grid">
       <div class="module sid-module">
         <strong>Add Sid Data</strong>
         <span>→ Add new SID account information and secure PIN/UID details.</span>
@@ -1714,10 +1819,9 @@
     </div>
 
     <div class="footer-note">
-      Security note: Data save/list uses Supabase sid_data table. Demo test password: Zayan@123. For real secret data, enable RLS/Auth again before final use.
+      AC/SID Management section: add, search, view, edit and remove SID records.
     </div>
   </section>
-
 
   <section class="sid-page" id="sidPage">
     <div class="sid-head">
@@ -1728,7 +1832,7 @@
           Secure account data entry panel • PIN protected view • SIM recharge expiry monitoring
         </p>
       </div>
-      <div class="sid-nav-group"><button class="sid-back" id="sidBackBtn">← Dashboard</button><button class="sid-next" id="sidToListBtn">SID Data List →</button></div>
+      <div class="sid-nav-group"><button class="sid-back" id="sidBackBtn">← AC/SID</button><button class="sid-next" id="sidToListBtn">SID Data List →</button></div>
     </div>
 
     <div class="sid-entry-card">
@@ -1744,8 +1848,8 @@
         </div>
 
         <div class="sid-field">
-          <label for="accountUser">Account User</label>
-          <input id="accountUser" type="text" placeholder="Enter account user name" autocomplete="off" />
+          <label for="accountUser">SIM Owner Name</label>
+          <input id="accountUser" type="text" placeholder="Enter SIM owner name" autocomplete="off" />
         </div>
 
         <div class="sid-field">
@@ -1857,7 +1961,7 @@
         <p class="dark-subtitle">Saved account information list • View, edit and remove available</p>
       </div>
       <div class="sid-nav-group">
-        <button class="sid-back" id="listBackBtn">← Dashboard</button>
+        <button class="sid-back" id="listBackBtn">← AC/SID</button>
         <button class="sid-next" id="listAddBtn">Add Sid Data →</button>
       </div>
     </div>
@@ -1962,6 +2066,9 @@
     const DEMO_PASSWORD = "Zayan@123";
     const loginShell = document.getElementById("loginShell");
     const dashboard = document.getElementById("dashboard");
+    const managementPage = document.getElementById("managementPage");
+    const managementModule = document.getElementById("managementModule");
+    const managementBackBtn = document.getElementById("managementBackBtn");
     const sidModule = document.querySelector(".sid-module");
     const sidListModule = document.querySelector(".sid-list-module");
     const sidPage = document.getElementById("sidPage");
@@ -2144,6 +2251,12 @@
 
     backBtn.addEventListener("click", showUsernameStep);
 
+    window.addEventListener("pageshow", () => {
+      password.value = "";
+    });
+
+
+
 
     function playWrongPasswordSound() {
       const AudioContext = window.AudioContext || window.webkitAudioContext;
@@ -2249,6 +2362,7 @@
       ]);
 
       setTimeout(() => {
+        password.value = "";
         loginShell.style.display = "none";
         dashboard.classList.add("active");
         welcomeText.textContent = `Welcome, ${username.value.trim()} — Zayan Secure dashboard preview is ready.`;
@@ -2258,6 +2372,7 @@
 
     function hideAllSecurePages() {
       dashboard.classList.remove("active");
+      managementPage.classList.remove("active");
       sidPage.classList.remove("active");
       sidListPage.classList.remove("active");
       sidViewPage.classList.remove("active");
@@ -2280,6 +2395,18 @@
 
       sidRecords = (data || []).map(recordFromDb);
       return true;
+    }
+
+
+    async function accountNoAlreadyExists(accountNoValue) {
+      const { data, error } = await supabaseClient
+        .from("sid_data")
+        .select("id, account_no")
+        .ilike("account_no", accountNoValue);
+
+      if (error) throw error;
+
+      return (data || []).some((row) => row.id !== editingSidId);
     }
 
     async function saveSidRecordToSupabase(record) {
@@ -2399,6 +2526,16 @@
       dashboard.classList.add("active");
     }
 
+    function openManagementPage() {
+      hideAllSecurePages();
+      managementPage.classList.add("active");
+    }
+
+    function backToManagement() {
+      hideAllSecurePages();
+      managementPage.classList.add("active");
+    }
+
     function updateAccountStatusView() {
       if (accountStatus.value === "Active") {
         accountStatusView.className = "status-line ok";
@@ -2503,7 +2640,7 @@
           <div>
             <small>Account No</small>
             <strong>${escapeHtml(record.accountNo || "-")}</strong>
-            <small>${escapeHtml(record.accountUser ? "User: " + record.accountUser : "User: -")}</small>
+            <small>${escapeHtml(record.accountUser ? "SIM Owner: " + record.accountUser : "SIM Owner: -")}</small>
             <small>${escapeHtml(record.mobileNo ? "Mobile No: " + record.mobileNo : "Mobile No: -")}</small>
             <small>${escapeHtml(record.slotNo ? "Slot No: " + record.slotNo : "Slot No: -")}</small>
           </div>
@@ -2531,7 +2668,7 @@
 
         <div class="view-top-grid">
           <div class="view-mini">
-            <span>Account User</span>
+            <span>SIM Owner Name</span>
             <strong>${escapeHtml(record.accountUser || "-")}</strong>
           </div>
           <div class="view-mini">
@@ -2610,11 +2747,13 @@
       return "•".repeat(Math.min(pinValue.length, 8));
     }
 
+    managementModule.addEventListener("click", openManagementPage);
+    managementBackBtn.addEventListener("click", backToDashboard);
     sidModule.addEventListener("click", () => openSidPage({ reset: true }));
     sidListModule.addEventListener("click", openSidListPage);
-    sidBackBtn.addEventListener("click", backToDashboard);
+    sidBackBtn.addEventListener("click", backToManagement);
     sidToListBtn.addEventListener("click", openSidListPage);
-    listBackBtn.addEventListener("click", backToDashboard);
+    listBackBtn.addEventListener("click", backToManagement);
     listAddBtn.addEventListener("click", () => openSidPage({ reset: true }));
     viewBackBtn.addEventListener("click", openSidListPage);
 
@@ -2679,6 +2818,33 @@
     accountStatus.addEventListener("change", updateAccountStatusView);
     simExpiry.addEventListener("change", updateExpiryStatusView);
 
+    sidEntryForm.addEventListener("keydown", (event) => {
+      if (event.key !== "Enter") return;
+
+      const target = event.target;
+      if (!target.matches("input, select, textarea")) return;
+
+      event.preventDefault();
+
+      const fields = Array.from(
+        sidEntryForm.querySelectorAll("input, select, textarea, button.sid-save")
+      ).filter((el) => !el.disabled && el.offsetParent !== null && el.type !== "button");
+
+      const currentIndex = fields.indexOf(target);
+      const nextField = fields[currentIndex + 1];
+
+      if (nextField) {
+        nextField.focus();
+        if (typeof nextField.select === "function" && nextField.tagName !== "SELECT") {
+          nextField.select();
+        }
+      } else {
+        sidSaveBtn.focus();
+      }
+    });
+
+
+
     sidEntryForm.addEventListener("submit", async (event) => {
       event.preventDefault();
 
@@ -2686,6 +2852,18 @@
       if (!accountNoValue) {
         sidPreview.innerHTML = "<span class='warn'>[REQUIRED]</span> Account No. is mandatory. Other fields can be empty.";
         document.getElementById("accountNo").focus();
+        return;
+      }
+
+      try {
+        const exists = await accountNoAlreadyExists(accountNoValue);
+        if (exists) {
+          sidPreview.innerHTML = "<span class='warn'>[ALREADY EXIST]</span> Same Account No already exists. Save blocked.";
+          document.getElementById("accountNo").focus();
+          return;
+        }
+      } catch (error) {
+        sidPreview.innerHTML = `<span class='warn'>[SUPABASE CHECK ERROR]</span> ${escapeHtml(error.message)}`;
         return;
       }
 
@@ -2728,7 +2906,7 @@
         sidPreview.innerHTML = [
         "<span class='ok'>[SAVED]</span> Account Informations saved to Supabase SID Data List.",
         `[DATA] Account No: ${escapeHtml(formData.accountNo || "-")}`,
-        `[DATA] Account User: ${escapeHtml(formData.accountUser || "-")}`,
+        `[DATA] SIM Owner Name: ${escapeHtml(formData.accountUser || "-")}`,
         `[DATA] Mobile No: ${escapeHtml(formData.mobileNo || "-")}`,
         `[DATA] UID: ${escapeHtml(maskPinForPreview(formData.uidNo || "") || "-")}`,
         `[DATA] Uses: ${escapeHtml(formData.usesStatus || "-")}`,
