@@ -1253,6 +1253,111 @@
     }
 
 
+
+    .search-panel {
+      margin-top: 18px;
+      padding: 15px;
+      border: 1px solid rgba(121, 139, 178, 0.24);
+      border-radius: 18px;
+      background: rgba(255, 255, 255, 0.025);
+      display: grid;
+      grid-template-columns: 190px 1fr;
+      gap: 12px;
+      align-items: center;
+    }
+
+    .search-panel select,
+    .search-panel input {
+      height: 48px;
+      border: 1px solid rgba(121, 139, 178, 0.32);
+      border-radius: 13px;
+      background: rgba(0, 0, 0, 0.28);
+      color: #fff;
+      padding: 0 14px;
+      outline: none;
+      font-size: 14px;
+      letter-spacing: 0.7px;
+    }
+
+    .search-panel input:focus,
+    .search-panel select:focus {
+      border-color: rgba(0, 245, 255, 0.55);
+      box-shadow: 0 0 18px rgba(0, 245, 255, 0.18);
+    }
+
+    .sid-pill.reserved {
+      color: #ffd37c;
+      background: rgba(255, 211, 124, 0.09);
+      border-color: rgba(255, 211, 124, 0.3);
+    }
+
+    .pin-wrap.uid-wrap input {
+      padding-right: 56px;
+    }
+
+    .dashboard .module-grid {
+      grid-template-columns: repeat(2, minmax(220px, 1fr));
+    }
+
+    @media (max-width: 1180px) {
+      body { padding: 12px; }
+      .shell { width: min(920px, 100%); gap: 14px; }
+      .brand-panel, .login-panel { padding: 24px; min-height: 440px; }
+      .main-logo { width: min(260px, 100%); margin-top: 20px; }
+      .brand-title h1 { font-size: clamp(30px, 4vw, 46px); }
+      .sid-page, .sid-list-page, .sid-view-page { max-height: calc(100vh - 24px); padding: 22px; }
+      .sid-form { gap: 14px; }
+      .sid-list-card { grid-template-columns: 1fr 0.7fr 0.75fr 0.8fr auto; }
+    }
+
+    @media (max-width: 980px) {
+      html, body { overflow-x: hidden; overflow-y: auto; }
+      body { align-items: flex-start; min-height: 100vh; }
+      .shell { grid-template-columns: 1fr; padding-bottom: 18px; }
+      .brand-panel, .login-panel, .dashboard, .sid-page, .sid-list-page, .sid-view-page {
+        width: 100%; min-height: auto; max-height: none;
+      }
+      .brand-panel { gap: 20px; }
+      .mini-stats { grid-template-columns: repeat(3, 1fr); }
+      .dashboard .module-grid { grid-template-columns: 1fr 1fr; }
+      .view-top-grid { grid-template-columns: repeat(2, 1fr); }
+    }
+
+    @media (max-width: 620px) {
+      body { padding: 10px; }
+      .brand-panel, .login-panel, .dashboard, .sid-page, .sid-list-page, .sid-view-page {
+        border-radius: 16px; padding: 16px;
+      }
+      .main-logo { width: 220px; padding: 12px; }
+      .brand-title h1 { font-size: 31px; }
+      .brand-title p, .sid-subtitle, .dark-subtitle { font-size: 11px; }
+      .login-head h2, .dashboard h2 { font-size: 21px; }
+      .dashboard-head, .sid-head { flex-direction: column; gap: 14px; }
+      .logout, .sid-back, .sid-next, .sid-nav-group, .sid-nav-group button { width: 100%; }
+      .dashboard .module-grid, .mini-stats, .sid-form, .form-actions, .view-top-grid, .view-details, .search-panel {
+        grid-template-columns: 1fr;
+      }
+      .sid-entry-card { padding: 14px; }
+      .sid-list-card { grid-template-columns: 1fr; padding: 14px; }
+      .sid-card-actions { display: grid; grid-template-columns: 1fr; width: 100%; }
+      .sid-action-btn { width: 100%; }
+      .view-hero { padding: 20px; }
+      .view-account-no { font-size: clamp(28px, 11vw, 44px); }
+      input, .sid-field input, .sid-field select, .primary-btn, .sid-save, .sid-clear {
+        height: 50px; font-size: 14px;
+      }
+      .terminal { height: auto; min-height: 82px; }
+    }
+
+    @media (max-height: 740px) and (min-width: 981px) {
+      body { align-items: flex-start; overflow-y: auto; }
+      .shell, .dashboard, .sid-page, .sid-list-page, .sid-view-page { margin: 12px 0; }
+      .brand-panel, .login-panel { min-height: 420px; padding: 22px; }
+      .main-logo { width: 230px; margin-top: 16px; margin-bottom: 12px; }
+      .code-strip { min-height: 86px; margin-top: 18px; }
+      .login-head { margin-bottom: 18px; }
+    }
+
     .footer-note {
       margin-top: 20px;
       padding: 12px 14px;
@@ -1554,7 +1659,7 @@
           </svg>
         </div>
         <h2>Access Gateway</h2>
-        <p id="loginSubtitle">Enter user ID: zayanzabit</p>
+        <p id="loginSubtitle">Enter your user name to continue</p>
       </div>
 
       <div class="stepper">
@@ -1566,7 +1671,7 @@
         <div class="field-area">
           <div class="field-card" id="usernameStep">
             <label for="username">Enter Your User Name</label>
-            <input id="username" type="text" autocomplete="off" value="zayanzabit" placeholder="user id: zayanzabit" />
+            <input id="username" type="text" autocomplete="off" placeholder="Enter user name" />
             <button class="primary-btn" type="button" id="usernameBtn">Verify User</button>
           </div>
 
@@ -1581,7 +1686,7 @@
 
       <div class="terminal" id="terminal">
         [SYS] Zayan Secure gateway initialized...<br>
-        [SYS] Waiting for user ID: zayanzabit...<br>
+        [SYS] Waiting for user ID...<br>
         [STATUS] Frontend demo mode active.
       </div>
     </section>
@@ -1600,28 +1705,16 @@
     <div class="module-grid">
       <div class="module sid-module">
         <strong>Add Sid Data</strong>
-        <span>→ Add new SID account information and secure PIN details.</span>
+        <span>→ Add new SID account information and secure PIN/UID details.</span>
       </div>
       <div class="module sid-list-module">
         <strong>SID Data List</strong>
-        <span>→ View saved SID entries with View and Edit options.</span>
-      </div>
-      <div class="module">
-        <strong>Secure Vault</strong>
-        <span>Restricted file and control area.</span>
-      </div>
-      <div class="module">
-        <strong>Data Monitor</strong>
-        <span>Live system log and data access monitoring section.</span>
-      </div>
-      <div class="module">
-        <strong>User Control</strong>
-        <span>Role based user permission management area.</span>
+        <span>→ Search, view, edit and remove saved SID entries.</span>
       </div>
     </div>
 
     <div class="footer-note">
-      Security note: This is only the starting frontend design. Real secret data should be protected with Supabase Auth/RLS or a secure backend. Do not keep passwords, service_role keys, or secret data inside HTML/JavaScript. Demo user ID: zayanzabit. Demo test password: Zayan@123. Data save/list uses Supabase sid_data table.
+      Security note: Data save/list uses Supabase sid_data table. Demo test password: Zayan@123. For real secret data, enable RLS/Auth again before final use.
     </div>
   </section>
 
@@ -1676,6 +1769,14 @@
         </div>
 
         <div class="sid-field">
+          <label for="uidNo">UID</label>
+          <div class="pin-wrap uid-wrap">
+            <input id="uidNo" type="password" placeholder="Enter UID" autocomplete="off" />
+            <button type="button" class="eye-btn" id="uidEyeBtn" aria-label="Show or hide UID">👁</button>
+          </div>
+        </div>
+
+        <div class="sid-field">
           <label for="pinNo">PIN</label>
           <div class="pin-wrap">
             <input id="pinNo" type="password" placeholder="Enter PIN" autocomplete="off" />
@@ -1691,6 +1792,14 @@
           <select id="accountStatus">
             <option value="Active" selected>Active</option>
             <option value="Inactive">Inactive</option>
+          </select>
+        </div>
+
+        <div class="sid-field">
+          <label for="usesStatus">Uses</label>
+          <select id="usesStatus">
+            <option value="Available" selected>Available</option>
+            <option value="Reserved">Reserved</option>
           </select>
         </div>
 
@@ -1722,6 +1831,11 @@
           <textarea id="address" placeholder="Enter address"></textarea>
         </div>
 
+        <div class="sid-field full">
+          <label for="noteText">Note</label>
+          <textarea id="noteText" placeholder="Enter note"></textarea>
+        </div>
+
         <div class="form-actions">
           <button type="submit" class="sid-save" id="sidSaveBtn">Save Data</button>
           <button type="button" class="sid-clear" id="sidClearBtn">Clear Form</button>
@@ -1748,6 +1862,14 @@
       </div>
     </div>
 
+    <div class="search-panel">
+      <select id="sidSearchType">
+        <option value="slotNo">Slot No</option>
+        <option value="mobileNo">Mobile No</option>
+      </select>
+      <input id="sidSearchInput" type="text" placeholder="Search selected data..." autocomplete="off" />
+    </div>
+
     <div class="sid-list-wrap" id="sidListWrap">
       <div class="empty-list">No SID data found.<br>Click <b>Add Sid Data →</b> to create your first entry.</div>
     </div>
@@ -1768,7 +1890,7 @@
 
     <div class="view-shell" id="sidViewContent">
       <div class="view-hero">
-        <small>Account No</small>
+        <small>Slot No</small>
         <div class="view-account-no">-</div>
       </div>
       <div class="view-note">Select a record from SID Data List to view details.</div>
@@ -1854,15 +1976,20 @@
     const sidListWrap = document.getElementById("sidListWrap");
     const sidViewContent = document.getElementById("sidViewContent");
     const sidSaveBtn = document.getElementById("sidSaveBtn");
+    const uidNo = document.getElementById("uidNo");
+    const uidEyeBtn = document.getElementById("uidEyeBtn");
     const pinNo = document.getElementById("pinNo");
     const pinEyeBtn = document.getElementById("pinEyeBtn");
     const accountStatus = document.getElementById("accountStatus");
+    const usesStatus = document.getElementById("usesStatus");
     const accountStatusView = document.getElementById("accountStatusView");
     const simExpiry = document.getElementById("simExpiry");
     const expiryStatusView = document.getElementById("expiryStatusView");
     const sidEntryForm = document.getElementById("sidEntryForm");
     const sidClearBtn = document.getElementById("sidClearBtn");
     const sidPreview = document.getElementById("sidPreview");
+    const sidSearchType = document.getElementById("sidSearchType");
+    const sidSearchInput = document.getElementById("sidSearchInput");
     const welcomeText = document.getElementById("welcomeText");
     const logoutBtn = document.getElementById("logoutBtn");
     const codeStrip = document.getElementById("codeStrip");
@@ -1885,6 +2012,9 @@
         fatherName: row.father_name || "",
         motherName: row.mother_name || "",
         address: row.address || "",
+        uidNo: row.uid || "",
+        noteText: row.note || "",
+        usesStatus: row.uses_status || "Available",
         slotNo: row.slot_no || "",
         pinNo: row.pin_code || "",
         accountStatus: row.account_status || "Active",
@@ -1905,6 +2035,9 @@
         father_name: record.fatherName || null,
         mother_name: record.motherName || null,
         address: record.address || null,
+        uid: record.uidNo || null,
+        note: record.noteText || null,
+        uses_status: record.usesStatus || "Available",
         slot_no: record.slotNo || null,
         pin_code: record.pinNo || null,
         account_status: record.accountStatus || "Active",
@@ -1940,7 +2073,7 @@
       if (!user) {
         setTerminal([
           "<span class='warn'>[WARN] User ID required.</span>",
-          "[SYS] Please enter user ID: zayanzabit"
+          "[SYS] Please enter user ID."
         ]);
         username.focus();
         return;
@@ -1978,11 +2111,11 @@
       usernameStep.classList.remove("hidden");
       stepTwoDot.classList.remove("active");
       stepOneDot.classList.add("active");
-      loginSubtitle.textContent = "Enter user ID: zayanzabit";
+      loginSubtitle.textContent = "Enter your user name to continue";
       password.value = "";
       setTerminal([
         "[SYS] Returned to username layer...",
-        "[SYS] Waiting for user ID: zayanzabit..."
+        "[SYS] Waiting for user ID..."
       ]);
       setTimeout(() => username.focus(), 260);
     }
@@ -2195,6 +2328,8 @@
       sidEntryForm.reset();
       editingSidId = null;
       sidSaveBtn.textContent = "Save Data";
+      uidNo.type = "password";
+      uidEyeBtn.textContent = "👁";
       pinNo.type = "password";
       pinEyeBtn.textContent = "👁";
       updateAccountStatusView();
@@ -2216,13 +2351,16 @@
         document.getElementById("dob").value = options.record.dob || "";
         setFieldValue("fatherName", options.record.fatherName);
         setFieldValue("motherName", options.record.motherName);
+        uidNo.value = options.record.uidNo || "";
         pinNo.value = options.record.pinNo || "";
         accountStatus.value = options.record.accountStatus || "Active";
+        usesStatus.value = options.record.usesStatus || "Available";
         setFieldValue("simBalance", options.record.simBalance);
         simExpiry.value = options.record.simExpiry || "";
         setFieldValue("rocketName", options.record.rocketName);
         document.getElementById("lastUses").value = options.record.lastUses || "";
         document.getElementById("address").value = options.record.address || "";
+        document.getElementById("noteText").value = options.record.noteText || "";
         updateAccountStatusView();
         updateExpiryStatusView();
         sidPreview.innerHTML = `[EDIT MODE] Updating Account No: ${escapeHtml(options.record.accountNo || "-")}<br>[SYS] Change data and press Update Data.`;
@@ -2319,6 +2457,14 @@
       return "<span class='sid-pill inactive'>✕ Inactive</span>";
     }
 
+
+    function usesPill(record) {
+      if ((record.usesStatus || "Available") === "Reserved") {
+        return "<span class='sid-pill reserved'>Reserved</span>";
+      }
+      return "<span class='sid-pill active'>Available</span>";
+    }
+
     function expiryPill(record) {
       if (!record.simExpiry) return "<span class='sid-pill'>No Date</span>";
       if (isExpired(record.simExpiry)) {
@@ -2327,16 +2473,32 @@
       return "<span class='sid-pill active'>✓ Valid</span>";
     }
 
-    async function renderSidList() {
-      const ok = await loadSidRecords();
-      if (!ok) return;
+    async function renderSidList(reload = true) {
+      if (reload) {
+        const ok = await loadSidRecords();
+        if (!ok) return;
+      }
 
       if (!sidRecords.length) {
         sidListWrap.innerHTML = "<div class='empty-list'>No SID data found.<br>Click <b>Add Sid Data →</b> to create your first entry.</div>";
         return;
       }
 
-      sidListWrap.innerHTML = sidRecords.map((record) => `
+      const searchValue = (sidSearchInput?.value || "").trim().toLowerCase();
+      const searchType = sidSearchType?.value || "slotNo";
+      let displayRecords = [...sidRecords];
+
+      if (searchValue) {
+        displayRecords.sort((a, b) => {
+          const av = String(a[searchType] || "").toLowerCase();
+          const bv = String(b[searchType] || "").toLowerCase();
+          const aMatch = av.includes(searchValue) ? 0 : 1;
+          const bMatch = bv.includes(searchValue) ? 0 : 1;
+          return aMatch - bMatch;
+        });
+      }
+
+      sidListWrap.innerHTML = displayRecords.map((record) => `
         <div class="sid-list-card">
           <div>
             <small>Account No</small>
@@ -2349,7 +2511,7 @@
             <small>Last Uses</small>
             <strong>${escapeHtml(formatMonth(record.lastUses))}</strong>
           </div>
-          <div>${statusPill(record)}</div>
+          <div>${statusPill(record)}<br><br>${usesPill(record)}</div>
           <div>${expiryPill(record)}</div>
           <div class="sid-card-actions">
             <button class="sid-action-btn view" type="button" data-action="view" data-id="${record.id}">View</button>
@@ -2363,8 +2525,8 @@
     function renderSidView(record) {
       sidViewContent.innerHTML = `
         <div class="view-hero">
-          <small>Account No</small>
-          <div class="view-account-no">${escapeHtml(record.accountNo || "-")}</div>
+          <small>Slot No</small>
+          <div class="view-account-no">${escapeHtml(record.slotNo || "-")}</div>
         </div>
 
         <div class="view-top-grid">
@@ -2385,6 +2547,10 @@
             <strong>${statusPill(record)}</strong>
           </div>
           <div class="view-mini">
+            <span>Uses</span>
+            <strong>${usesPill(record)}</strong>
+          </div>
+          <div class="view-mini">
             <span>DOB</span>
             <strong>${escapeHtml(formatDate(record.dob))}</strong>
           </div>
@@ -2396,8 +2562,8 @@
 
         <div class="view-details">
           <div class="detail-box">
-            <span>Slot No.</span>
-            <strong>${escapeHtml(record.slotNo || "-")}</strong>
+            <span>Account No.</span>
+            <strong>${escapeHtml(record.accountNo || "-")}</strong>
           </div>
           <div class="detail-box">
             <span>SIM Balance</span>
@@ -2416,12 +2582,20 @@
             <strong>${escapeHtml(record.rocketName || "-")}</strong>
           </div>
           <div class="detail-box">
+            <span>UID</span>
+            <strong>${escapeHtml(maskPinForPreview(record.uidNo || "")) || "-"}</strong>
+          </div>
+          <div class="detail-box">
             <span>PIN</span>
             <strong>${escapeHtml(maskPinForPreview(record.pinNo || "")) || "-"}</strong>
           </div>
           <div class="detail-box full">
             <span>Address</span>
             <strong>${escapeHtml(record.address || "-")}</strong>
+          </div>
+          <div class="detail-box full">
+            <span>Note</span>
+            <strong>${escapeHtml(record.noteText || "-")}</strong>
           </div>
         </div>
 
@@ -2466,7 +2640,7 @@
       }
 
       if (button.dataset.action === "remove") {
-        const confirmRemove = confirm(`Remove this SID data from Supabase?\n\nAccount No: ${record.accountNo || "-"}`);
+        const confirmRemove = confirm(`Remove this SID data from Supabase?\n\nSlot No: ${record.slotNo || "-"}`);
         if (!confirmRemove) return;
 
         try {
@@ -2481,6 +2655,18 @@
           button.textContent = "Remove";
         }
       }
+    });
+
+
+
+    sidSearchInput.addEventListener("input", () => renderSidList(false));
+    sidSearchType.addEventListener("change", () => renderSidList(false));
+
+    uidEyeBtn.addEventListener("click", () => {
+      const isHidden = uidNo.type === "password";
+      uidNo.type = isHidden ? "text" : "password";
+      uidEyeBtn.textContent = isHidden ? "🙈" : "👁";
+      uidNo.focus();
     });
 
     pinEyeBtn.addEventListener("click", () => {
@@ -2512,13 +2698,16 @@
         dob: document.getElementById("dob").value,
         fatherName: getFieldValue("fatherName"),
         motherName: getFieldValue("motherName"),
+        uidNo: uidNo.value.trim(),
         pinNo: pinNo.value.trim(),
         accountStatus: accountStatus.value,
+        usesStatus: usesStatus.value,
         simBalance: getFieldValue("simBalance"),
         simExpiry: simExpiry.value,
         rocketName: getFieldValue("rocketName"),
         lastUses: document.getElementById("lastUses").value,
         address: document.getElementById("address").value.trim(),
+        noteText: document.getElementById("noteText").value.trim(),
         updatedAt: new Date().toISOString()
       };
 
@@ -2541,6 +2730,8 @@
         `[DATA] Account No: ${escapeHtml(formData.accountNo || "-")}`,
         `[DATA] Account User: ${escapeHtml(formData.accountUser || "-")}`,
         `[DATA] Mobile No: ${escapeHtml(formData.mobileNo || "-")}`,
+        `[DATA] UID: ${escapeHtml(maskPinForPreview(formData.uidNo || "") || "-")}`,
+        `[DATA] Uses: ${escapeHtml(formData.usesStatus || "-")}`,
         `[DATA] DOB: ${escapeHtml(formatDate(formData.dob))}`,
         `[DATA] Last Uses: ${escapeHtml(formatMonth(formData.lastUses))}`,
         `[DATA] Status: ${escapeHtml(formData.accountStatus)}`,
