@@ -1437,6 +1437,102 @@
       }
     }
 
+
+    .identity-upload-box {
+      border: 1px dashed rgba(0, 245, 255, 0.3);
+      border-radius: 16px;
+      padding: 15px;
+      background: rgba(0, 0, 0, 0.22);
+    }
+
+    .identity-upload-box .upload-hint {
+      display: block;
+      margin-top: 8px;
+      color: rgba(255, 200, 87, 0.88);
+      font-size: 11px;
+      line-height: 1.5;
+      letter-spacing: 0.7px;
+      text-transform: uppercase;
+    }
+
+    .identity-status {
+      margin-top: 8px;
+      color: rgba(0, 255, 136, 0.82);
+      font-size: 12px;
+      line-height: 1.5;
+      word-break: break-word;
+    }
+
+    .identity-view-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      height: 38px;
+      padding: 0 14px;
+      border-radius: 11px;
+      border: 1px solid rgba(0, 245, 255, 0.42);
+      background: rgba(0, 245, 255, 0.055);
+      color: #8ff7ff;
+      cursor: pointer;
+      font-weight: 800;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      text-decoration: none;
+      transition: 0.22s ease;
+    }
+
+    .identity-view-btn:hover {
+      transform: translateY(-2px);
+      background: rgba(0, 245, 255, 0.12);
+      box-shadow: 0 0 18px rgba(0, 245, 255, 0.22);
+    }
+
+
+    /* Full monitor friendly SID Data List */
+    .sid-list-page {
+      width: min(1540px, calc(100vw - 28px));
+      max-height: calc(100vh - 28px);
+    }
+
+    .sid-list-page .sid-list-card {
+      grid-template-columns: minmax(280px, 1.4fr) minmax(150px, 0.65fr) minmax(150px, 0.6fr) minmax(150px, 0.6fr) minmax(250px, auto);
+      gap: 16px;
+      padding: 18px;
+    }
+
+    .sid-list-page .sid-list-wrap {
+      gap: 16px;
+    }
+
+    .sid-list-page .search-panel {
+      grid-template-columns: 220px 1fr;
+      max-width: 100%;
+    }
+
+    .sid-list-page .sid-action-btn {
+      min-width: 76px;
+    }
+
+    @media (min-width: 1200px) {
+      .sid-list-page {
+        padding: 36px;
+      }
+
+      .sid-list-page .dark-title {
+        font-size: 44px;
+      }
+    }
+
+    @media (max-width: 1050px) {
+      .sid-list-page .sid-list-card {
+        grid-template-columns: 1fr;
+      }
+
+      .sid-list-page .sid-card-actions {
+        justify-content: flex-start;
+      }
+    }
+
     .footer-note {
       margin-top: 20px;
       padding: 12px 14px;
@@ -1940,6 +2036,15 @@
           <textarea id="noteText" placeholder="Enter note"></textarea>
         </div>
 
+        <div class="sid-field full">
+          <label for="identityFile">Identity Documents</label>
+          <div class="identity-upload-box">
+            <input id="identityFile" type="file" accept="application/pdf,.pdf" />
+            <span class="upload-hint">Upload your NID / Birth Certificate PDF</span>
+            <div class="identity-status" id="identityStatus">No identity document selected.</div>
+          </div>
+        </div>
+
         <div class="form-actions">
           <button type="submit" class="sid-save" id="sidSaveBtn">Save Data</button>
           <button type="button" class="sid-clear" id="sidClearBtn">Clear Form</button>
@@ -2095,6 +2200,8 @@
     const sidEntryForm = document.getElementById("sidEntryForm");
     const sidClearBtn = document.getElementById("sidClearBtn");
     const sidPreview = document.getElementById("sidPreview");
+    const identityFile = document.getElementById("identityFile");
+    const identityStatus = document.getElementById("identityStatus");
     const sidSearchType = document.getElementById("sidSearchType");
     const sidSearchInput = document.getElementById("sidSearchInput");
     const welcomeText = document.getElementById("welcomeText");
@@ -2103,6 +2210,7 @@
     const SUPABASE_URL = "https://heifnbpbzyoyvipbftwq.supabase.co";
     const SUPABASE_PUBLISHABLE_KEY = "sb_publishable_ZGiMSERlIw57pJDxEM210Q_WA4Nm3pg";
     const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY);
+    const IDENTITY_BUCKET = "identity-documents";
 
     let sidRecords = [];
     let editingSidId = null;
@@ -2129,7 +2237,8 @@
         simExpiry: row.sim_recharge_expiry || "",
         rocketName: row.rocket_account_name || "",
         lastUses: row.last_uses_month || "",
-        updatedAt: row.updated_at || ""
+        updatedAt: row.updated_at || "",
+        identityDocument: null
       };
     }
 
@@ -2394,7 +2503,102 @@
       }
 
       sidRecords = (data || []).map(recordFromDb);
+      await loadIdentityDocumentsForRecords(sidRecords);
       return true;
+    }
+
+
+
+    async function getIdentityDocument(accountNoValue) {
+      if (!accountNoValue) return null;
+
+      const { data, error } = await supabaseClient
+        .from("identity_documents")
+        .select("*")
+        .eq("account_no", accountNoValue)
+        .order("uploaded_at", { ascending: false })
+        .limit(1)
+        .maybeSingle();
+
+      if (error) throw error;
+      return data || null;
+    }
+
+    async function loadIdentityDocumentsForRecords(records) {
+      const accountNumbers = [...new Set(records.map((record) => record.accountNo).filter(Boolean))];
+      if (!accountNumbers.length) return;
+
+      const { data, error } = await supabaseClient
+        .from("identity_documents")
+        .select("*")
+        .in("account_no", accountNumbers)
+        .order("uploaded_at", { ascending: false });
+
+      if (error) {
+        console.error("Identity document load error:", error);
+        return;
+      }
+
+      const latestByAccount = {};
+      (data || []).forEach((doc) => {
+        if (!latestByAccount[doc.account_no]) {
+          latestByAccount[doc.account_no] = doc;
+        }
+      });
+
+      records.forEach((record) => {
+        record.identityDocument = latestByAccount[record.accountNo] || null;
+      });
+    }
+
+    async function uploadIdentityDocument(accountNoValue) {
+      const file = identityFile.files && identityFile.files[0];
+      if (!file) return null;
+
+      if (file.type !== "application/pdf" && !file.name.toLowerCase().endsWith(".pdf")) {
+        throw new Error("Only PDF identity documents are allowed.");
+      }
+
+      const safeAccount = String(accountNoValue || "unknown").replace(/[^a-zA-Z0-9_-]/g, "_");
+      const safeFileName = file.name.replace(/[^a-zA-Z0-9._-]/g, "_");
+      const filePath = `${safeAccount}/${Date.now()}_${safeFileName}`;
+
+      const { error: uploadError } = await supabaseClient.storage
+        .from(IDENTITY_BUCKET)
+        .upload(filePath, file, {
+          cacheControl: "3600",
+          upsert: true,
+          contentType: "application/pdf"
+        });
+
+      if (uploadError) throw uploadError;
+
+      const { data: publicData } = supabaseClient.storage
+        .from(IDENTITY_BUCKET)
+        .getPublicUrl(filePath);
+
+      const fileUrl = publicData.publicUrl;
+
+      const { error: insertError } = await supabaseClient
+        .from("identity_documents")
+        .insert({
+          account_no: accountNoValue,
+          document_name: file.name,
+          file_path: filePath,
+          file_url: fileUrl
+        });
+
+      if (insertError) throw insertError;
+
+      return { filePath, fileUrl, documentName: file.name };
+    }
+
+    function identityButton(doc) {
+      if (!doc || !doc.file_url) {
+        return "<span class='sid-pill inactive'>No Document</span>";
+      }
+
+      return `<a class="identity-view-btn" href="${escapeHtml(doc.file_url)}" target="_blank" rel="noopener">View Identity Documents</a>`;
     }
 
 
@@ -2408,6 +2612,21 @@
 
       return (data || []).some((row) => row.id !== editingSidId);
     }
+
+
+    async function slotNoAlreadyExists(slotNoValue) {
+      if (!slotNoValue) return false;
+
+      const { data, error } = await supabaseClient
+        .from("sid_data")
+        .select("id, slot_no")
+        .ilike("slot_no", slotNoValue);
+
+      if (error) throw error;
+
+      return (data || []).some((row) => row.id !== editingSidId);
+    }
+
 
     async function saveSidRecordToSupabase(record) {
       const payload = recordToDb(record);
@@ -2461,6 +2680,8 @@
       pinEyeBtn.textContent = "👁";
       updateAccountStatusView();
       updateExpiryStatusView();
+      identityFile.value = "";
+      identityStatus.textContent = "No identity document selected.";
       sidPreview.innerHTML = "[SID] Form cleared...<br>[SYS] Ready for new Account Informations entry.";
     }
 
@@ -2488,6 +2709,12 @@
         document.getElementById("lastUses").value = options.record.lastUses || "";
         document.getElementById("address").value = options.record.address || "";
         document.getElementById("noteText").value = options.record.noteText || "";
+        identityFile.value = "";
+        if (options.record.identityDocument && options.record.identityDocument.file_url) {
+          identityStatus.innerHTML = `Existing PDF: <a class="identity-view-btn" href="${escapeHtml(options.record.identityDocument.file_url)}" target="_blank" rel="noopener">View Identity Documents</a>`;
+        } else {
+          identityStatus.textContent = "No identity document uploaded for this Account No.";
+        }
         updateAccountStatusView();
         updateExpiryStatusView();
         sidPreview.innerHTML = `[EDIT MODE] Updating Account No: ${escapeHtml(options.record.accountNo || "-")}<br>[SYS] Change data and press Update Data.`;
@@ -2643,6 +2870,7 @@
             <small>${escapeHtml(record.accountUser ? "SIM Owner: " + record.accountUser : "SIM Owner: -")}</small>
             <small>${escapeHtml(record.mobileNo ? "Mobile No: " + record.mobileNo : "Mobile No: -")}</small>
             <small>${escapeHtml(record.slotNo ? "Slot No: " + record.slotNo : "Slot No: -")}</small>
+            <div style="margin-top:10px;">${identityButton(record.identityDocument)}</div>
           </div>
           <div>
             <small>Last Uses</small>
@@ -2734,6 +2962,10 @@
             <span>Note</span>
             <strong>${escapeHtml(record.noteText || "-")}</strong>
           </div>
+          <div class="detail-box full">
+            <span>Identity Documents</span>
+            <strong>${identityButton(record.identityDocument)}</strong>
+          </div>
         </div>
 
         <div class="view-note">
@@ -2818,6 +3050,24 @@
     accountStatus.addEventListener("change", updateAccountStatusView);
     simExpiry.addEventListener("change", updateExpiryStatusView);
 
+    identityFile.addEventListener("change", () => {
+      const file = identityFile.files && identityFile.files[0];
+      if (!file) {
+        identityStatus.textContent = "No identity document selected.";
+        return;
+      }
+
+      if (file.type !== "application/pdf" && !file.name.toLowerCase().endsWith(".pdf")) {
+        identityStatus.innerHTML = "<span class='warn'>Only PDF file allowed.</span>";
+        identityFile.value = "";
+        return;
+      }
+
+      identityStatus.textContent = `Selected PDF: ${file.name}`;
+    });
+
+
+
     sidEntryForm.addEventListener("keydown", (event) => {
       if (event.key !== "Enter") return;
 
@@ -2862,6 +3112,14 @@
           document.getElementById("accountNo").focus();
           return;
         }
+
+        const slotNoValue = getFieldValue("slotNo");
+        const slotExists = await slotNoAlreadyExists(slotNoValue);
+        if (slotExists) {
+          sidPreview.innerHTML = "<span class='warn'>[ALREADY EXIST]</span> Same Slot No already exists. Save blocked.";
+          document.getElementById("slotNo").focus();
+          return;
+        }
       } catch (error) {
         sidPreview.innerHTML = `<span class='warn'>[SUPABASE CHECK ERROR]</span> ${escapeHtml(error.message)}`;
         return;
@@ -2898,6 +3156,14 @@
 
         const savedId = await saveSidRecordToSupabase(formData);
         formData.id = savedId;
+
+        let uploadedIdentity = null;
+        if (identityFile.files && identityFile.files[0]) {
+          identityStatus.textContent = "Uploading identity PDF...";
+          uploadedIdentity = await uploadIdentityDocument(formData.accountNo);
+          identityStatus.innerHTML = `Identity PDF uploaded: <a class="identity-view-btn" href="${escapeHtml(uploadedIdentity.fileUrl)}" target="_blank" rel="noopener">View Identity Documents</a>`;
+        }
+
         editingSidId = null;
         sidSaveBtn.textContent = "Save Data";
 
@@ -2913,6 +3179,7 @@
         `[DATA] DOB: ${escapeHtml(formatDate(formData.dob))}`,
         `[DATA] Last Uses: ${escapeHtml(formatMonth(formData.lastUses))}`,
         `[DATA] Status: ${escapeHtml(formData.accountStatus)}`,
+        `[DATA] Identity PDF: ${uploadedIdentity ? "Uploaded" : "No new file"}`,
         "[NEXT] Open SID Data List → to view/edit."
       ].join("<br>");
       } catch (error) {
