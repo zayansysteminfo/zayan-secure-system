@@ -2238,7 +2238,7 @@
     </div>
 
     <div class="footer-note">
-      Note: PC PowerShell script will still send email. Extra setup: the same PS1 should insert failed-login alert rows into Supabase table <b>login_alerts</b>.
+      Note: Auto refresh active every 10 seconds while this page is open. PC PowerShell email alert will also insert failed-login alert rows into Supabase table <b>login_alerts</b>.
     </div>
   </section>
 
@@ -2660,6 +2660,7 @@
     let sidRecords = [];
     let loginAlerts = [];
     let accountUsesHistory = [];
+    let loginAlertAutoRefreshTimer = null;
     let editingSidId = null;
     let viewingSidId = null;
 
@@ -2920,6 +2921,7 @@
 
 
     function hideAllSecurePages() {
+      stopLoginAlertAutoRefresh();
       dashboard.classList.remove("active");
       loginAlertPage.classList.remove("active");
       managementPage.classList.remove("active");
@@ -3047,11 +3049,43 @@
       return true;
     }
 
+    function stopLoginAlertAutoRefresh() {
+      if (loginAlertAutoRefreshTimer) {
+        clearInterval(loginAlertAutoRefreshTimer);
+        loginAlertAutoRefreshTimer = null;
+      }
+    }
+
+    function startLoginAlertAutoRefresh() {
+      stopLoginAlertAutoRefresh();
+
+      loginAlertAutoRefreshTimer = setInterval(async () => {
+        if (!loginAlertPage.classList.contains("active")) {
+          stopLoginAlertAutoRefresh();
+          return;
+        }
+
+        const oldCount = loginAlerts.length;
+        await loadLoginAlerts();
+
+        if (loginAlerts.length > oldCount && alertListWrap) {
+          const notice = document.createElement("div");
+          notice.className = "empty-list";
+          notice.style.borderColor = "rgba(0,255,136,0.45)";
+          notice.style.color = "rgba(0,255,136,0.9)";
+          notice.innerHTML = "⚠ New Login Alert Found — Auto Refreshed";
+          alertListWrap.prepend(notice);
+          setTimeout(() => notice.remove(), 3000);
+        }
+      }, 10000);
+    }
+
     async function openLoginAlertPage() {
       hideAllSecurePages();
       loginAlertPage.classList.add("active");
       alertListWrap.innerHTML = "<div class='empty-list'>Loading login alerts...</div>";
       await loadLoginAlerts();
+      startLoginAlertAutoRefresh();
     }
 
 
