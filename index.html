@@ -1533,6 +1533,65 @@
       }
     }
 
+
+    /* Clean Rocket/SIM form layout */
+    .slot-hero-field {
+      grid-column: 1 / -1;
+      padding: 18px;
+      border: 1px solid rgba(0, 245, 255, 0.38);
+      border-radius: 18px;
+      background: linear-gradient(135deg, rgba(0, 245, 255, 0.08), rgba(0, 0, 0, 0.18));
+      box-shadow: inset 0 0 22px rgba(0, 245, 255, 0.06);
+    }
+    .slot-hero-field input {
+      height: 66px;
+      font-size: clamp(26px, 4vw, 42px);
+      font-weight: 900;
+      color: #fff;
+      text-align: center;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+    }
+    .form-section-title {
+      grid-column: 1 / -1;
+      margin-top: 8px;
+      padding: 12px 14px;
+      border-radius: 14px;
+      border: 1px solid rgba(0, 255, 136, 0.28);
+      background: linear-gradient(90deg, rgba(0, 255, 136, 0.1), rgba(0, 245, 255, 0.05));
+      color: var(--green);
+      font-size: 18px;
+      font-weight: 900;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+    }
+    .non-kyc-row {
+      display: flex !important;
+      align-items: center;
+      justify-content: flex-start !important;
+      gap: 10px;
+      margin-bottom: 10px;
+      color: var(--gold);
+      font-size: 12px;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+    }
+    .non-kyc-row input {
+      width: 18px;
+      height: 18px;
+      accent-color: var(--gold);
+    }
+    .non-kyc-highlight {
+      color: #111 !important;
+      background: linear-gradient(90deg, #ffc857, #fff1a8) !important;
+      border-color: rgba(255, 200, 87, 0.65) !important;
+    }
+    .upload-dual-box input[type="file"] {
+      height: auto;
+      padding: 13px;
+      cursor: pointer;
+    }
+
     .footer-note {
       margin-top: 20px;
       padding: 12px 14px;
@@ -1923,9 +1982,9 @@
     <div class="sid-head">
       <div class="sid-title-wrap">
         <div class="top-tag"><span class="pulse"></span> Add Sid Data</div>
-        <h2 class="sid-title">Account Informations</h2>
+        <h2 class="sid-title">Rocket & SIM Informations</h2>
         <p class="sid-subtitle">
-          Secure account data entry panel • PIN protected view • SIM recharge expiry monitoring
+          Clean Rocket and SIM information entry panel
         </p>
       </div>
       <div class="sid-nav-group"><button class="sid-back" id="sidBackBtn">← AC/SID</button><button class="sid-next" id="sidToListBtn">SID Data List →</button></div>
@@ -1933,74 +1992,65 @@
 
     <div class="sid-entry-card">
       <form class="sid-form" id="sidEntryForm">
-        <div class="sid-field">
+
+        <div class="sid-field slot-hero-field">
           <label for="slotNo">Slot No.</label>
-          <input id="slotNo" type="text" placeholder="Enter slot no." autocomplete="off" />
+          <input id="slotNo" type="text" placeholder="SLOT NO" autocomplete="off" />
+        </div>
+
+        <div class="form-section-title">Rocket Information</div>
+
+        <div class="sid-field">
+          <label for="accountNo">Rocket AC No. <span class="required-star">*</span></label>
+          <input id="accountNo" type="text" placeholder="Enter Rocket AC no. (mandatory)" autocomplete="off" />
+        </div>
+
+        <div class="sid-field" id="rocketNameField">
+          <label for="rocketName">Rocket Account Name</label>
+          <label class="non-kyc-row" for="nonKyc">
+            <input id="nonKyc" type="checkbox" />
+            Non KYC
+          </label>
+          <input id="rocketName" type="text" placeholder="Enter Rocket account name" autocomplete="off" />
         </div>
 
         <div class="sid-field">
-          <label for="accountNo">Account No. <span class="required-star">*</span></label>
-          <input id="accountNo" type="text" placeholder="Enter account no. (mandatory)" autocomplete="off" />
+          <label for="rocketBalance">Rocket AC Balance</label>
+          <input id="rocketBalance" type="number" step="0.01" placeholder="Enter Rocket AC balance" />
         </div>
 
         <div class="sid-field">
-          <label for="accountUser">SIM Owner Name</label>
-          <input id="accountUser" type="text" placeholder="Enter SIM owner name" autocomplete="off" />
-        </div>
-
-        <div class="sid-field">
-          <label for="mobileNo">Mobile Number</label>
-          <input id="mobileNo" type="text" placeholder="Enter mobile number" autocomplete="off" />
-        </div>
-
-        <div class="sid-field">
-          <label for="dob">DOB</label>
-          <input id="dob" type="date" />
-        </div>
-
-        <div class="sid-field">
-          <label for="fatherName">Father Name</label>
-          <input id="fatherName" type="text" placeholder="Enter father name" autocomplete="off" />
-        </div>
-
-        <div class="sid-field">
-          <label for="motherName">Mother Name</label>
-          <input id="motherName" type="text" placeholder="Enter mother name" autocomplete="off" />
-        </div>
-
-        <div class="sid-field">
-          <label for="uidNo">UID</label>
+          <label for="uidNo">UID No.</label>
           <div class="pin-wrap uid-wrap">
-            <input id="uidNo" type="password" placeholder="Enter UID" autocomplete="off" />
+            <input id="uidNo" type="password" placeholder="Enter UID No." autocomplete="off" />
             <button type="button" class="eye-btn" id="uidEyeBtn" aria-label="Show or hide UID">👁</button>
           </div>
         </div>
 
         <div class="sid-field">
-          <label for="pinNo">PIN</label>
-          <div class="pin-wrap">
-            <input id="pinNo" type="password" placeholder="Enter PIN" autocomplete="off" />
-            <button type="button" class="eye-btn" id="pinEyeBtn" aria-label="Show or hide PIN">👁</button>
+          <label for="lastUses">Last Uses</label>
+          <input id="lastUses" type="month" />
+        </div>
+
+        <div class="sid-field full">
+          <label for="noteText">Note</label>
+          <textarea id="noteText" placeholder="Enter Rocket note"></textarea>
+        </div>
+
+        <div class="sid-field full">
+          <label for="rocketIdentityFile">Rocket Identity Documents</label>
+          <div class="identity-upload-box upload-dual-box">
+            <input id="rocketIdentityFile" type="file" accept="application/pdf,image/jpeg,image/jpg,image/png,.pdf,.jpg,.jpeg,.png" />
+            <span class="upload-hint">Upload Rocket NID / Birth Certificate PDF or JPEG</span>
+            <div class="identity-status" id="rocketIdentityStatus">No Rocket identity document selected.</div>
           </div>
         </div>
 
-        <div class="sid-field">
-          <label for="accountStatus">
-            Account Status
-            <span class="status-line ok" id="accountStatusView">✓ Active</span>
-          </label>
-          <select id="accountStatus">
-            <option value="Active" selected>Active</option>
-            <option value="Inactive">Inactive</option>
-          </select>
-        </div>
+        <div class="form-section-title">SIM Information</div>
 
         <div class="sid-field">
-          <label for="usesStatus">Uses</label>
-          <select id="usesStatus">
-            <option value="Available" selected>Available</option>
-            <option value="Reserved">Reserved</option>
-          </select>
+          <label for="accountUser">SIM Owner Name</label>
+          <input id="accountUser" type="text" placeholder="Enter SIM owner name" autocomplete="off" />
         </div>
 
         <div class="sid-field">
@@ -2016,34 +2066,20 @@
           <input id="simExpiry" type="date" />
         </div>
 
-        <div class="sid-field">
-          <label for="rocketName">Rocket Account Name</label>
-          <input id="rocketName" type="text" placeholder="Enter Rocket account name" autocomplete="off" />
-        </div>
-
-        <div class="sid-field">
-          <label for="lastUses">Last Uses</label>
-          <input id="lastUses" type="month" />
+        <div class="sid-field full">
+          <label for="simNoteText">Note</label>
+          <textarea id="simNoteText" placeholder="Enter SIM note"></textarea>
         </div>
 
         <div class="sid-field full">
-          <label for="address">Address</label>
-          <textarea id="address" placeholder="Enter address"></textarea>
-        </div>
-
-        <div class="sid-field full">
-          <label for="noteText">Note</label>
-          <textarea id="noteText" placeholder="Enter note"></textarea>
-        </div>
-
-        <div class="sid-field full">
-          <label for="identityFile">Identity Documents</label>
-          <div class="identity-upload-box">
-            <input id="identityFile" type="file" accept="application/pdf,.pdf" />
-            <span class="upload-hint">Upload your NID / Birth Certificate PDF</span>
-            <div class="identity-status" id="identityStatus">No identity document selected.</div>
+          <label for="simIdentityFile">SIM Identity Documents</label>
+          <div class="identity-upload-box upload-dual-box">
+            <input id="simIdentityFile" type="file" accept="application/pdf,image/jpeg,image/jpg,image/png,.pdf,.jpg,.jpeg,.png" />
+            <span class="upload-hint">Upload SIM NID / Birth Certificate PDF or JPEG</span>
+            <div class="identity-status" id="simIdentityStatus">No SIM identity document selected.</div>
           </div>
         </div>
+
 
         <div class="form-actions">
           <button type="submit" class="sid-save" id="sidSaveBtn">Save Data</button>
@@ -2052,7 +2088,7 @@
       </form>
 
       <div class="sid-preview" id="sidPreview">
-        [SID] Account Informations panel ready...<br>
+        [SID] Rocket & SIM Informations panel ready...<br>
         [SYS] Fill data and press Save Data to send Supabase table.
       </div>
     </div>
@@ -2074,7 +2110,7 @@
     <div class="search-panel">
       <select id="sidSearchType">
         <option value="slotNo">Slot No</option>
-        <option value="mobileNo">Mobile No</option>
+        <option value="accountNo">Rocket AC No</option>
       </select>
       <input id="sidSearchInput" type="text" placeholder="Search selected data..." autocomplete="off" />
     </div>
@@ -2190,18 +2226,21 @@
     const sidSaveBtn = document.getElementById("sidSaveBtn");
     const uidNo = document.getElementById("uidNo");
     const uidEyeBtn = document.getElementById("uidEyeBtn");
-    const pinNo = document.getElementById("pinNo");
-    const pinEyeBtn = document.getElementById("pinEyeBtn");
-    const accountStatus = document.getElementById("accountStatus");
-    const usesStatus = document.getElementById("usesStatus");
-    const accountStatusView = document.getElementById("accountStatusView");
+    const rocketBalance = document.getElementById("rocketBalance");
+    const nonKyc = document.getElementById("nonKyc");
+    const rocketNameField = document.getElementById("rocketNameField");
+    const accountStatus = null;
+    const usesStatus = null;
+    const accountStatusView = null;
     const simExpiry = document.getElementById("simExpiry");
     const expiryStatusView = document.getElementById("expiryStatusView");
     const sidEntryForm = document.getElementById("sidEntryForm");
     const sidClearBtn = document.getElementById("sidClearBtn");
     const sidPreview = document.getElementById("sidPreview");
-    const identityFile = document.getElementById("identityFile");
-    const identityStatus = document.getElementById("identityStatus");
+    const rocketIdentityFile = document.getElementById("rocketIdentityFile");
+    const rocketIdentityStatus = document.getElementById("rocketIdentityStatus");
+    const simIdentityFile = document.getElementById("simIdentityFile");
+    const simIdentityStatus = document.getElementById("simIdentityStatus");
     const sidSearchType = document.getElementById("sidSearchType");
     const sidSearchInput = document.getElementById("sidSearchInput");
     const welcomeText = document.getElementById("welcomeText");
@@ -2220,24 +2259,20 @@
     function recordFromDb(row) {
       return {
         id: row.id,
-        accountNo: row.account_no || "",
-        accountUser: row.account_user || "",
-        mobileNo: row.mobile_no || "",
-        dob: row.dob || "",
-        fatherName: row.father_name || "",
-        motherName: row.mother_name || "",
-        address: row.address || "",
-        uidNo: row.uid || "",
-        noteText: row.note || "",
-        usesStatus: row.uses_status || "Available",
         slotNo: row.slot_no || "",
-        pinNo: row.pin_code || "",
-        accountStatus: row.account_status || "Active",
+        accountNo: row.account_no || "",
+        rocketName: row.rocket_account_name || "",
+        nonKyc: !!row.non_kyc,
+        rocketBalance: row.rocket_ac_balance === null || row.rocket_ac_balance === undefined ? "" : String(row.rocket_ac_balance),
+        uidNo: row.uid_no || row.uid || "",
+        lastUses: row.last_uses_month || "",
+        noteText: row.rocket_note || row.note || "",
+        accountUser: row.account_user || "",
         simBalance: row.sim_balance === null || row.sim_balance === undefined ? "" : String(row.sim_balance),
         simExpiry: row.sim_recharge_expiry || "",
-        rocketName: row.rocket_account_name || "",
-        lastUses: row.last_uses_month || "",
-        updatedAt: row.updated_at || "",
+        simNoteText: row.sim_note || "",
+        rocketIdentityDocument: null,
+        simIdentityDocument: null,
         identityDocument: null
       };
     }
@@ -2246,21 +2281,18 @@
       return {
         account_no: record.accountNo,
         account_user: record.accountUser || null,
-        mobile_no: record.mobileNo || null,
-        dob: record.dob || null,
-        father_name: record.fatherName || null,
-        mother_name: record.motherName || null,
-        address: record.address || null,
-        uid: record.uidNo || null,
-        note: record.noteText || null,
-        uses_status: record.usesStatus || "Available",
         slot_no: record.slotNo || null,
-        pin_code: record.pinNo || null,
-        account_status: record.accountStatus || "Active",
+        rocket_account_name: record.nonKyc ? "NON KYC" : (record.rocketName || null),
+        non_kyc: !!record.nonKyc,
+        rocket_ac_balance: record.rocketBalance === "" ? null : Number(record.rocketBalance),
+        uid_no: record.uidNo || null,
+        uid: record.uidNo || null,
+        last_uses_month: record.lastUses || null,
+        rocket_note: record.noteText || null,
+        note: record.noteText || null,
         sim_balance: record.simBalance === "" ? null : Number(record.simBalance),
         sim_recharge_expiry: record.simExpiry || null,
-        rocket_account_name: record.rocketName || null,
-        last_uses_month: record.lastUses || null
+        sim_note: record.simNoteText || null
       };
     }
 
@@ -2539,36 +2571,37 @@
         return;
       }
 
-      const latestByAccount = {};
+      const latestByAccountType = {};
       (data || []).forEach((doc) => {
-        if (!latestByAccount[doc.account_no]) {
-          latestByAccount[doc.account_no] = doc;
-        }
+        const type = doc.document_type || "ROCKET";
+        const key = `${doc.account_no}__${type}`;
+        if (!latestByAccountType[key]) latestByAccountType[key] = doc;
       });
 
       records.forEach((record) => {
-        record.identityDocument = latestByAccount[record.accountNo] || null;
+        record.rocketIdentityDocument = latestByAccountType[`${record.accountNo}__ROCKET`] || null;
+        record.simIdentityDocument = latestByAccountType[`${record.accountNo}__SIM`] || null;
+        record.identityDocument = record.rocketIdentityDocument;
       });
     }
 
-    async function uploadIdentityDocument(accountNoValue) {
-      const file = identityFile.files && identityFile.files[0];
+    async function uploadIdentityDocument(accountNoValue, fileInput, documentType) {
+      const file = fileInput.files && fileInput.files[0];
       if (!file) return null;
 
-      if (file.type !== "application/pdf" && !file.name.toLowerCase().endsWith(".pdf")) {
-        throw new Error("Only PDF identity documents are allowed.");
-      }
+      const isAllowed = file.type === "application/pdf" || file.type === "image/jpeg" || file.type === "image/png" || /\.(pdf|jpg|jpeg|png)$/i.test(file.name);
+      if (!isAllowed) throw new Error("Only PDF/JPEG/PNG identity documents are allowed.");
 
       const safeAccount = String(accountNoValue || "unknown").replace(/[^a-zA-Z0-9_-]/g, "_");
       const safeFileName = file.name.replace(/[^a-zA-Z0-9._-]/g, "_");
-      const filePath = `${safeAccount}/${Date.now()}_${safeFileName}`;
+      const filePath = `${safeAccount}/${documentType}/${Date.now()}_${safeFileName}`;
 
       const { error: uploadError } = await supabaseClient.storage
         .from(IDENTITY_BUCKET)
         .upload(filePath, file, {
           cacheControl: "3600",
           upsert: true,
-          contentType: "application/pdf"
+          contentType: file.type || "application/octet-stream"
         });
 
       if (uploadError) throw uploadError;
@@ -2585,12 +2618,13 @@
           account_no: accountNoValue,
           document_name: file.name,
           file_path: filePath,
-          file_url: fileUrl
+          file_url: fileUrl,
+          document_type: documentType
         });
 
       if (insertError) throw insertError;
 
-      return { filePath, fileUrl, documentName: file.name };
+      return { filePath, fileUrl, documentName: file.name, documentType };
     }
 
     function identityButton(doc) {
@@ -2598,7 +2632,7 @@
         return "<span class='sid-pill inactive'>No Document</span>";
       }
 
-      return `<a class="identity-view-btn" href="${escapeHtml(doc.file_url)}" target="_blank" rel="noopener">View Identity Documents</a>`;
+      return `<a class="identity-view-btn" href="${escapeHtml(doc.file_url)}" target="_blank" rel="noopener">View Documents</a>`;
     }
 
 
@@ -2676,13 +2710,15 @@
       sidSaveBtn.textContent = "Save Data";
       uidNo.type = "password";
       uidEyeBtn.textContent = "👁";
-      pinNo.type = "password";
-      pinEyeBtn.textContent = "👁";
+      nonKyc.checked = false;
+      updateNonKycMode();
       updateAccountStatusView();
       updateExpiryStatusView();
-      identityFile.value = "";
-      identityStatus.textContent = "No identity document selected.";
-      sidPreview.innerHTML = "[SID] Form cleared...<br>[SYS] Ready for new Account Informations entry.";
+      rocketIdentityFile.value = "";
+      simIdentityFile.value = "";
+      rocketIdentityStatus.textContent = "No Rocket identity document selected.";
+      simIdentityStatus.textContent = "No SIM identity document selected.";
+      sidPreview.innerHTML = "[SID] Form cleared...<br>[SYS] Ready for new Rocket/SIM entry.";
     }
 
     function openSidPage(options = {}) {
@@ -2694,30 +2730,30 @@
         sidSaveBtn.textContent = "Update Data";
         setFieldValue("slotNo", options.record.slotNo);
         setFieldValue("accountNo", options.record.accountNo);
-        setFieldValue("accountUser", options.record.accountUser);
-        setFieldValue("mobileNo", options.record.mobileNo);
-        document.getElementById("dob").value = options.record.dob || "";
-        setFieldValue("fatherName", options.record.fatherName);
-        setFieldValue("motherName", options.record.motherName);
+        setFieldValue("rocketName", options.record.rocketName);
+        nonKyc.checked = !!options.record.nonKyc;
+        updateNonKycMode();
+        setFieldValue("rocketBalance", options.record.rocketBalance);
         uidNo.value = options.record.uidNo || "";
-        pinNo.value = options.record.pinNo || "";
-        accountStatus.value = options.record.accountStatus || "Active";
-        usesStatus.value = options.record.usesStatus || "Available";
+        document.getElementById("lastUses").value = options.record.lastUses || "";
+        document.getElementById("noteText").value = options.record.noteText || "";
+        setFieldValue("accountUser", options.record.accountUser);
         setFieldValue("simBalance", options.record.simBalance);
         simExpiry.value = options.record.simExpiry || "";
-        setFieldValue("rocketName", options.record.rocketName);
-        document.getElementById("lastUses").value = options.record.lastUses || "";
-        document.getElementById("address").value = options.record.address || "";
-        document.getElementById("noteText").value = options.record.noteText || "";
-        identityFile.value = "";
-        if (options.record.identityDocument && options.record.identityDocument.file_url) {
-          identityStatus.innerHTML = `Existing PDF: <a class="identity-view-btn" href="${escapeHtml(options.record.identityDocument.file_url)}" target="_blank" rel="noopener">View Identity Documents</a>`;
-        } else {
-          identityStatus.textContent = "No identity document uploaded for this Account No.";
-        }
-        updateAccountStatusView();
+        document.getElementById("simNoteText").value = options.record.simNoteText || "";
+        rocketIdentityFile.value = "";
+        simIdentityFile.value = "";
+
+        rocketIdentityStatus.innerHTML = options.record.rocketIdentityDocument && options.record.rocketIdentityDocument.file_url
+          ? `Existing Rocket document: <a class="identity-view-btn" href="${escapeHtml(options.record.rocketIdentityDocument.file_url)}" target="_blank" rel="noopener">View Documents</a>`
+          : "No Rocket identity document uploaded.";
+
+        simIdentityStatus.innerHTML = options.record.simIdentityDocument && options.record.simIdentityDocument.file_url
+          ? `Existing SIM document: <a class="identity-view-btn" href="${escapeHtml(options.record.simIdentityDocument.file_url)}" target="_blank" rel="noopener">View Documents</a>`
+          : "No SIM identity document uploaded.";
+
         updateExpiryStatusView();
-        sidPreview.innerHTML = `[EDIT MODE] Updating Account No: ${escapeHtml(options.record.accountNo || "-")}<br>[SYS] Change data and press Update Data.`;
+        sidPreview.innerHTML = `[EDIT MODE] Updating Rocket AC No: ${escapeHtml(options.record.accountNo || "-")}<br>[SYS] Change data and press Update Data.`;
       } else if (options.reset !== false) {
         clearSidForm();
       }
@@ -2764,13 +2800,7 @@
     }
 
     function updateAccountStatusView() {
-      if (accountStatus.value === "Active") {
-        accountStatusView.className = "status-line ok";
-        accountStatusView.textContent = "✓ Active";
-      } else {
-        accountStatusView.className = "status-line bad";
-        accountStatusView.textContent = "✕ Inactive";
-      }
+      return;
     }
 
     function updateExpiryStatusView() {
@@ -2865,23 +2895,28 @@
       sidListWrap.innerHTML = displayRecords.map((record) => `
         <div class="sid-list-card">
           <div>
-            <small>Account No</small>
+            <small>Rocket AC No</small>
             <strong>${escapeHtml(record.accountNo || "-")}</strong>
+            <small>${escapeHtml(record.nonKyc ? "Rocket Name: NON KYC" : (record.rocketName ? "Rocket Name: " + record.rocketName : "Rocket Name: -"))}</small>
+            ${record.nonKyc ? "<div style='margin-top:8px;'><span class='sid-pill non-kyc-highlight'>NON KYC</span></div>" : ""}
             <small>${escapeHtml(record.accountUser ? "SIM Owner: " + record.accountUser : "SIM Owner: -")}</small>
-            <small>${escapeHtml(record.mobileNo ? "Mobile No: " + record.mobileNo : "Mobile No: -")}</small>
             <small>${escapeHtml(record.slotNo ? "Slot No: " + record.slotNo : "Slot No: -")}</small>
-            <div style="margin-top:10px;">${identityButton(record.identityDocument)}</div>
           </div>
           <div>
             <small>Last Uses</small>
             <strong>${escapeHtml(formatMonth(record.lastUses))}</strong>
           </div>
-          <div>${statusPill(record)}<br><br>${usesPill(record)}</div>
+          <div>
+            <small>Rocket Balance</small>
+            <strong>${escapeHtml(record.rocketBalance || "-")}</strong>
+          </div>
           <div>${expiryPill(record)}</div>
           <div class="sid-card-actions">
             <button class="sid-action-btn view" type="button" data-action="view" data-id="${record.id}">View</button>
             <button class="sid-action-btn edit" type="button" data-action="edit" data-id="${record.id}">Edit</button>
             <button class="sid-action-btn remove" type="button" data-action="remove" data-id="${record.id}">Remove</button>
+            ${identityButton(record.rocketIdentityDocument)}
+            ${identityButton(record.simIdentityDocument)}
           </div>
         </div>
       `).join("");
@@ -2896,28 +2931,24 @@
 
         <div class="view-top-grid">
           <div class="view-mini">
-            <span>SIM Owner Name</span>
-            <strong>${escapeHtml(record.accountUser || "-")}</strong>
+            <span>Rocket AC No</span>
+            <strong>${escapeHtml(record.accountNo || "-")}</strong>
           </div>
           <div class="view-mini">
-            <span>Mobile Number</span>
-            <strong>${escapeHtml(record.mobileNo || "-")}</strong>
+            <span>Rocket Account Name</span>
+            <strong>${record.nonKyc ? "<span class='sid-pill non-kyc-highlight'>NON KYC</span>" : escapeHtml(record.rocketName || "-")}</strong>
           </div>
           <div class="view-mini">
             <span>Last Uses</span>
             <strong>${escapeHtml(formatMonth(record.lastUses))}</strong>
           </div>
           <div class="view-mini">
-            <span>Account Status</span>
-            <strong>${statusPill(record)}</strong>
+            <span>Rocket AC Balance</span>
+            <strong>${escapeHtml(record.rocketBalance || "-")}</strong>
           </div>
           <div class="view-mini">
-            <span>Uses</span>
-            <strong>${usesPill(record)}</strong>
-          </div>
-          <div class="view-mini">
-            <span>DOB</span>
-            <strong>${escapeHtml(formatDate(record.dob))}</strong>
+            <span>UID No</span>
+            <strong>${escapeHtml(maskPinForPreview(record.uidNo || "")) || "-"}</strong>
           </div>
           <div class="view-mini">
             <span>SIM Recharge Expiry</span>
@@ -2926,50 +2957,34 @@
         </div>
 
         <div class="view-details">
+          <div class="detail-box full">
+            <span>Rocket Note</span>
+            <strong>${escapeHtml(record.noteText || "-")}</strong>
+          </div>
+          <div class="detail-box full">
+            <span>Rocket Identity Documents</span>
+            <strong>${identityButton(record.rocketIdentityDocument)}</strong>
+          </div>
           <div class="detail-box">
-            <span>Account No.</span>
-            <strong>${escapeHtml(record.accountNo || "-")}</strong>
+            <span>SIM Owner Name</span>
+            <strong>${escapeHtml(record.accountUser || "-")}</strong>
           </div>
           <div class="detail-box">
             <span>SIM Balance</span>
             <strong>${escapeHtml(record.simBalance || "-")}</strong>
           </div>
-          <div class="detail-box">
-            <span>Father Name</span>
-            <strong>${escapeHtml(record.fatherName || "-")}</strong>
-          </div>
-          <div class="detail-box">
-            <span>Mother Name</span>
-            <strong>${escapeHtml(record.motherName || "-")}</strong>
-          </div>
-          <div class="detail-box">
-            <span>Rocket Account Name</span>
-            <strong>${escapeHtml(record.rocketName || "-")}</strong>
-          </div>
-          <div class="detail-box">
-            <span>UID</span>
-            <strong>${escapeHtml(maskPinForPreview(record.uidNo || "")) || "-"}</strong>
-          </div>
-          <div class="detail-box">
-            <span>PIN</span>
-            <strong>${escapeHtml(maskPinForPreview(record.pinNo || "")) || "-"}</strong>
+          <div class="detail-box full">
+            <span>SIM Note</span>
+            <strong>${escapeHtml(record.simNoteText || "-")}</strong>
           </div>
           <div class="detail-box full">
-            <span>Address</span>
-            <strong>${escapeHtml(record.address || "-")}</strong>
-          </div>
-          <div class="detail-box full">
-            <span>Note</span>
-            <strong>${escapeHtml(record.noteText || "-")}</strong>
-          </div>
-          <div class="detail-box full">
-            <span>Identity Documents</span>
-            <strong>${identityButton(record.identityDocument)}</strong>
+            <span>SIM Identity Documents</span>
+            <strong>${identityButton(record.simIdentityDocument)}</strong>
           </div>
         </div>
 
         <div class="view-note">
-          Data loaded from Supabase sid_data table. For real protection, enable RLS again before storing sensitive data.
+          Data loaded from Supabase sid_data and identity_documents tables.
         </div>
       `;
     }
@@ -3040,31 +3055,43 @@
       uidNo.focus();
     });
 
-    pinEyeBtn.addEventListener("click", () => {
-      const isHidden = pinNo.type === "password";
-      pinNo.type = isHidden ? "text" : "password";
-      pinEyeBtn.textContent = isHidden ? "🙈" : "👁";
-      pinNo.focus();
-    });
-
-    accountStatus.addEventListener("change", updateAccountStatusView);
+    if (accountStatus) accountStatus.addEventListener("change", updateAccountStatusView);
     simExpiry.addEventListener("change", updateExpiryStatusView);
 
-    identityFile.addEventListener("change", () => {
-      const file = identityFile.files && identityFile.files[0];
-      if (!file) {
-        identityStatus.textContent = "No identity document selected.";
-        return;
+    function updateNonKycMode() {
+      if (nonKyc.checked) {
+        document.getElementById("rocketName").value = "NON KYC";
+        document.getElementById("rocketName").style.display = "none";
+      } else {
+        if (document.getElementById("rocketName").value === "NON KYC") {
+          document.getElementById("rocketName").value = "";
+        }
+        document.getElementById("rocketName").style.display = "";
       }
+    }
 
-      if (file.type !== "application/pdf" && !file.name.toLowerCase().endsWith(".pdf")) {
-        identityStatus.innerHTML = "<span class='warn'>Only PDF file allowed.</span>";
-        identityFile.value = "";
-        return;
-      }
+    function setupIdentityFileInput(fileInput, statusBox, labelText) {
+      fileInput.addEventListener("change", () => {
+        const file = fileInput.files && fileInput.files[0];
+        if (!file) {
+          statusBox.textContent = `No ${labelText} document selected.`;
+          return;
+        }
 
-      identityStatus.textContent = `Selected PDF: ${file.name}`;
-    });
+        const isAllowed = file.type === "application/pdf" || file.type === "image/jpeg" || file.type === "image/png" || /\.(pdf|jpg|jpeg|png)$/i.test(file.name);
+        if (!isAllowed) {
+          statusBox.innerHTML = "<span class='warn'>Only PDF/JPEG/PNG file allowed.</span>";
+          fileInput.value = "";
+          return;
+        }
+
+        statusBox.textContent = `Selected ${labelText}: ${file.name}`;
+      });
+    }
+
+    nonKyc.addEventListener("change", updateNonKycMode);
+    setupIdentityFileInput(rocketIdentityFile, rocketIdentityStatus, "Rocket identity");
+    setupIdentityFileInput(simIdentityFile, simIdentityStatus, "SIM identity");
 
 
 
@@ -3100,7 +3127,7 @@
 
       const accountNoValue = getFieldValue("accountNo");
       if (!accountNoValue) {
-        sidPreview.innerHTML = "<span class='warn'>[REQUIRED]</span> Account No. is mandatory. Other fields can be empty.";
+        sidPreview.innerHTML = "<span class='warn'>[REQUIRED]</span> Rocket AC No. is mandatory. Other fields can be empty.";
         document.getElementById("accountNo").focus();
         return;
       }
@@ -3108,7 +3135,7 @@
       try {
         const exists = await accountNoAlreadyExists(accountNoValue);
         if (exists) {
-          sidPreview.innerHTML = "<span class='warn'>[ALREADY EXIST]</span> Same Account No already exists. Save blocked.";
+          sidPreview.innerHTML = "<span class='warn'>[ALREADY EXIST]</span> Same Rocket AC No already exists. Save blocked.";
           document.getElementById("accountNo").focus();
           return;
         }
@@ -3129,21 +3156,16 @@
         id: editingSidId || `sid_${Date.now()}_${Math.random().toString(16).slice(2)}`,
         slotNo: getFieldValue("slotNo"),
         accountNo: accountNoValue,
-        accountUser: getFieldValue("accountUser"),
-        mobileNo: getFieldValue("mobileNo"),
-        dob: document.getElementById("dob").value,
-        fatherName: getFieldValue("fatherName"),
-        motherName: getFieldValue("motherName"),
+        rocketName: nonKyc.checked ? "NON KYC" : getFieldValue("rocketName"),
+        nonKyc: nonKyc.checked,
+        rocketBalance: getFieldValue("rocketBalance"),
         uidNo: uidNo.value.trim(),
-        pinNo: pinNo.value.trim(),
-        accountStatus: accountStatus.value,
-        usesStatus: usesStatus.value,
+        lastUses: document.getElementById("lastUses").value,
+        noteText: document.getElementById("noteText").value.trim(),
+        accountUser: getFieldValue("accountUser"),
         simBalance: getFieldValue("simBalance"),
         simExpiry: simExpiry.value,
-        rocketName: getFieldValue("rocketName"),
-        lastUses: document.getElementById("lastUses").value,
-        address: document.getElementById("address").value.trim(),
-        noteText: document.getElementById("noteText").value.trim(),
+        simNoteText: document.getElementById("simNoteText").value.trim(),
         updatedAt: new Date().toISOString()
       };
 
@@ -3157,11 +3179,19 @@
         const savedId = await saveSidRecordToSupabase(formData);
         formData.id = savedId;
 
-        let uploadedIdentity = null;
-        if (identityFile.files && identityFile.files[0]) {
-          identityStatus.textContent = "Uploading identity PDF...";
-          uploadedIdentity = await uploadIdentityDocument(formData.accountNo);
-          identityStatus.innerHTML = `Identity PDF uploaded: <a class="identity-view-btn" href="${escapeHtml(uploadedIdentity.fileUrl)}" target="_blank" rel="noopener">View Identity Documents</a>`;
+        let uploadedRocketIdentity = null;
+        let uploadedSimIdentity = null;
+
+        if (rocketIdentityFile.files && rocketIdentityFile.files[0]) {
+          rocketIdentityStatus.textContent = "Uploading Rocket identity document...";
+          uploadedRocketIdentity = await uploadIdentityDocument(formData.accountNo, rocketIdentityFile, "ROCKET");
+          rocketIdentityStatus.innerHTML = `Rocket document uploaded: <a class="identity-view-btn" href="${escapeHtml(uploadedRocketIdentity.fileUrl)}" target="_blank" rel="noopener">View Documents</a>`;
+        }
+
+        if (simIdentityFile.files && simIdentityFile.files[0]) {
+          simIdentityStatus.textContent = "Uploading SIM identity document...";
+          uploadedSimIdentity = await uploadIdentityDocument(formData.accountNo, simIdentityFile, "SIM");
+          simIdentityStatus.innerHTML = `SIM document uploaded: <a class="identity-view-btn" href="${escapeHtml(uploadedSimIdentity.fileUrl)}" target="_blank" rel="noopener">View Documents</a>`;
         }
 
         editingSidId = null;
@@ -3170,16 +3200,15 @@
         await renderSidList();
 
         sidPreview.innerHTML = [
-        "<span class='ok'>[SAVED]</span> Account Informations saved to Supabase SID Data List.",
-        `[DATA] Account No: ${escapeHtml(formData.accountNo || "-")}`,
+        "<span class='ok'>[SAVED]</span> Rocket/SIM Informations saved to Supabase SID Data List.",
+        `[DATA] Slot No: ${escapeHtml(formData.slotNo || "-")}`,
+        `[DATA] Rocket AC No: ${escapeHtml(formData.accountNo || "-")}`,
+        `[DATA] Rocket Name: ${escapeHtml(formData.rocketName || "-")}`,
         `[DATA] SIM Owner Name: ${escapeHtml(formData.accountUser || "-")}`,
-        `[DATA] Mobile No: ${escapeHtml(formData.mobileNo || "-")}`,
         `[DATA] UID: ${escapeHtml(maskPinForPreview(formData.uidNo || "") || "-")}`,
-        `[DATA] Uses: ${escapeHtml(formData.usesStatus || "-")}`,
-        `[DATA] DOB: ${escapeHtml(formatDate(formData.dob))}`,
         `[DATA] Last Uses: ${escapeHtml(formatMonth(formData.lastUses))}`,
-        `[DATA] Status: ${escapeHtml(formData.accountStatus)}`,
-        `[DATA] Identity PDF: ${uploadedIdentity ? "Uploaded" : "No new file"}`,
+        `[DATA] Rocket Document: ${uploadedRocketIdentity ? "Uploaded" : "No new file"}`,
+        `[DATA] SIM Document: ${uploadedSimIdentity ? "Uploaded" : "No new file"}`,
         "[NEXT] Open SID Data List → to view/edit."
       ].join("<br>");
       } catch (error) {
