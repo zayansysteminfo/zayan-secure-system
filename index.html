@@ -1592,6 +1592,257 @@
       cursor: pointer;
     }
 
+
+    /* Login Alert System */
+    .alert-module {
+      border-color: rgba(255, 47, 109, 0.72);
+      background: linear-gradient(135deg, rgba(255, 47, 109, 0.12), rgba(0, 245, 255, 0.045)), rgba(0, 0, 0, 0.08);
+      min-height: 132px;
+    }
+    .alert-module::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      transform: translateX(-120%);
+      background: linear-gradient(90deg, transparent, rgba(255, 47, 109, 0.23), transparent);
+      animation: sidSweep 2s linear infinite;
+    }
+    .alert-module::after { content: "ALERT"; color: rgba(255, 47, 109, 0.95); }
+    .module-logo {
+      width: 54px;
+      height: 54px;
+      border-radius: 16px;
+      display: grid;
+      place-items: center;
+      margin-bottom: 12px;
+      border: 1px solid rgba(255, 47, 109, 0.45);
+      background: radial-gradient(circle at 30% 20%, rgba(255, 47, 109, 0.22), rgba(0, 0, 0, 0.2));
+      box-shadow: 0 0 22px rgba(255, 47, 109, 0.25), inset 0 0 16px rgba(255, 47, 109, 0.08);
+      font-size: 28px;
+    }
+    .login-alert-page {
+      display: none;
+      z-index: 5;
+      width: min(1420px, calc(100vw - 28px));
+      max-height: calc(100vh - 28px);
+      overflow: auto;
+      padding: 34px;
+      background: linear-gradient(145deg, rgba(16, 7, 14, 0.95), rgba(3, 7, 16, 0.92));
+      border: 1px solid rgba(255, 47, 109, 0.32);
+      box-shadow: 0 0 38px rgba(255, 47, 109, 0.18), inset 0 0 26px rgba(255, 255, 255, 0.025);
+      backdrop-filter: blur(12px);
+      border-radius: 22px;
+      position: relative;
+    }
+    .login-alert-page.active { display: block; animation: sidPageIn 0.35s ease; }
+    .alert-summary-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 13px;
+      margin-top: 20px;
+    }
+    .alert-stat {
+      padding: 16px;
+      border-radius: 16px;
+      border: 1px solid rgba(255, 47, 109, 0.24);
+      background: rgba(255, 47, 109, 0.045);
+      box-shadow: inset 0 0 18px rgba(255, 47, 109, 0.035);
+    }
+    .alert-stat span {
+      display: block;
+      color: rgba(232, 251, 255, 0.58);
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-bottom: 7px;
+    }
+    .alert-stat strong {
+      color: var(--red);
+      font-size: 24px;
+      text-shadow: 0 0 16px rgba(255, 47, 109, 0.32);
+    }
+    .alert-toolbar {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 12px;
+      margin-top: 18px;
+      align-items: center;
+    }
+    .alert-toolbar input { height: 48px; border-color: rgba(255, 47, 109, 0.28); }
+    .alert-refresh-btn {
+      height: 48px;
+      padding: 0 18px;
+      border-radius: 13px;
+      border: 1px solid rgba(255, 47, 109, 0.45);
+      background: rgba(255, 47, 109, 0.08);
+      color: var(--red);
+      cursor: pointer;
+      font-weight: 900;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+    }
+    .alert-list-wrap { display: grid; gap: 14px; margin-top: 20px; }
+    .alert-card {
+      display: grid;
+      grid-template-columns: minmax(230px, 1fr) minmax(150px, .7fr) minmax(180px, .8fr) minmax(260px, 1fr) auto;
+      gap: 14px;
+      align-items: center;
+      padding: 17px;
+      border-radius: 17px;
+      border: 1px solid rgba(255, 47, 109, 0.22);
+      background: linear-gradient(135deg, rgba(41, 13, 24, 0.92), rgba(9, 13, 23, 0.94));
+      box-shadow: 0 12px 24px rgba(0, 0, 0, 0.24);
+    }
+    .alert-card small {
+      display: block;
+      color: rgba(220, 231, 255, 0.55);
+      font-size: 11px;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      margin-bottom: 5px;
+    }
+    .alert-card strong {
+      display: block;
+      color: #fff;
+      font-size: 16px;
+      word-break: break-word;
+    }
+    .alert-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      width: fit-content;
+      padding: 8px 11px;
+      border-radius: 999px;
+      font-size: 12px;
+      font-weight: 900;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      color: #ff7f9a;
+      background: rgba(255, 47, 109, 0.1);
+      border: 1px solid rgba(255, 47, 109, 0.34);
+    }
+    @media (max-width: 1050px) {
+      .alert-card, .alert-toolbar, .alert-summary-grid { grid-template-columns: 1fr; }
+    }
+
+
+    /* Account Uses History */
+    .module.history-module {
+      border-color: rgba(255, 200, 87, 0.55);
+      background:
+        linear-gradient(135deg, rgba(255, 200, 87, 0.1), rgba(0, 245, 255, 0.04)),
+        rgba(0, 0, 0, 0.08);
+    }
+
+    .module.history-module::after {
+      content: "HISTORY";
+      color: rgba(255, 200, 87, 0.95);
+    }
+
+    .history-menu-page,
+    .history-add-page,
+    .history-list-page {
+      display: none;
+      z-index: 5;
+      width: min(1180px, calc(100vw - 28px));
+      max-height: calc(100vh - 28px);
+      overflow: auto;
+      padding: 32px;
+      background: linear-gradient(145deg, rgba(15, 14, 8, 0.94), rgba(2, 6, 14, 0.9));
+      border: 1px solid rgba(255, 200, 87, 0.28);
+      box-shadow: 0 0 34px rgba(255, 200, 87, 0.12), inset 0 0 24px rgba(255, 255, 255, 0.025);
+      backdrop-filter: blur(12px);
+      border-radius: 22px;
+      position: relative;
+    }
+
+    .history-menu-page.active,
+    .history-add-page.active,
+    .history-list-page.active {
+      display: block;
+      animation: sidPageIn 0.35s ease;
+    }
+
+    .history-form {
+      margin-top: 22px;
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 16px;
+      border: 1px solid rgba(255, 200, 87, 0.22);
+      border-radius: 20px;
+      padding: 22px;
+      background: rgba(0, 0, 0, 0.18);
+    }
+
+    .history-field.full {
+      grid-column: 1 / -1;
+    }
+
+    .history-field select,
+    .history-field input {
+      width: 100%;
+      height: 54px;
+      border: 1px solid rgba(255, 200, 87, 0.32);
+      background: rgba(0, 0, 0, 0.36);
+      color: #fff;
+      border-radius: 14px;
+      outline: none;
+      padding: 0 15px;
+      font-size: 15px;
+      letter-spacing: 0.6px;
+    }
+
+    .history-actions {
+      grid-column: 1 / -1;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+
+    .history-list-wrap {
+      display: grid;
+      gap: 14px;
+      margin-top: 20px;
+    }
+
+    .history-card {
+      display: grid;
+      grid-template-columns: minmax(240px, 1fr) minmax(160px, .7fr) minmax(180px, .7fr) auto;
+      gap: 14px;
+      align-items: center;
+      padding: 17px;
+      border-radius: 17px;
+      border: 1px solid rgba(255, 200, 87, 0.24);
+      background:
+        linear-gradient(135deg, rgba(39, 33, 16, 0.92), rgba(9, 13, 23, 0.94));
+      box-shadow: 0 12px 24px rgba(0, 0, 0, 0.24);
+    }
+
+    .history-card small {
+      display: block;
+      color: rgba(220, 231, 255, 0.55);
+      font-size: 11px;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      margin-bottom: 5px;
+    }
+
+    .history-card strong {
+      display: block;
+      color: #fff;
+      font-size: 17px;
+      word-break: break-word;
+    }
+
+    @media (max-width: 860px) {
+      .history-form,
+      .history-actions,
+      .history-card {
+        grid-template-columns: 1fr;
+      }
+    }
+
     .footer-note {
       margin-top: 20px;
       padding: 12px 14px;
@@ -1943,6 +2194,11 @@
         <strong>AC/SID Management</strong>
         <span>→ Open SID account management section.</span>
       </div>
+      <div class="module alert-module" id="loginAlertModule">
+        <div class="module-logo">🛡️</div>
+        <strong>A&O Login Alert System</strong>
+        <span>→ View failed login alerts from office PCs in one security dashboard.</span>
+      </div>
     </div>
 
     <div class="footer-note">
@@ -1951,6 +2207,40 @@
   </section>
 
 
+
+
+  <section class="login-alert-page" id="loginAlertPage">
+    <div class="dashboard-head">
+      <div>
+        <div class="top-tag"><span class="pulse"></span> Security Monitor</div>
+        <h2 class="dark-title">🛡️ A&O Login Alert System</h2>
+        <p class="dark-subtitle">Failed password alert dashboard • Office PC monitoring • Supabase log view</p>
+      </div>
+      <div class="sid-nav-group">
+        <button class="sid-back" id="alertBackBtn">← Dashboard</button>
+      </div>
+    </div>
+
+    <div class="alert-summary-grid">
+      <div class="alert-stat"><span>Total Alerts</span><strong id="alertTotalCount">0</strong></div>
+      <div class="alert-stat"><span>Today Alerts</span><strong id="alertTodayCount">0</strong></div>
+      <div class="alert-stat"><span>PC Count</span><strong id="alertPcCount">0</strong></div>
+      <div class="alert-stat"><span>Last Alert</span><strong id="alertLastTime">-</strong></div>
+    </div>
+
+    <div class="alert-toolbar">
+      <input id="alertSearchInput" type="text" placeholder="Search PC name, user, IP or message..." autocomplete="off" />
+      <button class="alert-refresh-btn" id="alertRefreshBtn">Refresh Alerts</button>
+    </div>
+
+    <div class="alert-list-wrap" id="alertListWrap">
+      <div class="empty-list">No login alerts loaded yet.</div>
+    </div>
+
+    <div class="footer-note">
+      Note: PC PowerShell script will still send email. Extra setup: the same PS1 should insert failed-login alert rows into Supabase table <b>login_alerts</b>.
+    </div>
+  </section>
 
   <section class="management-page" id="managementPage">
     <div class="dashboard-head">
@@ -1971,10 +2261,97 @@
         <strong>SID Data List</strong>
         <span>→ Search, view, edit and remove saved SID entries.</span>
       </div>
+      <div class="module history-module" id="historyModule">
+        <strong>Account Uses History</strong>
+        <span>→ Add and view account monthly uses history.</span>
+      </div>
     </div>
 
     <div class="footer-note">
       AC/SID Management section: add, search, view, edit and remove SID records.
+    </div>
+  </section>
+
+
+  <section class="history-menu-page" id="historyMenuPage">
+    <div class="dashboard-head">
+      <div>
+        <div class="top-tag"><span class="pulse"></span> Uses History</div>
+        <h2 class="dark-title">Account Uses History</h2>
+        <p class="dark-subtitle">Add account monthly use data and view saved history list.</p>
+      </div>
+      <button class="sid-back" id="historyMenuBackBtn">← AC/SID</button>
+    </div>
+
+    <div class="module-grid">
+      <div class="module history-module" id="historyAddModule">
+        <strong>Add History</strong>
+        <span>→ Add Account No, Month and UID No history.</span>
+      </div>
+      <div class="module sid-list-module" id="historyListModule">
+        <strong>History List</strong>
+        <span>→ View saved history and remove if needed.</span>
+      </div>
+    </div>
+  </section>
+
+  <section class="history-add-page" id="historyAddPage">
+    <div class="sid-head">
+      <div class="sid-title-wrap">
+        <div class="top-tag"><span class="pulse"></span> Add History</div>
+        <h2 class="dark-title">Add Account Uses History</h2>
+        <p class="dark-subtitle">Select saved Rocket AC No and add Month/UID No.</p>
+      </div>
+      <div class="sid-nav-group">
+        <button class="sid-back" id="historyAddBackBtn">← History Menu</button>
+        <button class="sid-next" id="historyAddToListBtn">History List →</button>
+      </div>
+    </div>
+
+    <form class="history-form" id="historyEntryForm">
+      <div class="history-field full">
+        <label for="historyAccountNo">Account No</label>
+        <select id="historyAccountNo">
+          <option value="">Loading account list...</option>
+        </select>
+      </div>
+
+      <div class="history-field">
+        <label for="historyMonth">Month: MM/YYYY</label>
+        <input id="historyMonth" type="text" placeholder="MM/YYYY" autocomplete="off" />
+      </div>
+
+      <div class="history-field">
+        <label for="historyUidNo">UID No.</label>
+        <input id="historyUidNo" type="text" placeholder="Enter UID No." autocomplete="off" />
+      </div>
+
+      <div class="history-actions">
+        <button type="submit" class="sid-save" id="historySaveBtn">Save History</button>
+        <button type="button" class="sid-clear" id="historyClearBtn">Clear</button>
+      </div>
+    </form>
+
+    <div class="sid-preview" id="historyPreview">
+      [HISTORY] Ready to save Account Uses History.
+    </div>
+  </section>
+
+  <section class="history-list-page" id="historyListPage">
+    <div class="sid-head">
+      <div class="sid-title-wrap">
+        <div class="top-tag"><span class="pulse"></span> History List</div>
+        <h2 class="dark-title">Account Uses History List</h2>
+        <p class="dark-subtitle">Only Add History entered data shown here.</p>
+      </div>
+      <div class="sid-nav-group">
+        <button class="sid-back" id="historyListBackBtn">← History Menu</button>
+        <button class="sid-next" id="historyListAddBtn">Add History →</button>
+      </div>
+    </div>
+
+    <div class="history-list-wrap" id="historyListWrap">
+      <div class="empty-list">No history data found.</div>
     </div>
   </section>
 
@@ -2208,10 +2585,39 @@
     const loginShell = document.getElementById("loginShell");
     const dashboard = document.getElementById("dashboard");
     const managementPage = document.getElementById("managementPage");
+    const loginAlertPage = document.getElementById("loginAlertPage");
     const managementModule = document.getElementById("managementModule");
+    const loginAlertModule = document.getElementById("loginAlertModule");
+    const alertBackBtn = document.getElementById("alertBackBtn");
+    const alertRefreshBtn = document.getElementById("alertRefreshBtn");
+    const alertSearchInput = document.getElementById("alertSearchInput");
+    const alertListWrap = document.getElementById("alertListWrap");
+    const alertTotalCount = document.getElementById("alertTotalCount");
+    const alertTodayCount = document.getElementById("alertTodayCount");
+    const alertPcCount = document.getElementById("alertPcCount");
+    const alertLastTime = document.getElementById("alertLastTime");
     const managementBackBtn = document.getElementById("managementBackBtn");
     const sidModule = document.querySelector(".sid-module");
     const sidListModule = document.querySelector(".sid-list-module");
+    const historyModule = document.getElementById("historyModule");
+    const historyMenuPage = document.getElementById("historyMenuPage");
+    const historyAddPage = document.getElementById("historyAddPage");
+    const historyListPage = document.getElementById("historyListPage");
+    const historyAddModule = document.getElementById("historyAddModule");
+    const historyListModule = document.getElementById("historyListModule");
+    const historyMenuBackBtn = document.getElementById("historyMenuBackBtn");
+    const historyAddBackBtn = document.getElementById("historyAddBackBtn");
+    const historyAddToListBtn = document.getElementById("historyAddToListBtn");
+    const historyListBackBtn = document.getElementById("historyListBackBtn");
+    const historyListAddBtn = document.getElementById("historyListAddBtn");
+    const historyEntryForm = document.getElementById("historyEntryForm");
+    const historyAccountNo = document.getElementById("historyAccountNo");
+    const historyMonth = document.getElementById("historyMonth");
+    const historyUidNo = document.getElementById("historyUidNo");
+    const historySaveBtn = document.getElementById("historySaveBtn");
+    const historyClearBtn = document.getElementById("historyClearBtn");
+    const historyPreview = document.getElementById("historyPreview");
+    const historyListWrap = document.getElementById("historyListWrap");
     const sidPage = document.getElementById("sidPage");
     const sidListPage = document.getElementById("sidListPage");
     const sidViewPage = document.getElementById("sidViewPage");
@@ -2252,6 +2658,8 @@
     const IDENTITY_BUCKET = "identity-documents";
 
     let sidRecords = [];
+    let loginAlerts = [];
+    let accountUsesHistory = [];
     let editingSidId = null;
     let viewingSidId = null;
 
@@ -2513,11 +2921,252 @@
 
     function hideAllSecurePages() {
       dashboard.classList.remove("active");
+      loginAlertPage.classList.remove("active");
       managementPage.classList.remove("active");
+      historyMenuPage.classList.remove("active");
+      historyAddPage.classList.remove("active");
+      historyListPage.classList.remove("active");
       sidPage.classList.remove("active");
       sidListPage.classList.remove("active");
       sidViewPage.classList.remove("active");
     }
+
+
+    async function loadLoginAlerts() {
+      const { data, error } = await supabaseClient
+        .from("login_alerts")
+        .select("*")
+        .order("alert_time", { ascending: false })
+        .limit(200);
+
+      if (error) {
+        console.error("Login alert load error:", error);
+        loginAlerts = [];
+        alertListWrap.innerHTML = `<div class="empty-list">Supabase login_alerts load error:<br>${escapeHtml(error.message)}<br><br>Run the SQL table setup first.</div>`;
+        updateAlertSummary([]);
+        return false;
+      }
+
+      loginAlerts = data || [];
+      renderLoginAlerts(false);
+      return true;
+    }
+
+    function formatAlertTime(value) {
+      if (!value) return "-";
+      const date = new Date(value);
+      if (Number.isNaN(date.getTime())) return value;
+      return date.toLocaleString("en-GB", {
+        day: "2-digit",
+        month: "short",
+        year: "numeric",
+        hour: "2-digit",
+        minute: "2-digit"
+      });
+    }
+
+    function updateAlertSummary(records) {
+      const todayKey = new Date().toISOString().slice(0, 10);
+      const todayCount = records.filter((item) => String(item.alert_time || item.created_at || "").slice(0, 10) === todayKey).length;
+      const pcCount = new Set(records.map((item) => item.pc_name || item.computer_name || "").filter(Boolean)).size;
+
+      alertTotalCount.textContent = records.length;
+      alertTodayCount.textContent = todayCount;
+      alertPcCount.textContent = pcCount;
+      alertLastTime.textContent = records[0] ? formatAlertTime(records[0].alert_time || records[0].created_at).split(",")[0] : "-";
+    }
+
+    function renderLoginAlerts() {
+      const searchValue = (alertSearchInput?.value || "").trim().toLowerCase();
+      let displayAlerts = [...loginAlerts];
+
+      if (searchValue) {
+        displayAlerts = displayAlerts.filter((item) => {
+          return [
+            item.pc_name,
+            item.computer_name,
+            item.user_name,
+            item.ip_address,
+            item.alert_message,
+            item.message,
+            item.status
+          ].some((value) => String(value || "").toLowerCase().includes(searchValue));
+        });
+      }
+
+      updateAlertSummary(displayAlerts);
+
+      if (!displayAlerts.length) {
+        alertListWrap.innerHTML = "<div class='empty-list'>No login alert found.</div>";
+        return;
+      }
+
+      alertListWrap.innerHTML = displayAlerts.map((alert) => {
+        const pcName = alert.pc_name || alert.computer_name || "-";
+        const userName = alert.user_name || "-";
+        const alertTime = alert.alert_time || alert.created_at || "";
+        const ipAddress = alert.ip_address || "-";
+        const message = alert.alert_message || alert.message || "Failed login alert";
+        const status = alert.status || "FAILED LOGIN";
+
+        return `
+          <div class="alert-card">
+            <div>
+              <small>PC Name</small>
+              <strong>${escapeHtml(pcName)}</strong>
+              <small>User: ${escapeHtml(userName)}</small>
+            </div>
+            <div>
+              <small>Status</small>
+              <span class="alert-pill">⚠ ${escapeHtml(status)}</span>
+            </div>
+            <div>
+              <small>Failed Time</small>
+              <strong>${escapeHtml(formatAlertTime(alertTime))}</strong>
+            </div>
+            <div>
+              <small>IP / Message</small>
+              <strong>${escapeHtml(ipAddress)}</strong>
+              <small>${escapeHtml(message)}</small>
+            </div>
+            <div class="sid-card-actions">
+              <button class="sid-action-btn remove" type="button" data-alert-remove="${alert.id}">Remove</button>
+            </div>
+          </div>
+        `;
+      }).join("");
+    }
+
+    async function deleteLoginAlert(alertId) {
+      const { error } = await supabaseClient
+        .from("login_alerts")
+        .delete()
+        .eq("id", alertId);
+
+      if (error) throw error;
+      return true;
+    }
+
+    async function openLoginAlertPage() {
+      hideAllSecurePages();
+      loginAlertPage.classList.add("active");
+      alertListWrap.innerHTML = "<div class='empty-list'>Loading login alerts...</div>";
+      await loadLoginAlerts();
+    }
+
+
+
+    async function loadHistoryAccountOptions() {
+      const ok = await loadSidRecords();
+      if (!ok) {
+        historyAccountNo.innerHTML = `<option value="">Unable to load account list</option>`;
+        return false;
+      }
+
+      const accounts = sidRecords
+        .map((record) => record.accountNo)
+        .filter(Boolean);
+
+      if (!accounts.length) {
+        historyAccountNo.innerHTML = `<option value="">No Account No found in SID Data</option>`;
+        return false;
+      }
+
+      historyAccountNo.innerHTML = `<option value="">Select Account No</option>` + accounts.map((accountNo) => (
+        `<option value="${escapeHtml(accountNo)}">${escapeHtml(accountNo)}</option>`
+      )).join("");
+
+      return true;
+    }
+
+    async function saveAccountUsesHistory(record) {
+      const { error } = await supabaseClient
+        .from("account_uses_history")
+        .insert({
+          account_no: record.accountNo,
+          month_year: record.monthYear,
+          uid_no: record.uidNo
+        });
+
+      if (error) throw error;
+      return true;
+    }
+
+    async function loadAccountUsesHistory() {
+      const { data, error } = await supabaseClient
+        .from("account_uses_history")
+        .select("*")
+        .order("created_at", { ascending: false });
+
+      if (error) {
+        accountUsesHistory = [];
+        historyListWrap.innerHTML = `<div class="empty-list">Supabase history load error:<br>${escapeHtml(error.message)}</div>`;
+        return false;
+      }
+
+      accountUsesHistory = data || [];
+      renderAccountUsesHistoryList();
+      return true;
+    }
+
+    async function deleteAccountUsesHistory(historyId) {
+      const { error } = await supabaseClient
+        .from("account_uses_history")
+        .delete()
+        .eq("id", historyId);
+
+      if (error) throw error;
+      return true;
+    }
+
+    function renderAccountUsesHistoryList() {
+      if (!accountUsesHistory.length) {
+        historyListWrap.innerHTML = "<div class='empty-list'>No history data found.</div>";
+        return;
+      }
+
+      historyListWrap.innerHTML = accountUsesHistory.map((item) => `
+        <div class="history-card">
+          <div>
+            <small>Account No</small>
+            <strong>${escapeHtml(item.account_no || "-")}</strong>
+          </div>
+          <div>
+            <small>Month</small>
+            <strong>${escapeHtml(item.month_year || "-")}</strong>
+          </div>
+          <div>
+            <small>UID No</small>
+            <strong>${escapeHtml(item.uid_no || "-")}</strong>
+          </div>
+          <div class="sid-card-actions">
+            <button class="sid-action-btn remove" type="button" data-history-remove="${item.id}">Remove</button>
+          </div>
+        </div>
+      `).join("");
+    }
+
+    function openHistoryMenuPage() {
+      hideAllSecurePages();
+      historyMenuPage.classList.add("active");
+    }
+
+    async function openHistoryAddPage() {
+      hideAllSecurePages();
+      historyAddPage.classList.add("active");
+      historyPreview.innerHTML = "[HISTORY] Loading Account No list...";
+      await loadHistoryAccountOptions();
+      historyPreview.innerHTML = "[HISTORY] Ready to save Account Uses History.";
+      setTimeout(() => historyAccountNo.focus(), 120);
+    }
+
+    async function openHistoryListPage() {
+      hideAllSecurePages();
+      historyListPage.classList.add("active");
+      historyListWrap.innerHTML = "<div class='empty-list'>Loading history data...</div>";
+      await loadAccountUsesHistory();
+    }
+
 
     async function loadSidRecords() {
       const { data, error } = await supabaseClient
@@ -2995,9 +3644,41 @@
     }
 
     managementModule.addEventListener("click", openManagementPage);
+    loginAlertModule.addEventListener("click", openLoginAlertPage);
+    alertBackBtn.addEventListener("click", backToDashboard);
+    alertRefreshBtn.addEventListener("click", loadLoginAlerts);
+    alertSearchInput.addEventListener("input", renderLoginAlerts);
+
+    alertListWrap.addEventListener("click", async (event) => {
+      const button = event.target.closest("button[data-alert-remove]");
+      if (!button) return;
+
+      const alertId = button.dataset.alertRemove;
+      if (!confirm("Remove this login alert from Supabase?")) return;
+
+      try {
+        button.disabled = true;
+        button.textContent = "Removing...";
+        await deleteLoginAlert(alertId);
+        await loadLoginAlerts();
+      } catch (error) {
+        alert("Supabase alert delete error: " + error.message);
+        button.disabled = false;
+        button.textContent = "Remove";
+      }
+    });
+
     managementBackBtn.addEventListener("click", backToDashboard);
     sidModule.addEventListener("click", () => openSidPage({ reset: true }));
     sidListModule.addEventListener("click", openSidListPage);
+    historyModule.addEventListener("click", openHistoryMenuPage);
+    historyAddModule.addEventListener("click", openHistoryAddPage);
+    historyListModule.addEventListener("click", openHistoryListPage);
+    historyMenuBackBtn.addEventListener("click", backToManagement);
+    historyAddBackBtn.addEventListener("click", openHistoryMenuPage);
+    historyAddToListBtn.addEventListener("click", openHistoryListPage);
+    historyListBackBtn.addEventListener("click", openHistoryMenuPage);
+    historyListAddBtn.addEventListener("click", openHistoryAddPage);
     sidBackBtn.addEventListener("click", backToManagement);
     sidToListBtn.addEventListener("click", openSidListPage);
     listBackBtn.addEventListener("click", backToManagement);
@@ -3093,6 +3774,74 @@
     setupIdentityFileInput(rocketIdentityFile, rocketIdentityStatus, "Rocket identity");
     setupIdentityFileInput(simIdentityFile, simIdentityStatus, "SIM identity");
 
+
+
+
+    historyEntryForm.addEventListener("submit", async (event) => {
+      event.preventDefault();
+
+      const accountNo = historyAccountNo.value.trim();
+      const monthYear = historyMonth.value.trim();
+      const uidNoValue = historyUidNo.value.trim();
+
+      if (!accountNo) {
+        historyPreview.innerHTML = "<span class='warn'>[REQUIRED]</span> Account No select korte hobe.";
+        historyAccountNo.focus();
+        return;
+      }
+
+      try {
+        historySaveBtn.disabled = true;
+        historySaveBtn.textContent = "Saving...";
+
+        await saveAccountUsesHistory({
+          accountNo,
+          monthYear,
+          uidNo: uidNoValue
+        });
+
+        historyPreview.innerHTML = [
+          "<span class='ok'>[SAVED]</span> Account Uses History saved.",
+          `[DATA] Account No: ${escapeHtml(accountNo || "-")}`,
+          `[DATA] Month: ${escapeHtml(monthYear || "-")}`,
+          `[DATA] UID No: ${escapeHtml(uidNoValue || "-")}`,
+          "[NEXT] Open History List → to view/remove."
+        ].join("<br>");
+
+        historyMonth.value = "";
+        historyUidNo.value = "";
+      } catch (error) {
+        historyPreview.innerHTML = `<span class='warn'>[SUPABASE ERROR]</span> ${escapeHtml(error.message)}`;
+      } finally {
+        historySaveBtn.disabled = false;
+        historySaveBtn.textContent = "Save History";
+      }
+    });
+
+    historyClearBtn.addEventListener("click", () => {
+      historyEntryForm.reset();
+      historyPreview.innerHTML = "[HISTORY] Form cleared.";
+      historyAccountNo.focus();
+    });
+
+    historyListWrap.addEventListener("click", async (event) => {
+      const button = event.target.closest("button[data-history-remove]");
+      if (!button) return;
+
+      const historyId = button.dataset.historyRemove;
+      if (!confirm("Remove this history data from Supabase?")) return;
+
+      try {
+        button.disabled = true;
+        button.textContent = "Removing...";
+        await deleteAccountUsesHistory(historyId);
+        await loadAccountUsesHistory();
+      } catch (error) {
+        alert("Supabase history delete error: " + error.message);
+        button.disabled = false;
+        button.textContent = "Remove";
+      }
+    });
 
 
     sidEntryForm.addEventListener("keydown", (event) => {
