@@ -1768,6 +1768,188 @@
     }
 
 
+    /* Device Password Manager */
+    .module.device-password-module {
+      border-color: rgba(0, 245, 255, 0.62);
+      background:
+        linear-gradient(135deg, rgba(0, 245, 255, 0.1), rgba(255, 200, 87, 0.06)),
+        rgba(0, 0, 0, 0.08);
+      min-height: 132px;
+    }
+
+    .module.device-password-module::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      transform: translateX(-120%);
+      background: linear-gradient(90deg, transparent, rgba(0, 245, 255, 0.18), transparent);
+      animation: sidSweep 2.25s linear infinite;
+    }
+
+    .module.device-password-module::after {
+      content: "PASSWORD";
+      color: rgba(0, 245, 255, 0.95);
+    }
+
+    .device-menu-page,
+    .device-add-page,
+    .device-list-page {
+      display: none;
+      z-index: 5;
+      width: min(1480px, calc(100vw - 28px));
+      max-height: calc(100vh - 28px);
+      overflow: auto;
+      padding: 32px;
+      background: linear-gradient(145deg, rgba(6, 15, 24, 0.95), rgba(2, 6, 14, 0.92));
+      border: 1px solid rgba(0, 245, 255, 0.28);
+      box-shadow: 0 0 34px rgba(0, 245, 255, 0.16), inset 0 0 24px rgba(255, 255, 255, 0.025);
+      backdrop-filter: blur(12px);
+      border-radius: 22px;
+      position: relative;
+    }
+
+    .device-menu-page.active,
+    .device-add-page.active,
+    .device-list-page.active {
+      display: block;
+      animation: sidPageIn 0.35s ease;
+    }
+
+    .device-form {
+      margin-top: 22px;
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 16px;
+      border: 1px solid rgba(0, 245, 255, 0.24);
+      border-radius: 20px;
+      padding: 22px;
+      background: rgba(0, 0, 0, 0.18);
+    }
+
+    .device-field.full {
+      grid-column: 1 / -1;
+    }
+
+    .device-field input {
+      width: 100%;
+      height: 54px;
+      border: 1px solid rgba(0, 245, 255, 0.32);
+      background: rgba(0, 0, 0, 0.36);
+      color: #fff;
+      border-radius: 14px;
+      outline: none;
+      padding: 0 15px;
+      font-size: 15px;
+      letter-spacing: 0.6px;
+    }
+
+    .device-actions {
+      grid-column: 1 / -1;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+
+    .device-table-wrap {
+      margin-top: 22px;
+      overflow: auto;
+      border: 1px solid rgba(121, 139, 178, 0.28);
+      border-radius: 18px;
+      background: rgba(255, 255, 255, 0.025);
+    }
+
+    .device-table {
+      width: 100%;
+      min-width: 980px;
+      border-collapse: collapse;
+    }
+
+    .device-table th,
+    .device-table td {
+      border: 1px solid rgba(121, 139, 178, 0.28);
+      padding: 13px 12px;
+      text-align: left;
+      color: rgba(232, 251, 255, 0.86);
+      font-size: 13px;
+      vertical-align: middle;
+      word-break: break-word;
+    }
+
+    .device-table th {
+      color: #071015;
+      background: linear-gradient(90deg, var(--cyan), var(--green));
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      font-weight: 900;
+      white-space: nowrap;
+    }
+
+    .device-table td:first-child,
+    .device-table th:first-child {
+      text-align: center;
+      width: 62px;
+    }
+
+    .device-status-valid,
+    .device-status-expired,
+    .device-status-empty {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 130px;
+      padding: 8px 10px;
+      border-radius: 999px;
+      font-weight: 900;
+      letter-spacing: 0.8px;
+      text-transform: uppercase;
+      font-size: 12px;
+    }
+
+    .device-status-valid {
+      color: #05120d;
+      background: linear-gradient(90deg, #00ff88, #8effc8);
+      box-shadow: 0 0 18px rgba(0, 255, 136, 0.22);
+    }
+
+    .device-status-expired {
+      color: #fff;
+      background: linear-gradient(90deg, #ff2f6d, #ff758f);
+      box-shadow: 0 0 18px rgba(255, 47, 109, 0.26);
+    }
+
+    .device-status-empty {
+      color: rgba(232, 251, 255, 0.75);
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.14);
+    }
+
+    .device-remove-btn {
+      width: 40px;
+      height: 38px;
+      border-radius: 11px;
+      border: 1px solid rgba(255, 76, 110, 0.46);
+      color: #ff6f8b;
+      background: rgba(255, 76, 110, 0.06);
+      cursor: pointer;
+      font-size: 18px;
+      font-weight: 900;
+      transition: 0.22s ease;
+    }
+
+    .device-remove-btn:hover {
+      transform: translateY(-2px);
+      background: rgba(255, 76, 110, 0.16);
+      box-shadow: 0 0 18px rgba(255, 76, 110, 0.22);
+    }
+
+    @media (max-width: 860px) {
+      .device-form,
+      .device-actions {
+        grid-template-columns: 1fr;
+      }
+    }
+
+
     /* Login Alert System */
     .alert-module {
       border-color: rgba(255, 47, 109, 0.72);
@@ -2410,6 +2592,11 @@
         <strong>A&O Login Alert System</strong>
         <span>→ View failed login alerts from office PCs in one security dashboard.</span>
       </div>
+      <div class="module device-password-module" id="devicePasswordModule">
+        <div class="module-logo">🔑</div>
+        <strong>Device Password Manager</strong>
+        <span>→ Add and monitor PC/System password validity and expiry status.</span>
+      </div>
     </div>
 
     <div class="footer-note">
@@ -2419,6 +2606,96 @@
 
 
 
+
+
+  <section class="device-menu-page" id="deviceMenuPage">
+    <div class="dashboard-head">
+      <div>
+        <div class="top-tag"><span class="pulse"></span> Device Password</div>
+        <h2 class="dark-title">Device Password Manager</h2>
+        <p class="dark-subtitle">Add PC/System passwords and monitor 3-month password validity status.</p>
+      </div>
+      <button class="sid-back" id="deviceMenuBackBtn">← Dashboard</button>
+    </div>
+
+    <div class="module-grid">
+      <div class="module device-password-module" id="deviceAddModule">
+        <strong>Add Entry</strong>
+        <span>→ Add PC/System Name, User, Designation, Password and Last Update date.</span>
+      </div>
+      <div class="module sid-list-module" id="deviceListModule">
+        <strong>System List</strong>
+        <span>→ View all device password entries with auto status and remove option.</span>
+      </div>
+    </div>
+
+    <div class="footer-note">
+      Password validity rule: Last Update date থেকে ৩ মাস পর্যন্ত Valid; ৩ মাস পার হলে Password Expire.
+    </div>
+  </section>
+
+  <section class="device-add-page" id="deviceAddPage">
+    <div class="sid-head">
+      <div class="sid-title-wrap">
+        <div class="top-tag"><span class="pulse"></span> Add Entry</div>
+        <h2 class="dark-title">Add Device Password Entry</h2>
+        <p class="dark-subtitle">Status will be calculated automatically from Last Update date.</p>
+      </div>
+      <div class="sid-nav-group">
+        <button class="sid-back" id="deviceAddBackBtn">← Device Menu</button>
+        <button class="sid-next" id="deviceAddToListBtn">System List →</button>
+      </div>
+    </div>
+
+    <form class="device-form" id="deviceEntryForm">
+      <div class="device-field">
+        <label for="devicePcName">PC/System Name <span class="required-star">*</span></label>
+        <input id="devicePcName" type="text" placeholder="Enter PC/System name" autocomplete="off" />
+      </div>
+      <div class="device-field">
+        <label for="deviceUserName">User Name</label>
+        <input id="deviceUserName" type="text" placeholder="Enter user name" autocomplete="off" />
+      </div>
+      <div class="device-field">
+        <label for="deviceDesignation">Designation</label>
+        <input id="deviceDesignation" type="text" placeholder="Enter designation" autocomplete="off" />
+      </div>
+      <div class="device-field">
+        <label for="deviceLatestPassword">Latest Password</label>
+        <input id="deviceLatestPassword" type="text" placeholder="Enter latest password" autocomplete="off" />
+      </div>
+      <div class="device-field full">
+        <label for="deviceLastUpdate">Last Update <span class="required-star">*</span></label>
+        <input id="deviceLastUpdate" type="date" />
+      </div>
+      <div class="device-actions">
+        <button type="submit" class="sid-save" id="deviceSaveBtn">Save Entry</button>
+        <button type="button" class="sid-clear" id="deviceClearBtn">Clear Form</button>
+      </div>
+    </form>
+
+    <div class="sid-preview" id="devicePreview">
+      [DEVICE] Ready to save Device Password Manager entry.
+    </div>
+  </section>
+
+  <section class="device-list-page" id="deviceListPage">
+    <div class="sid-head">
+      <div class="sid-title-wrap">
+        <div class="top-tag"><span class="pulse"></span> System List</div>
+        <h2 class="dark-title">Device Password System List</h2>
+        <p class="dark-subtitle">All saved PC/System password entries with auto 3-month validity status.</p>
+      </div>
+      <div class="sid-nav-group">
+        <button class="sid-back" id="deviceListBackBtn">← Device Menu</button>
+        <button class="sid-next" id="deviceListAddBtn">Add Entry →</button>
+      </div>
+    </div>
+
+    <div class="device-table-wrap" id="deviceTableWrap">
+      <div class="empty-list">No device password entry found.</div>
+    </div>
+  </section>
 
   <section class="login-alert-page" id="loginAlertPage">
     <div class="dashboard-head">
@@ -2802,6 +3079,27 @@
     const managementPage = document.getElementById("managementPage");
     const loginAlertPage = document.getElementById("loginAlertPage");
     const managementModule = document.getElementById("managementModule");
+    const devicePasswordModule = document.getElementById("devicePasswordModule");
+    const deviceMenuPage = document.getElementById("deviceMenuPage");
+    const deviceAddPage = document.getElementById("deviceAddPage");
+    const deviceListPage = document.getElementById("deviceListPage");
+    const deviceAddModule = document.getElementById("deviceAddModule");
+    const deviceListModule = document.getElementById("deviceListModule");
+    const deviceMenuBackBtn = document.getElementById("deviceMenuBackBtn");
+    const deviceAddBackBtn = document.getElementById("deviceAddBackBtn");
+    const deviceAddToListBtn = document.getElementById("deviceAddToListBtn");
+    const deviceListBackBtn = document.getElementById("deviceListBackBtn");
+    const deviceListAddBtn = document.getElementById("deviceListAddBtn");
+    const deviceEntryForm = document.getElementById("deviceEntryForm");
+    const devicePcName = document.getElementById("devicePcName");
+    const deviceUserName = document.getElementById("deviceUserName");
+    const deviceDesignation = document.getElementById("deviceDesignation");
+    const deviceLatestPassword = document.getElementById("deviceLatestPassword");
+    const deviceLastUpdate = document.getElementById("deviceLastUpdate");
+    const deviceSaveBtn = document.getElementById("deviceSaveBtn");
+    const deviceClearBtn = document.getElementById("deviceClearBtn");
+    const devicePreview = document.getElementById("devicePreview");
+    const deviceTableWrap = document.getElementById("deviceTableWrap");
     const acSidPasswordOverlay = document.getElementById("acSidPasswordOverlay");
     const acSidPasswordCard = document.getElementById("acSidPasswordCard");
     const acSidPasswordForm = document.getElementById("acSidPasswordForm");
@@ -2886,6 +3184,7 @@
     let sidRecords = [];
     let loginAlerts = [];
     let accountUsesHistory = [];
+    let devicePasswordRecords = [];
     let loginAlertAutoRefreshTimer = null;
     let editingSidId = null;
     let viewingSidId = null;
@@ -3154,6 +3453,9 @@
       dashboard.classList.remove("active");
       loginAlertPage.classList.remove("active");
       managementPage.classList.remove("active");
+      deviceMenuPage.classList.remove("active");
+      deviceAddPage.classList.remove("active");
+      deviceListPage.classList.remove("active");
       historyMenuPage.classList.remove("active");
       historyAddPage.classList.remove("active");
       historyListPage.classList.remove("active");
@@ -3333,6 +3635,163 @@
       startLoginAlertAutoRefresh();
     }
 
+
+
+    function deviceRecordFromDb(row) {
+      return {
+        id: row.id,
+        pcSystemName: row.pc_system_name || "",
+        userName: row.user_name || "",
+        designation: row.designation || "",
+        latestPassword: row.latest_password || "",
+        lastUpdate: row.last_update || "",
+        createdAt: row.created_at || "",
+        updatedAt: row.updated_at || ""
+      };
+    }
+
+    function deviceRecordToDb(record) {
+      return {
+        pc_system_name: record.pcSystemName,
+        user_name: record.userName || null,
+        designation: record.designation || null,
+        latest_password: record.latestPassword || null,
+        last_update: record.lastUpdate || null,
+        updated_at: new Date().toISOString()
+      };
+    }
+
+    function getDevicePasswordStatus(lastUpdateValue) {
+      if (!lastUpdateValue) {
+        return { label: "No Date", className: "device-status-empty" };
+      }
+
+      const today = new Date();
+      today.setHours(0, 0, 0, 0);
+
+      const expiryDate = new Date(lastUpdateValue + "T00:00:00");
+      if (Number.isNaN(expiryDate.getTime())) {
+        return { label: "No Date", className: "device-status-empty" };
+      }
+
+      expiryDate.setMonth(expiryDate.getMonth() + 3);
+      expiryDate.setHours(0, 0, 0, 0);
+
+      if (today > expiryDate) {
+        return { label: "Password Expire", className: "device-status-expired" };
+      }
+
+      return { label: "Valid", className: "device-status-valid" };
+    }
+
+    function formatDeviceDate(value) {
+      if (!value) return "-";
+      const date = new Date(value + "T00:00:00");
+      if (Number.isNaN(date.getTime())) return value;
+      return date.toLocaleDateString("en-GB", { day: "2-digit", month: "short", year: "numeric" });
+    }
+
+    async function loadDevicePasswordRecords() {
+      const { data, error } = await supabaseClient
+        .from("device_password_manager")
+        .select("*")
+        .order("created_at", { ascending: false });
+
+      if (error) {
+        devicePasswordRecords = [];
+        deviceTableWrap.innerHTML = `<div class="empty-list">Supabase device_password_manager load error:<br>${escapeHtml(error.message)}</div>`;
+        return false;
+      }
+
+      devicePasswordRecords = (data || []).map(deviceRecordFromDb);
+      return true;
+    }
+
+    async function saveDevicePasswordRecord(record) {
+      const { error } = await supabaseClient
+        .from("device_password_manager")
+        .insert(deviceRecordToDb(record));
+
+      if (error) throw error;
+      return true;
+    }
+
+    async function deleteDevicePasswordRecord(recordId) {
+      const { error } = await supabaseClient
+        .from("device_password_manager")
+        .delete()
+        .eq("id", recordId);
+
+      if (error) throw error;
+      return true;
+    }
+
+    function renderDevicePasswordList() {
+      if (!devicePasswordRecords.length) {
+        deviceTableWrap.innerHTML = "<div class='empty-list'>No device password entry found.<br>Click <b>Add Entry →</b> to create your first entry.</div>";
+        return;
+      }
+
+      const rows = devicePasswordRecords.map((record, index) => {
+        const status = getDevicePasswordStatus(record.lastUpdate);
+        return `
+          <tr>
+            <td>${index + 1}</td>
+            <td>${escapeHtml(record.pcSystemName || "-")}</td>
+            <td>${escapeHtml(record.userName || "-")}</td>
+            <td>${escapeHtml(record.designation || "-")}</td>
+            <td>${escapeHtml(record.latestPassword || "-")}</td>
+            <td>${escapeHtml(formatDeviceDate(record.lastUpdate))}</td>
+            <td><span class="${status.className}">${escapeHtml(status.label)}</span></td>
+            <td style="text-align:center;"><button class="device-remove-btn" type="button" title="Remove" data-device-remove="${record.id}">🗑</button></td>
+          </tr>
+        `;
+      }).join("");
+
+      deviceTableWrap.innerHTML = `
+        <table class="device-table">
+          <thead>
+            <tr>
+              <th>SL</th>
+              <th>PC/System Name</th>
+              <th>User Name</th>
+              <th>Designation</th>
+              <th>Latest Password</th>
+              <th>Last Update</th>
+              <th>Status</th>
+              <th>Remove</th>
+            </tr>
+          </thead>
+          <tbody>${rows}</tbody>
+        </table>
+      `;
+    }
+
+    function openDeviceMenuPage() {
+      hideAllSecurePages();
+      deviceMenuPage.classList.add("active");
+    }
+
+    function clearDeviceForm() {
+      deviceEntryForm.reset();
+      devicePreview.innerHTML = "[DEVICE] Form cleared. Ready to save new entry.";
+      devicePcName.focus();
+    }
+
+    function openDeviceAddPage() {
+      hideAllSecurePages();
+      deviceAddPage.classList.add("active");
+      clearDeviceForm();
+      devicePreview.innerHTML = "[DEVICE] Ready to save Device Password Manager entry.";
+    }
+
+    async function openDeviceListPage() {
+      hideAllSecurePages();
+      deviceListPage.classList.add("active");
+      deviceTableWrap.innerHTML = "<div class='empty-list'>Loading Device Password Manager data...</div>";
+      const ok = await loadDevicePasswordRecords();
+      if (ok) renderDevicePasswordList();
+    }
 
 
     async function loadHistoryAccountOptions() {
@@ -3978,6 +4437,14 @@
     }
 
     managementModule.addEventListener("click", openAcSidPasswordGate);
+    devicePasswordModule.addEventListener("click", openDeviceMenuPage);
+    deviceMenuBackBtn.addEventListener("click", backToDashboard);
+    deviceAddModule.addEventListener("click", openDeviceAddPage);
+    deviceListModule.addEventListener("click", openDeviceListPage);
+    deviceAddBackBtn.addEventListener("click", openDeviceMenuPage);
+    deviceAddToListBtn.addEventListener("click", openDeviceListPage);
+    deviceListBackBtn.addEventListener("click", openDeviceMenuPage);
+    deviceListAddBtn.addEventListener("click", openDeviceAddPage);
     acSidPasswordForm.addEventListener("submit", verifyAcSidPassword);
     acSidPasswordCancelBtn.addEventListener("click", closeAcSidPasswordGate);
     acSidPasswordOverlay.addEventListener("click", (event) => {
@@ -4114,6 +4581,77 @@
     setupIdentityFileInput(rocketIdentityFile, rocketIdentityStatus, "Rocket identity");
     setupIdentityFileInput(simIdentityFile, simIdentityStatus, "SIM identity");
 
+
+
+    deviceEntryForm.addEventListener("submit", async (event) => {
+      event.preventDefault();
+
+      const pcSystemName = devicePcName.value.trim();
+      const lastUpdate = deviceLastUpdate.value;
+
+      if (!pcSystemName) {
+        devicePreview.innerHTML = "<span class='warn'>[REQUIRED]</span> PC/System Name dite hobe.";
+        devicePcName.focus();
+        return;
+      }
+
+      if (!lastUpdate) {
+        devicePreview.innerHTML = "<span class='warn'>[REQUIRED]</span> Last Update date select korte hobe.";
+        deviceLastUpdate.focus();
+        return;
+      }
+
+      try {
+        deviceSaveBtn.disabled = true;
+        deviceSaveBtn.textContent = "Saving...";
+
+        await saveDevicePasswordRecord({
+          pcSystemName,
+          userName: deviceUserName.value.trim(),
+          designation: deviceDesignation.value.trim(),
+          latestPassword: deviceLatestPassword.value.trim(),
+          lastUpdate
+        });
+
+        devicePreview.innerHTML = [
+          "<span class='ok'>[SAVED]</span> Device password entry saved successfully.",
+          `[DATA] PC/System Name: ${escapeHtml(pcSystemName)}`,
+          `[DATA] Last Update: ${escapeHtml(formatDeviceDate(lastUpdate))}`,
+          "[NEXT] Opening System List automatically..."
+        ].join("<br>");
+
+        showSidSuccessPopup("Save Successful", "Opening System List...", async () => {
+          await openDeviceListPage();
+        });
+      } catch (error) {
+        console.error("Device password save error:", error);
+        devicePreview.innerHTML = `<span class='warn'>[SUPABASE ERROR]</span> ${escapeHtml(error.message)}`;
+      } finally {
+        deviceSaveBtn.disabled = false;
+        deviceSaveBtn.textContent = "Save Entry";
+      }
+    });
+
+    deviceClearBtn.addEventListener("click", clearDeviceForm);
+
+    deviceTableWrap.addEventListener("click", async (event) => {
+      const button = event.target.closest("button[data-device-remove]");
+      if (!button) return;
+
+      const recordId = button.dataset.deviceRemove;
+      if (!confirm("Remove this device password entry from Supabase?")) return;
+
+      try {
+        button.disabled = true;
+        button.textContent = "...";
+        await deleteDevicePasswordRecord(recordId);
+        await openDeviceListPage();
+      } catch (error) {
+        alert("Supabase device password delete error: " + error.message);
+        button.disabled = false;
+        button.textContent = "🗑";
+      }
+    });
 
 
 
