@@ -1593,6 +1593,181 @@
     }
 
 
+    /* AC/SID Management Password Gate */
+    .acsid-password-overlay {
+      position: fixed;
+      inset: 0;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 18;
+      background:
+        radial-gradient(circle at center, rgba(0, 245, 255, 0.16), rgba(0, 0, 0, 0.88) 58%),
+        rgba(0, 0, 0, 0.72);
+      backdrop-filter: blur(10px);
+      padding: 18px;
+    }
+
+    .acsid-password-overlay.active {
+      display: flex;
+      animation: alertFade 0.22s ease;
+    }
+
+    .acsid-password-card {
+      width: min(460px, 100%);
+      border-radius: 22px;
+      border: 1px solid rgba(0, 255, 136, 0.38);
+      background: linear-gradient(145deg, rgba(4, 16, 28, 0.96), rgba(2, 6, 14, 0.96));
+      box-shadow: 0 0 38px rgba(0, 245, 255, 0.26), inset 0 0 26px rgba(0, 255, 136, 0.045);
+      padding: 26px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .acsid-password-card::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background:
+        repeating-linear-gradient(90deg, rgba(0, 255, 136, 0.04) 0 1px, transparent 1px 26px),
+        repeating-linear-gradient(0deg, rgba(0, 245, 255, 0.03) 0 1px, transparent 1px 26px);
+      pointer-events: none;
+    }
+
+    .acsid-password-inner {
+      position: relative;
+      z-index: 2;
+    }
+
+    .acsid-password-icon {
+      width: 76px;
+      height: 76px;
+      margin: 0 auto 16px;
+      border-radius: 22px;
+      border: 1px solid rgba(0, 255, 136, 0.44);
+      display: grid;
+      place-items: center;
+      font-size: 36px;
+      background: radial-gradient(circle at 30% 20%, rgba(0, 255, 136, 0.22), rgba(0, 0, 0, 0.2));
+      box-shadow: 0 0 24px rgba(0, 255, 136, 0.2), inset 0 0 16px rgba(0, 255, 136, 0.08);
+    }
+
+    .acsid-password-card h3 {
+      color: var(--cyan);
+      text-align: center;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      font-size: 22px;
+      margin-bottom: 8px;
+    }
+
+    .acsid-password-card p {
+      color: var(--muted);
+      text-align: center;
+      font-size: 12px;
+      line-height: 1.6;
+      margin-bottom: 18px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    .acsid-password-actions {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      margin-top: 12px;
+    }
+
+    .acsid-password-msg {
+      min-height: 20px;
+      margin-top: 10px;
+      color: var(--red);
+      font-size: 12px;
+      line-height: 1.5;
+      text-align: center;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+    }
+
+    .acsid-password-card.shake {
+      animation: panelShake 0.38s linear;
+      border-color: rgba(255, 47, 109, 0.68);
+      box-shadow: 0 0 38px rgba(255, 47, 109, 0.32), inset 0 0 24px rgba(255, 47, 109, 0.1);
+    }
+
+    .sid-success-overlay {
+      position: fixed;
+      inset: 0;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 19;
+      padding: 18px;
+      background:
+        radial-gradient(circle at center, rgba(0, 255, 136, 0.18), rgba(0, 0, 0, 0.86) 58%),
+        rgba(0, 0, 0, 0.64);
+      backdrop-filter: blur(8px);
+    }
+
+    .sid-success-overlay.active {
+      display: flex;
+      animation: alertFade 0.22s ease;
+    }
+
+    .sid-success-card {
+      width: min(520px, 100%);
+      border-radius: 24px;
+      border: 1px solid rgba(0, 255, 136, 0.56);
+      background: linear-gradient(145deg, rgba(4, 20, 16, 0.98), rgba(2, 8, 14, 0.98));
+      box-shadow: 0 0 46px rgba(0, 255, 136, 0.32), inset 0 0 28px rgba(0, 245, 255, 0.05);
+      padding: 34px 26px;
+      text-align: center;
+      animation: successPop 0.34s ease;
+    }
+
+    .sid-success-icon {
+      width: 92px;
+      height: 92px;
+      margin: 0 auto 18px;
+      border-radius: 50%;
+      display: grid;
+      place-items: center;
+      color: #06120d;
+      font-size: 48px;
+      font-weight: 900;
+      background: linear-gradient(90deg, var(--green), var(--cyan));
+      box-shadow: 0 0 35px rgba(0, 255, 136, 0.46);
+    }
+
+    .sid-success-card h3 {
+      color: var(--green);
+      font-size: clamp(28px, 6vw, 42px);
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      text-shadow: 0 0 18px rgba(0, 255, 136, 0.38);
+      margin-bottom: 10px;
+    }
+
+    .sid-success-card p {
+      color: rgba(232, 251, 255, 0.7);
+      font-size: 13px;
+      line-height: 1.6;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    @keyframes successPop {
+      from { opacity: 0; transform: scale(0.88) translateY(18px); }
+      to { opacity: 1; transform: scale(1) translateY(0); }
+    }
+
+    @media (max-width: 520px) {
+      .acsid-password-actions {
+        grid-template-columns: 1fr;
+      }
+    }
+
+
     /* Login Alert System */
     .alert-module {
       border-color: rgba(255, 47, 109, 0.72);
@@ -1669,7 +1844,8 @@
       align-items: center;
     }
     .alert-toolbar input { height: 48px; border-color: rgba(255, 47, 109, 0.28); }
-    .alert-refresh-btn {
+    .alert-refresh-btn,
+    .alert-sound-test-btn {
       height: 48px;
       padding: 0 18px;
       border-radius: 13px;
@@ -1680,6 +1856,11 @@
       font-weight: 900;
       letter-spacing: 1px;
       text-transform: uppercase;
+    }
+    .alert-sound-test-btn {
+      border-color: rgba(0, 255, 136, 0.42);
+      color: var(--green);
+      background: rgba(0, 255, 136, 0.07);
     }
     .alert-list-wrap { display: grid; gap: 14px; margin-top: 20px; }
     .alert-card {
@@ -2054,6 +2235,36 @@
   </div>
 
 
+  <div class="acsid-password-overlay" id="acSidPasswordOverlay" aria-live="polite">
+    <div class="acsid-password-card" id="acSidPasswordCard">
+      <div class="acsid-password-inner">
+        <div class="acsid-password-icon">🔐</div>
+        <h3>AC/SID Access Lock</h3>
+        <p>Enter management password to open AC/SID Management.</p>
+        <form id="acSidPasswordForm" autocomplete="off">
+          <label for="acSidPasswordInput">Management Password</label>
+          <input id="acSidPasswordInput" type="password" autocomplete="new-password" placeholder="Enter AC/SID password" />
+          <div class="acsid-password-actions">
+            <button class="primary-btn" type="submit">Unlock</button>
+            <button class="ghost-btn" type="button" id="acSidPasswordCancelBtn">Cancel</button>
+          </div>
+          <div class="acsid-password-msg" id="acSidPasswordMsg"></div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <div class="sid-success-overlay" id="sidSuccessOverlay" aria-live="polite">
+    <div class="sid-success-card">
+      <div class="sid-success-icon">✓</div>
+      <h3 id="sidSuccessTitle">Save Successful</h3>
+      <p id="sidSuccessText">Opening SID Data List...</p>
+    </div>
+  </div>
+
+  <audio id="loginAlertSound" src="eritnhut1992-buzzer-or-wrong-answer-20582.mp3" preload="auto"></audio>
+
+
   <main class="shell" id="loginShell">
     <section class="brand-panel">
       <div>
@@ -2230,7 +2441,10 @@
 
     <div class="alert-toolbar">
       <input id="alertSearchInput" type="text" placeholder="Search PC name, user, IP or message..." autocomplete="off" />
-      <button class="alert-refresh-btn" id="alertRefreshBtn">Refresh Alerts</button>
+      <div style="display:flex; gap:10px; flex-wrap:wrap; justify-content:flex-end;">
+        <button class="alert-sound-test-btn" id="alertSoundTestBtn" type="button">Test Sound</button>
+        <button class="alert-refresh-btn" id="alertRefreshBtn" type="button">Refresh Alerts</button>
+      </div>
     </div>
 
     <div class="alert-list-wrap" id="alertListWrap">
@@ -2582,14 +2796,26 @@
     const alertSubtitle = document.getElementById("alertSubtitle");
     const DEMO_USER_ID = "zayanzabit";
     const DEMO_PASSWORD = "Zayan@123";
+    const ACSID_MANAGEMENT_PASSWORD = "Z5ssiq##1@";
     const loginShell = document.getElementById("loginShell");
     const dashboard = document.getElementById("dashboard");
     const managementPage = document.getElementById("managementPage");
     const loginAlertPage = document.getElementById("loginAlertPage");
     const managementModule = document.getElementById("managementModule");
+    const acSidPasswordOverlay = document.getElementById("acSidPasswordOverlay");
+    const acSidPasswordCard = document.getElementById("acSidPasswordCard");
+    const acSidPasswordForm = document.getElementById("acSidPasswordForm");
+    const acSidPasswordInput = document.getElementById("acSidPasswordInput");
+    const acSidPasswordCancelBtn = document.getElementById("acSidPasswordCancelBtn");
+    const acSidPasswordMsg = document.getElementById("acSidPasswordMsg");
+    const sidSuccessOverlay = document.getElementById("sidSuccessOverlay");
+    const sidSuccessTitle = document.getElementById("sidSuccessTitle");
+    const sidSuccessText = document.getElementById("sidSuccessText");
+    const loginAlertSound = document.getElementById("loginAlertSound");
     const loginAlertModule = document.getElementById("loginAlertModule");
     const alertBackBtn = document.getElementById("alertBackBtn");
     const alertRefreshBtn = document.getElementById("alertRefreshBtn");
+    const alertSoundTestBtn = document.getElementById("alertSoundTestBtn");
     const alertSearchInput = document.getElementById("alertSearchInput");
     const alertListWrap = document.getElementById("alertListWrap");
     const alertTotalCount = document.getElementById("alertTotalCount");
@@ -2923,6 +3149,8 @@
 
     function hideAllSecurePages() {
       stopLoginAlertAutoRefresh();
+      if (acSidPasswordOverlay) acSidPasswordOverlay.classList.remove("active");
+      if (sidSuccessOverlay) sidSuccessOverlay.classList.remove("active");
       dashboard.classList.remove("active");
       loginAlertPage.classList.remove("active");
       managementPage.classList.remove("active");
@@ -3057,6 +3285,21 @@
       }
     }
 
+    function playLoginAlertSound() {
+      if (!loginAlertSound) return;
+      try {
+        loginAlertSound.currentTime = 0;
+        const playPromise = loginAlertSound.play();
+        if (playPromise && typeof playPromise.catch === "function") {
+          playPromise.catch((error) => {
+            console.warn("Login alert sound play blocked:", error);
+          });
+        }
+      } catch (error) {
+        console.warn("Login alert sound error:", error);
+      }
+    }
+
     function startLoginAlertAutoRefresh() {
       stopLoginAlertAutoRefresh();
 
@@ -3070,6 +3313,7 @@
         await loadLoginAlerts();
 
         if (loginAlerts.length > oldCount && alertListWrap) {
+          playLoginAlertSound();
           const notice = document.createElement("div");
           notice.className = "empty-list";
           notice.style.borderColor = "rgba(0,255,136,0.45)";
@@ -3399,6 +3643,8 @@
       sidEntryForm.reset();
       editingSidId = null;
       sidSaveBtn.textContent = "Save Data";
+      sidClearBtn.style.display = "";
+      sidSaveBtn.style.gridColumn = "";
       uidNo.type = "password";
       uidEyeBtn.textContent = "👁";
       nonKyc.checked = false;
@@ -3419,6 +3665,8 @@
       if (options.mode === "edit" && options.record) {
         editingSidId = options.record.id;
         sidSaveBtn.textContent = "Update Data";
+        sidClearBtn.style.display = "none";
+        sidSaveBtn.style.gridColumn = "1 / -1";
         setFieldValue("slotNo", options.record.slotNo);
         setFieldValue("accountNo", options.record.accountNo);
         setFieldValue("rocketName", options.record.rocketName);
@@ -3478,6 +3726,50 @@
     function backToDashboard() {
       hideAllSecurePages();
       dashboard.classList.add("active");
+    }
+
+    function openAcSidPasswordGate() {
+      acSidPasswordInput.value = "";
+      acSidPasswordMsg.textContent = "";
+      acSidPasswordCard.classList.remove("shake");
+      acSidPasswordOverlay.classList.add("active");
+      setTimeout(() => acSidPasswordInput.focus(), 120);
+    }
+
+    function closeAcSidPasswordGate() {
+      acSidPasswordOverlay.classList.remove("active");
+      acSidPasswordInput.value = "";
+      acSidPasswordMsg.textContent = "";
+      acSidPasswordCard.classList.remove("shake");
+    }
+
+    function verifyAcSidPassword(event) {
+      event.preventDefault();
+      const enteredPassword = acSidPasswordInput.value;
+
+      if (enteredPassword !== ACSID_MANAGEMENT_PASSWORD) {
+        acSidPasswordMsg.textContent = "Wrong AC/SID password. Access blocked.";
+        acSidPasswordCard.classList.remove("shake");
+        void acSidPasswordCard.offsetWidth;
+        acSidPasswordCard.classList.add("shake");
+        triggerWrongPassword("Wrong AC/SID Password", "Management Access Blocked", "Wrong AC/SID Management password detected.");
+        acSidPasswordInput.value = "";
+        acSidPasswordInput.focus();
+        return;
+      }
+
+      closeAcSidPasswordGate();
+      openManagementPage();
+    }
+
+    function showSidSuccessPopup(title = "Save Successful", text = "Opening SID Data List...", callback = null) {
+      sidSuccessTitle.textContent = title;
+      sidSuccessText.textContent = text;
+      sidSuccessOverlay.classList.add("active");
+      setTimeout(async () => {
+        sidSuccessOverlay.classList.remove("active");
+        if (typeof callback === "function") await callback();
+      }, 1350);
     }
 
     function openManagementPage() {
@@ -3685,10 +3977,16 @@
       return "•".repeat(Math.min(pinValue.length, 8));
     }
 
-    managementModule.addEventListener("click", openManagementPage);
+    managementModule.addEventListener("click", openAcSidPasswordGate);
+    acSidPasswordForm.addEventListener("submit", verifyAcSidPassword);
+    acSidPasswordCancelBtn.addEventListener("click", closeAcSidPasswordGate);
+    acSidPasswordOverlay.addEventListener("click", (event) => {
+      if (event.target === acSidPasswordOverlay) closeAcSidPasswordGate();
+    });
     loginAlertModule.addEventListener("click", openLoginAlertPage);
     alertBackBtn.addEventListener("click", backToDashboard);
     alertRefreshBtn.addEventListener("click", loadLoginAlerts);
+    alertSoundTestBtn.addEventListener("click", playLoginAlertSound);
     alertSearchInput.addEventListener("input", renderLoginAlerts);
 
     alertListWrap.addEventListener("click", async (event) => {
@@ -3994,11 +4292,10 @@
         renderSidList(false);
 
         if (wasEditingSid) {
-          const updatedRecord = sidRecords.find((item) => item.id === savedId);
-          sidPreview.innerHTML = "<span class='ok'>[UPDATED]</span> SID data updated successfully. Opening updated view...";
-          if (updatedRecord) {
-            setTimeout(() => openSidViewPage(savedId), 250);
-          }
+          sidPreview.innerHTML = "<span class='ok'>[UPDATED]</span> SID data updated successfully. Opening SID Data List...";
+          showSidSuccessPopup("Update Successful", "Opening SID Data List...", async () => {
+            await openSidListPage();
+          });
           return;
         }
 
@@ -4012,8 +4309,12 @@
         `[DATA] Last Uses: ${escapeHtml(formatMonth(formData.lastUses))}`,
         `[DATA] Rocket Document: ${uploadedRocketIdentity ? "Uploaded" : "No new file"}`,
         `[DATA] SIM Document: ${uploadedSimIdentity ? "Uploaded" : "No new file"}`,
-        "[NEXT] Open SID Data List → to view/edit."
+        "[NEXT] Opening SID Data List automatically..."
       ].join("<br>");
+
+        showSidSuccessPopup("Save Successful", "Opening SID Data List...", async () => {
+          await openSidListPage();
+        });
       } catch (error) {
         console.error("Supabase save error:", error);
         sidPreview.innerHTML = `<span class='warn'>[SUPABASE ERROR]</span> ${escapeHtml(error.message)}`;
