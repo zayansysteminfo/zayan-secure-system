@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Zayan Secure System</title>
+  <title>Access Control System</title>
   <style>
     :root {
       --bg: #02040a;
@@ -1950,6 +1950,352 @@
     }
 
 
+    /* Surveillance Management System */
+    .module.surveillance-module {
+      border-color: rgba(0, 255, 136, 0.62);
+      background:
+        linear-gradient(135deg, rgba(0, 255, 136, 0.1), rgba(0, 245, 255, 0.055)),
+        rgba(0, 0, 0, 0.08);
+      min-height: 132px;
+    }
+
+    .module.surveillance-module::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      transform: translateX(-120%);
+      background: linear-gradient(90deg, transparent, rgba(0, 255, 136, 0.18), transparent);
+      animation: sidSweep 2.15s linear infinite;
+    }
+
+    .module.surveillance-module::after {
+      content: "CCTV";
+      color: rgba(0, 255, 136, 0.95);
+    }
+
+    .surveillance-dashboard-page,
+    .surveillance-add-page,
+    .surveillance-list-page,
+    .surveillance-print-page {
+      display: none;
+      z-index: 5;
+      width: min(1520px, calc(100vw - 28px));
+      max-height: calc(100vh - 28px);
+      overflow: auto;
+      padding: 32px;
+      background: linear-gradient(145deg, rgba(5, 18, 20, 0.95), rgba(2, 6, 14, 0.92));
+      border: 1px solid rgba(0, 255, 136, 0.28);
+      box-shadow: 0 0 34px rgba(0, 255, 136, 0.14), inset 0 0 24px rgba(255, 255, 255, 0.025);
+      backdrop-filter: blur(12px);
+      border-radius: 22px;
+      position: relative;
+    }
+
+    .surveillance-dashboard-page.active,
+    .surveillance-add-page.active,
+    .surveillance-list-page.active,
+    .surveillance-print-page.active {
+      display: block;
+      animation: sidPageIn 0.35s ease;
+    }
+
+    .surveillance-summary-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 14px;
+      margin: 20px 0;
+    }
+
+    .surveillance-stat {
+      padding: 18px;
+      border-radius: 18px;
+      border: 1px solid rgba(0, 255, 136, 0.24);
+      background: rgba(0, 255, 136, 0.045);
+      box-shadow: inset 0 0 18px rgba(0, 255, 136, 0.035);
+    }
+
+    .surveillance-stat .cam-icon {
+      width: 52px;
+      height: 52px;
+      border-radius: 16px;
+      display: grid;
+      place-items: center;
+      margin-bottom: 12px;
+      border: 1px solid rgba(0, 255, 136, 0.38);
+      background: rgba(0, 255, 136, 0.08);
+      font-size: 28px;
+    }
+
+    .surveillance-stat span {
+      display: block;
+      color: rgba(232, 251, 255, 0.58);
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-bottom: 7px;
+    }
+
+    .surveillance-stat strong {
+      color: var(--green);
+      font-size: 28px;
+      text-shadow: 0 0 16px rgba(0, 255, 136, 0.28);
+    }
+
+    .surveillance-stat.inactive {
+      border-color: rgba(255, 47, 109, 0.25);
+      background: rgba(255, 47, 109, 0.045);
+    }
+
+    .surveillance-stat.inactive .cam-icon {
+      border-color: rgba(255, 47, 109, 0.38);
+      background: rgba(255, 47, 109, 0.08);
+    }
+
+    .surveillance-stat.inactive strong { color: var(--red); }
+
+    .surveillance-form {
+      margin-top: 22px;
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 16px;
+      border: 1px solid rgba(0, 255, 136, 0.24);
+      border-radius: 20px;
+      padding: 22px;
+      background: rgba(0, 0, 0, 0.18);
+    }
+
+    .surveillance-field.full { grid-column: 1 / -1; }
+
+    .surveillance-field input,
+    .surveillance-field select,
+    .surveillance-field textarea {
+      width: 100%;
+      border: 1px solid rgba(0, 255, 136, 0.32);
+      background: rgba(0, 0, 0, 0.36);
+      color: #fff;
+      border-radius: 14px;
+      outline: none;
+      padding: 0 15px;
+      font-size: 15px;
+      letter-spacing: 0.6px;
+    }
+
+    .surveillance-field input,
+    .surveillance-field select { height: 54px; }
+    .surveillance-field textarea { min-height: 86px; padding-top: 13px; line-height: 1.5; resize: vertical; }
+
+    .surveillance-actions {
+      grid-column: 1 / -1;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+
+    .surveillance-table-wrap {
+      margin-top: 22px;
+      overflow: auto;
+      border: 1px solid rgba(121, 139, 178, 0.28);
+      border-radius: 18px;
+      background: rgba(255, 255, 255, 0.025);
+    }
+
+    .surveillance-table {
+      width: 100%;
+      min-width: 1240px;
+      border-collapse: collapse;
+    }
+
+    .surveillance-table th,
+    .surveillance-table td {
+      border: 1px solid rgba(121, 139, 178, 0.28);
+      padding: 12px 10px;
+      text-align: left;
+      color: rgba(232, 251, 255, 0.86);
+      font-size: 12px;
+      vertical-align: middle;
+      word-break: break-word;
+    }
+
+    .surveillance-table th {
+      color: #071015;
+      background: linear-gradient(90deg, var(--green), var(--cyan));
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      font-weight: 900;
+      white-space: nowrap;
+    }
+
+    .surveillance-status-active,
+    .surveillance-status-inactive {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 92px;
+      padding: 7px 10px;
+      border-radius: 999px;
+      font-weight: 900;
+      letter-spacing: 0.8px;
+      text-transform: uppercase;
+      font-size: 11px;
+    }
+
+    .surveillance-status-active { color: #05120d; background: linear-gradient(90deg, #00ff88, #8effc8); }
+    .surveillance-status-inactive { color: #fff; background: linear-gradient(90deg, #ff2f6d, #ff758f); }
+
+    .surveillance-print-sheet {
+      margin-top: 22px;
+      background: #fff;
+      color: #111;
+      border-radius: 10px;
+      padding: 18px;
+      overflow: auto;
+    }
+
+    .surveillance-print-sheet h2 {
+      color: #111;
+      text-align: center;
+      margin-bottom: 6px;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+    }
+
+    .surveillance-print-sheet p {
+      color: #333;
+      text-align: center;
+      margin: 0 0 14px;
+      font-size: 12px;
+    }
+
+    .print-camera-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-family: Arial, sans-serif;
+      font-size: 11px;
+    }
+
+    .print-camera-table th,
+    .print-camera-table td {
+      border: 1px solid #333;
+      padding: 6px;
+      color: #111;
+      vertical-align: top;
+    }
+
+    .print-camera-table th { background: #e8eef7; text-align: center; }
+
+    .print-signature-row {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 40px;
+      margin-top: 46px;
+      color: #111;
+      font-family: Arial, sans-serif;
+      font-size: 12px;
+      text-align: center;
+    }
+
+    .print-signature-row div {
+      border-top: 1px solid #222;
+      padding-top: 8px;
+    }
+
+    @media print {
+      body * { visibility: hidden !important; }
+      #surveillancePrintPage, #surveillancePrintPage * { visibility: visible !important; }
+      #surveillancePrintPage {
+        display: block !important;
+        position: absolute !important;
+        left: 0 !important;
+        top: 0 !important;
+        width: 100% !important;
+        max-height: none !important;
+        overflow: visible !important;
+        padding: 0 !important;
+        border: 0 !important;
+        box-shadow: none !important;
+        background: #fff !important;
+      }
+      .no-print { display: none !important; }
+      .surveillance-print-sheet { padding: 8mm; border-radius: 0; }
+      @page { size: A4 landscape; margin: 8mm; }
+    }
+
+    @media (max-width: 900px) {
+      .surveillance-summary-grid,
+      .surveillance-form,
+      .surveillance-actions { grid-template-columns: 1fr; }
+    }
+
+
+
+    /* Change Password System */
+    .module.change-password-module {
+      border-color: rgba(255, 200, 87, 0.62);
+      background:
+        linear-gradient(135deg, rgba(255, 200, 87, 0.11), rgba(0, 245, 255, 0.05)),
+        rgba(0, 0, 0, 0.08);
+      min-height: 132px;
+    }
+
+    .module.change-password-module::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      transform: translateX(-120%);
+      background: linear-gradient(90deg, transparent, rgba(255, 200, 87, 0.2), transparent);
+      animation: sidSweep 2.35s linear infinite;
+    }
+
+    .module.change-password-module::after {
+      content: "CHANGE";
+      color: rgba(255, 200, 87, 0.95);
+    }
+
+    .change-password-page {
+      display: none;
+      z-index: 5;
+      width: min(720px, calc(100vw - 28px));
+      max-height: calc(100vh - 28px);
+      overflow: auto;
+      padding: 34px;
+      background: linear-gradient(145deg, rgba(18, 15, 6, 0.95), rgba(2, 6, 14, 0.92));
+      border: 1px solid rgba(255, 200, 87, 0.32);
+      box-shadow: 0 0 34px rgba(255, 200, 87, 0.15), inset 0 0 24px rgba(255, 255, 255, 0.025);
+      backdrop-filter: blur(12px);
+      border-radius: 22px;
+      position: relative;
+    }
+
+    .change-password-page.active {
+      display: block;
+      animation: sidPageIn 0.35s ease;
+    }
+
+    .change-password-form {
+      margin-top: 22px;
+      display: grid;
+      gap: 16px;
+      border: 1px solid rgba(255, 200, 87, 0.24);
+      border-radius: 20px;
+      padding: 22px;
+      background: rgba(0, 0, 0, 0.18);
+    }
+
+    .change-password-form input {
+      border-color: rgba(255, 200, 87, 0.32);
+    }
+
+    .change-password-msg {
+      min-height: 22px;
+      color: var(--gold);
+      font-size: 12px;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      line-height: 1.6;
+      text-align: center;
+    }
+
+
     /* Login Alert System */
     .alert-module {
       border-color: rgba(255, 47, 109, 0.72);
@@ -2490,15 +2836,15 @@
         </div>
 
         <div class="brand-title">
-          <h1>Zayan <span>Secure System</span></h1>
+          <h1>Access <span>Control System</span></h1>
           <p>
-            Restricted access environment for private digital operation.
-            Unauthorized access attempt will be logged and monitored.
+            Security Monitoring • Access Management • Device Control<br>
+            Developed & Maintained by Zayan IT
           </p>
         </div>
 
         <div class="code-strip" id="codeStrip">
-          &gt; booting zayanzabit secure node...<br>
+          &gt; booting access control secure node...<br>
           &gt; loading binary firewall...<br>
           &gt; waiting for operator authentication...
         </div>
@@ -2537,36 +2883,32 @@
           </svg>
         </div>
         <h2>Access Gateway</h2>
-        <p id="loginSubtitle">Enter your user name to continue</p>
+        <p id="loginSubtitle">Enter system password to continue</p>
       </div>
 
       <div class="stepper">
         <div class="step-dot active" id="stepOneDot"></div>
-        <div class="step-dot" id="stepTwoDot"></div>
+        <div class="step-dot active" id="stepTwoDot" style="display:none;"></div>
       </div>
 
             <form id="secureLoginForm" autocomplete="off">
+        <input id="username" type="hidden" value="System Admin" />
         <input type="text" name="fake_username" autocomplete="username" style="position:absolute; left:-9999px; opacity:0; height:0; width:0;" tabindex="-1" />
         <input type="password" name="fake_password" autocomplete="new-password" style="position:absolute; left:-9999px; opacity:0; height:0; width:0;" tabindex="-1" />
         <div class="field-area">
-          <div class="field-card" id="usernameStep">
-            <label for="username">Enter Your User Name</label>
-            <input id="username" name="zayan_user_field" type="text" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="Enter user name" />
-            <button class="primary-btn" type="button" id="usernameBtn">Verify User</button>
-          </div>
+          <div class="field-card hidden" id="usernameStep" style="display:none;"></div>
 
-          <div class="field-card hidden" id="passwordStep">
-            <label for="password">Enter User Password</label>
-            <input id="password" name="zayan_pass_field" type="password" autocomplete="new-password" readonly onfocus="this.removeAttribute('readonly');" placeholder="••••••••••••" />
+          <div class="field-card slide-in" id="passwordStep">
+            <label for="password">Enter System Password</label>
+            <input id="password" name="access_control_password_field" type="password" autocomplete="new-password" readonly onfocus="this.removeAttribute('readonly');" placeholder="••••••••••••" />
             <button class="primary-btn" type="submit">Access System</button>
-            <button class="ghost-btn" type="button" id="backBtn">Back To User Name</button>
           </div>
         </div>
       </form>
 
       <div class="terminal" id="terminal">
-        [SYS] Zayan Secure gateway initialized...<br>
-        [SYS] Waiting for user ID...<br>
+        [SYS] Access Control gateway initialized...<br>
+        [SYS] Waiting for system password...<br>
         [STATUS] Frontend demo mode active.
       </div>
     </section>
@@ -2576,8 +2918,8 @@
     <div class="dashboard-head">
       <div>
         <div class="top-tag"><span class="pulse"></span> Access Granted</div>
-        <h2>Secure Dashboard</h2>
-        <p id="welcomeText">Welcome to Zayan Secure System.</p>
+        <h2>Access Control System</h2>
+        <p id="welcomeText">Security Monitoring • Access Management • Device Control</p>
       </div>
       <button class="logout" id="logoutBtn">LOG OUT</button>
     </div>
@@ -2597,16 +2939,62 @@
         <strong>Device Password Manager</strong>
         <span>→ Add and monitor PC/System password validity and expiry status.</span>
       </div>
+      <div class="module surveillance-module" id="surveillanceModule">
+        <div class="module-logo">📷</div>
+        <strong>Surveillance Management System</strong>
+        <span>→ Camera inventory, active/inactive status, password list and audit print report.</span>
+      </div>
+      <div class="module change-password-module" id="changePasswordModule">
+        <div class="module-logo">🔐</div>
+        <strong>Change Password</strong>
+        <span>→ Change Access Control System login password.</span>
+      </div>
     </div>
 
     <div class="footer-note">
-      Security note: Data save/list uses Supabase sid_data table. Demo test password: Zayan@123. For real secret data, enable RLS/Auth again before final use.
+      © 2026 Access Control System<br>All Rights Reserved.<br>Developed & Maintained by Zayan IT
     </div>
   </section>
 
 
 
 
+
+
+  <section class="change-password-page" id="changePasswordPage">
+    <div class="dashboard-head">
+      <div>
+        <div class="top-tag"><span class="pulse"></span> Password Control</div>
+        <h2 class="dark-title">Change Password</h2>
+        <p class="dark-subtitle">Change Access Control System login password. New password will save in this browser.</p>
+      </div>
+      <button class="sid-back" id="changePasswordBackBtn">← Dashboard</button>
+    </div>
+
+    <form class="change-password-form" id="changePasswordForm" autocomplete="off">
+      <div>
+        <label for="oldSystemPassword">Old Password</label>
+        <input id="oldSystemPassword" type="password" autocomplete="new-password" placeholder="Enter old password" />
+      </div>
+      <div>
+        <label for="newSystemPassword">New Password</label>
+        <input id="newSystemPassword" type="password" autocomplete="new-password" placeholder="Enter new password" />
+      </div>
+      <div>
+        <label for="confirmSystemPassword">Confirm New Password</label>
+        <input id="confirmSystemPassword" type="password" autocomplete="new-password" placeholder="Confirm new password" />
+      </div>
+      <div class="change-password-msg" id="changePasswordMsg">Default password: Sys@3629</div>
+      <div class="device-actions">
+        <button type="submit" class="sid-save">Update Password</button>
+        <button type="button" class="sid-clear" id="changePasswordClearBtn">Clear Form</button>
+      </div>
+    </form>
+
+    <div class="footer-note">
+      Password is saved locally in browser LocalStorage. First/default password: <b>Sys@3629</b>
+    </div>
+  </section>
 
   <section class="device-menu-page" id="deviceMenuPage">
     <div class="dashboard-head">
@@ -2690,6 +3078,179 @@
 
     <div class="device-table-wrap" id="deviceTableWrap">
       <div class="empty-list">No device password entry found.</div>
+    </div>
+  </section>
+
+
+
+  <section class="surveillance-dashboard-page" id="surveillanceDashboardPage">
+    <div class="dashboard-head">
+      <div>
+        <div class="top-tag"><span class="pulse"></span> Surveillance</div>
+        <h2 class="dark-title">Surveillance Management System</h2>
+        <p class="dark-subtitle">CCTV inventory dashboard • camera status • audit print report</p>
+      </div>
+      <button class="sid-back" id="surveillanceBackBtn">← Dashboard</button>
+    </div>
+
+    <div class="surveillance-summary-grid">
+      <div class="surveillance-stat">
+        <div class="cam-icon">📷</div>
+        <span>Active Camera</span>
+        <strong id="surveillanceActiveCount">0</strong>
+      </div>
+      <div class="surveillance-stat inactive">
+        <div class="cam-icon">📷</div>
+        <span>Inactive Camera</span>
+        <strong id="surveillanceInactiveCount">0</strong>
+      </div>
+      <div class="surveillance-stat">
+        <div class="cam-icon">🗂️</div>
+        <span>Total Camera</span>
+        <strong id="surveillanceTotalCount">0</strong>
+      </div>
+    </div>
+
+    <div class="module-grid">
+      <div class="module surveillance-module" id="surveillanceAddModule">
+        <strong>Add New</strong>
+        <span>→ Add camera IP, MAC, location, DVR, slot, brand, status and password.</span>
+      </div>
+      <div class="module sid-list-module" id="surveillanceListModule">
+        <strong>Camera List</strong>
+        <span>→ View all saved camera entries row-wise with password and edit option.</span>
+      </div>
+      <div class="module management-module" id="surveillancePrintModule">
+        <strong>Print All</strong>
+        <span>→ Generate audit-ready camera inventory output without password.</span>
+      </div>
+    </div>
+
+    <div class="footer-note">
+      Audit rule: System list keeps password for internal work. Print All output hides password automatically.
+    </div>
+  </section>
+
+  <section class="surveillance-add-page" id="surveillanceAddPage">
+    <div class="sid-head">
+      <div class="sid-title-wrap">
+        <div class="top-tag"><span class="pulse"></span> Add Camera</div>
+        <h2 class="dark-title" id="surveillanceAddTitle">Add New Camera</h2>
+        <p class="dark-subtitle">Last Update will be saved automatically when Add or Update is done.</p>
+      </div>
+      <div class="sid-nav-group">
+        <button class="sid-back" id="surveillanceAddBackBtn">← Surveillance</button>
+        <button class="sid-next" id="surveillanceAddToListBtn">Camera List →</button>
+      </div>
+    </div>
+
+    <form class="surveillance-form" id="surveillanceEntryForm">
+      <div class="surveillance-field">
+        <label for="surveillanceCameraName">Camera Name / Location <span class="required-star">*</span></label>
+        <input id="surveillanceCameraName" type="text" placeholder="Example: Finishing Floor Gate Camera" autocomplete="off" />
+      </div>
+      <div class="surveillance-field">
+        <label for="surveillanceIpAddress">IP Address</label>
+        <input id="surveillanceIpAddress" type="text" placeholder="Example: 192.168.1.101" autocomplete="off" />
+      </div>
+      <div class="surveillance-field">
+        <label for="surveillanceMacAddress">MAC Address</label>
+        <input id="surveillanceMacAddress" type="text" placeholder="Enter MAC address" autocomplete="off" />
+      </div>
+      <div class="surveillance-field">
+        <label for="surveillanceSlotNo">Camera Slot</label>
+        <input id="surveillanceSlotNo" type="text" placeholder="Enter camera slot" autocomplete="off" />
+      </div>
+      <div class="surveillance-field">
+        <label for="surveillanceDvrNo">DVR/NVR No</label>
+        <input id="surveillanceDvrNo" type="text" placeholder="Enter DVR/NVR no" autocomplete="off" />
+      </div>
+      <div class="surveillance-field">
+        <label for="surveillanceBrand">Camera Brand</label>
+        <input id="surveillanceBrand" type="text" placeholder="Enter camera brand" autocomplete="off" />
+      </div>
+      <div class="surveillance-field">
+        <label for="surveillanceStatus">Status</label>
+        <select id="surveillanceStatus">
+          <option value="Active">Active</option>
+          <option value="Inactive">Inactive</option>
+        </select>
+      </div>
+      <div class="surveillance-field">
+        <label for="surveillanceIpReserved">IP Reserved</label>
+        <select id="surveillanceIpReserved">
+          <option value="Yes">Yes</option>
+          <option value="No">No</option>
+        </select>
+      </div>
+      <div class="surveillance-field full">
+        <label for="surveillancePassword">Camera Password</label>
+        <input id="surveillancePassword" type="text" placeholder="Password will show only in internal Camera List, not in print output" autocomplete="off" />
+      </div>
+      <div class="surveillance-field full">
+        <label for="surveillanceRemarks">Remarks</label>
+        <textarea id="surveillanceRemarks" placeholder="Any camera/DVR/maintenance note"></textarea>
+      </div>
+      <div class="surveillance-actions">
+        <button type="submit" class="sid-save" id="surveillanceSaveBtn">Save Camera</button>
+        <button type="button" class="sid-clear" id="surveillanceClearBtn">Clear Form</button>
+      </div>
+    </form>
+
+    <div class="sid-preview" id="surveillancePreview">[CCTV] Ready to save camera inventory data.</div>
+  </section>
+
+  <section class="surveillance-list-page" id="surveillanceListPage">
+    <div class="sid-head">
+      <div class="sid-title-wrap">
+        <div class="top-tag"><span class="pulse"></span> Camera List</div>
+        <h2 class="dark-title">Camera Inventory List</h2>
+        <p class="dark-subtitle">Internal list includes password for maintenance work.</p>
+      </div>
+      <div class="sid-nav-group">
+        <button class="sid-back" id="surveillanceListBackBtn">← Surveillance</button>
+        <button class="sid-next" id="surveillanceListAddBtn">Add New →</button>
+      </div>
+    </div>
+
+    <div class="search-panel">
+      <select id="surveillanceSearchType">
+        <option value="cameraName">Camera Name/Location</option>
+        <option value="ipAddress">IP Address</option>
+        <option value="macAddress">MAC Address</option>
+        <option value="dvrNo">DVR/NVR No</option>
+        <option value="status">Status</option>
+      </select>
+      <input id="surveillanceSearchInput" type="text" placeholder="Search camera list..." autocomplete="off" />
+    </div>
+
+    <div class="surveillance-table-wrap" id="surveillanceTableWrap">
+      <div class="empty-list">No camera data found.</div>
+    </div>
+  </section>
+
+  <section class="surveillance-print-page" id="surveillancePrintPage">
+    <div class="sid-head no-print">
+      <div class="sid-title-wrap">
+        <div class="top-tag"><span class="pulse"></span> Audit Output</div>
+        <h2 class="dark-title">CCTV Camera Inventory Report</h2>
+        <p class="dark-subtitle">Password hidden automatically. Use Print / Save as PDF.</p>
+      </div>
+      <div class="sid-nav-group">
+        <button class="sid-back" id="surveillancePrintBackBtn">← Surveillance</button>
+        <button class="sid-next" id="surveillancePrintNowBtn">Print / PDF</button>
+      </div>
+    </div>
+
+    <div class="surveillance-print-sheet" id="surveillancePrintSheet">
+      <h2>CCTV Camera Inventory Report</h2>
+      <p>Surveillance Management System • Password information hidden for audit output</p>
+      <div id="surveillancePrintContent"></div>
+      <div class="print-signature-row">
+        <div>Prepared By</div>
+        <div>Checked By</div>
+        <div>Approved By</div>
+      </div>
     </div>
   </section>
 
@@ -3017,7 +3578,7 @@
     let height;
     let columns;
     let drops;
-    const characters = "0101010101ZAYANZABITSECURESYSTEMLOGINACCESSROOTADMINDATA";
+    const characters = "0101010101ACCESSCONTROLSYSTEMLOGINACCESSROOTADMINDATA";
 
     function resizeCanvas() {
       width = canvas.width = window.innerWidth;
@@ -3067,8 +3628,8 @@
     const intrusionAlert = document.getElementById("intrusionAlert");
     const alertTitle = document.getElementById("alertTitle");
     const alertSubtitle = document.getElementById("alertSubtitle");
-    const DEMO_USER_ID = "zayanzabit";
-    const DEMO_PASSWORD = "Zayan@123";
+    const DEFAULT_SYSTEM_PASSWORD = "Sys@3629";
+    const SYSTEM_PASSWORD_STORAGE_KEY = "access_control_system_password";
     const ACSID_MANAGEMENT_PASSWORD = "Z5ssiq##1@";
     const loginShell = document.getElementById("loginShell");
     const dashboard = document.getElementById("dashboard");
@@ -3076,6 +3637,52 @@
     const loginAlertPage = document.getElementById("loginAlertPage");
     const managementModule = document.getElementById("managementModule");
     const devicePasswordModule = document.getElementById("devicePasswordModule");
+    const surveillanceModule = document.getElementById("surveillanceModule");
+    const changePasswordModule = document.getElementById("changePasswordModule");
+    const changePasswordPage = document.getElementById("changePasswordPage");
+    const changePasswordBackBtn = document.getElementById("changePasswordBackBtn");
+    const changePasswordForm = document.getElementById("changePasswordForm");
+    const oldSystemPassword = document.getElementById("oldSystemPassword");
+    const newSystemPassword = document.getElementById("newSystemPassword");
+    const confirmSystemPassword = document.getElementById("confirmSystemPassword");
+    const changePasswordMsg = document.getElementById("changePasswordMsg");
+    const changePasswordClearBtn = document.getElementById("changePasswordClearBtn");
+    const surveillanceDashboardPage = document.getElementById("surveillanceDashboardPage");
+    const surveillanceAddPage = document.getElementById("surveillanceAddPage");
+    const surveillanceListPage = document.getElementById("surveillanceListPage");
+    const surveillancePrintPage = document.getElementById("surveillancePrintPage");
+    const surveillanceBackBtn = document.getElementById("surveillanceBackBtn");
+    const surveillanceAddModule = document.getElementById("surveillanceAddModule");
+    const surveillanceListModule = document.getElementById("surveillanceListModule");
+    const surveillancePrintModule = document.getElementById("surveillancePrintModule");
+    const surveillanceActiveCount = document.getElementById("surveillanceActiveCount");
+    const surveillanceInactiveCount = document.getElementById("surveillanceInactiveCount");
+    const surveillanceTotalCount = document.getElementById("surveillanceTotalCount");
+    const surveillanceAddTitle = document.getElementById("surveillanceAddTitle");
+    const surveillanceAddBackBtn = document.getElementById("surveillanceAddBackBtn");
+    const surveillanceAddToListBtn = document.getElementById("surveillanceAddToListBtn");
+    const surveillanceListBackBtn = document.getElementById("surveillanceListBackBtn");
+    const surveillanceListAddBtn = document.getElementById("surveillanceListAddBtn");
+    const surveillancePrintBackBtn = document.getElementById("surveillancePrintBackBtn");
+    const surveillancePrintNowBtn = document.getElementById("surveillancePrintNowBtn");
+    const surveillanceEntryForm = document.getElementById("surveillanceEntryForm");
+    const surveillanceCameraName = document.getElementById("surveillanceCameraName");
+    const surveillanceIpAddress = document.getElementById("surveillanceIpAddress");
+    const surveillanceMacAddress = document.getElementById("surveillanceMacAddress");
+    const surveillanceSlotNo = document.getElementById("surveillanceSlotNo");
+    const surveillanceDvrNo = document.getElementById("surveillanceDvrNo");
+    const surveillanceBrand = document.getElementById("surveillanceBrand");
+    const surveillanceStatus = document.getElementById("surveillanceStatus");
+    const surveillanceIpReserved = document.getElementById("surveillanceIpReserved");
+    const surveillancePassword = document.getElementById("surveillancePassword");
+    const surveillanceRemarks = document.getElementById("surveillanceRemarks");
+    const surveillanceSaveBtn = document.getElementById("surveillanceSaveBtn");
+    const surveillanceClearBtn = document.getElementById("surveillanceClearBtn");
+    const surveillancePreview = document.getElementById("surveillancePreview");
+    const surveillanceTableWrap = document.getElementById("surveillanceTableWrap");
+    const surveillanceSearchType = document.getElementById("surveillanceSearchType");
+    const surveillanceSearchInput = document.getElementById("surveillanceSearchInput");
+    const surveillancePrintContent = document.getElementById("surveillancePrintContent");
     const deviceMenuPage = document.getElementById("deviceMenuPage");
     const deviceAddPage = document.getElementById("deviceAddPage");
     const deviceListPage = document.getElementById("deviceListPage");
@@ -3118,7 +3725,7 @@
     const alertLastTime = document.getElementById("alertLastTime");
     const managementBackBtn = document.getElementById("managementBackBtn");
     const sidModule = document.querySelector(".sid-module");
-    const sidListModule = document.querySelector("#managementPage .sid-list-module");
+    const sidListModule = document.querySelector(".sid-list-module");
     const historyModule = document.getElementById("historyModule");
     const historyMenuPage = document.getElementById("historyMenuPage");
     const historyAddPage = document.getElementById("historyAddPage");
@@ -3181,6 +3788,8 @@
     let loginAlerts = [];
     let accountUsesHistory = [];
     let devicePasswordRecords = [];
+    let surveillanceRecords = [];
+    let editingSurveillanceId = null;
     let loginAlertAutoRefreshTimer = null;
     let editingSidId = null;
     let viewingSidId = null;
@@ -3231,7 +3840,7 @@
     const bootLines = [
       "&gt; scanning encrypted tunnel...",
       "&gt; binary firewall status: active",
-      "&gt; zayanzabit node heartbeat: stable",
+      "&gt; access control node heartbeat: stable",
       "&gt; monitoring unauthorized packets...",
       "&gt; authentication layer ready...",
       "&gt; private route shield enabled..."
@@ -3246,57 +3855,43 @@
       terminal.innerHTML = lines.join("<br>");
     }
 
+    function getSystemPassword() {
+      return localStorage.getItem(SYSTEM_PASSWORD_STORAGE_KEY) || DEFAULT_SYSTEM_PASSWORD;
+    }
+
+    function setSystemPassword(newPasswordValue) {
+      localStorage.setItem(SYSTEM_PASSWORD_STORAGE_KEY, newPasswordValue);
+    }
+
     function showPasswordStep() {
-      const user = username.value.trim();
-
-      if (!user) {
-        setTerminal([
-          "<span class='warn'>[WARN] User ID required.</span>",
-          "[SYS] Please enter user ID."
-        ]);
-        username.focus();
-        return;
-      }
-
-      if (user.toLowerCase() !== DEMO_USER_ID) {
-        triggerWrongPassword("Wrong User ID", "Unknown Operator Detected", "Wrong user ID detected.");
-        username.value = "";
-        username.focus();
-        return;
-      }
-
-      usernameStep.classList.add("slide-out-left");
-      usernameStep.classList.remove("slide-in");
       passwordStep.classList.remove("hidden");
-
-      setTimeout(() => {
-        passwordStep.classList.add("slide-in");
-      }, 30);
-
-      stepOneDot.classList.remove("active");
-      stepTwoDot.classList.add("active");
-      loginSubtitle.textContent = "User verified. Enter password.";
+      passwordStep.classList.add("slide-in");
+      if (stepOneDot) stepOneDot.classList.add("active");
+      if (stepTwoDot) stepTwoDot.classList.add("active");
+      loginSubtitle.textContent = "Enter system password to continue";
       setTerminal([
-        `[SYS] Operator verified: <span class='ok'>${escapeHtml(user)}</span>`,
-        "[SYS] Sliding password layer activated...",
-        "[STATUS] Awaiting secure passkey..."
+        "[SYS] Access Control gateway initialized...",
+        "[SYS] Waiting for system password..."
       ]);
-
-      setTimeout(() => password.focus(), 380);
+      setTimeout(() => password.focus(), 180);
     }
 
     function showUsernameStep() {
-      passwordStep.classList.add("hidden");
-      usernameStep.classList.remove("hidden");
-      stepTwoDot.classList.remove("active");
-      stepOneDot.classList.add("active");
-      loginSubtitle.textContent = "Enter your user name to continue";
-      password.value = "";
-      setTerminal([
-        "[SYS] Returned to username layer...",
-        "[SYS] Waiting for user ID..."
-      ]);
-      setTimeout(() => username.focus(), 260);
+      showPasswordStep();
+    }
+
+    function openChangePasswordPage() {
+      hideAllSecurePages();
+      changePasswordPage.classList.add("active");
+      changePasswordForm.reset();
+      changePasswordMsg.textContent = "Default password: Sys@3629";
+      setTimeout(() => oldSystemPassword.focus(), 120);
+    }
+
+    function clearChangePasswordForm() {
+      changePasswordForm.reset();
+      changePasswordMsg.textContent = "Form cleared.";
+      oldSystemPassword.focus();
     }
 
     function escapeHtml(text) {
@@ -3312,16 +3907,10 @@
       });
     }
 
-    usernameBtn.addEventListener("click", showPasswordStep);
-
-    username.addEventListener("keydown", (event) => {
-      if (event.key === "Enter") {
-        event.preventDefault();
-        showPasswordStep();
-      }
-    });
-
-    backBtn.addEventListener("click", showUsernameStep);
+    if (usernameBtn) usernameBtn.addEventListener("click", showPasswordStep);
+    if (username) username.value = "System Admin";
+    if (backBtn) backBtn.addEventListener("click", showPasswordStep);
+    showPasswordStep();
 
     window.addEventListener("pageshow", () => {
       password.value = "";
@@ -3420,7 +4009,7 @@
         return;
       }
 
-      if (password.value !== DEMO_PASSWORD) {
+      if (password.value !== getSystemPassword()) {
         triggerWrongPassword("Wrong Password", "Intrusion Attempt Detected", "Wrong password detected.");
         password.value = "";
         password.focus();
@@ -3437,7 +4026,7 @@
         password.value = "";
         loginShell.style.display = "none";
         dashboard.classList.add("active");
-        welcomeText.textContent = `Welcome, ${username.value.trim()} — Zayan Secure dashboard preview is ready.`;
+        welcomeText.textContent = "Welcome — Access Control System dashboard is ready.";
       }, 780);
     });
 
@@ -3447,11 +4036,16 @@
       if (acSidPasswordOverlay) acSidPasswordOverlay.classList.remove("active");
       if (sidSuccessOverlay) sidSuccessOverlay.classList.remove("active");
       dashboard.classList.remove("active");
+      changePasswordPage.classList.remove("active");
       loginAlertPage.classList.remove("active");
       managementPage.classList.remove("active");
       deviceMenuPage.classList.remove("active");
       deviceAddPage.classList.remove("active");
       deviceListPage.classList.remove("active");
+      surveillanceDashboardPage.classList.remove("active");
+      surveillanceAddPage.classList.remove("active");
+      surveillanceListPage.classList.remove("active");
+      surveillancePrintPage.classList.remove("active");
       historyMenuPage.classList.remove("active");
       historyAddPage.classList.remove("active");
       historyListPage.classList.remove("active");
@@ -3787,6 +4381,300 @@
       deviceTableWrap.innerHTML = "<div class='empty-list'>Loading Device Password Manager data...</div>";
       const ok = await loadDevicePasswordRecords();
       if (ok) renderDevicePasswordList();
+    }
+
+
+    function surveillanceRecordFromDb(row) {
+      return {
+        id: row.id,
+        cameraName: row.camera_name || "",
+        ipAddress: row.ip_address || "",
+        macAddress: row.mac_address || "",
+        slotNo: row.slot_no || "",
+        dvrNo: row.dvr_no || "",
+        brand: row.brand || "",
+        status: row.status || "Active",
+        ipReserved: row.ip_reserved || "Yes",
+        cameraPassword: row.camera_password || "",
+        remarks: row.remarks || "",
+        lastUpdate: row.last_update || row.updated_at || "",
+        createdAt: row.created_at || "",
+        updatedAt: row.updated_at || ""
+      };
+    }
+
+    function surveillanceRecordToDb(record) {
+      const nowIso = new Date().toISOString();
+      return {
+        camera_name: record.cameraName,
+        ip_address: record.ipAddress || null,
+        mac_address: record.macAddress || null,
+        slot_no: record.slotNo || null,
+        dvr_no: record.dvrNo || null,
+        brand: record.brand || null,
+        status: record.status || "Active",
+        ip_reserved: record.ipReserved || "Yes",
+        camera_password: record.cameraPassword || null,
+        remarks: record.remarks || null,
+        last_update: nowIso,
+        updated_at: nowIso
+      };
+    }
+
+    function formatSurveillanceDate(value) {
+      if (!value) return "-";
+      const date = new Date(value);
+      if (Number.isNaN(date.getTime())) return value;
+      return date.toLocaleString("en-GB", {
+        day: "2-digit",
+        month: "short",
+        year: "numeric",
+        hour: "2-digit",
+        minute: "2-digit"
+      });
+    }
+
+    function surveillanceStatusPill(statusValue) {
+      const status = String(statusValue || "Active").toLowerCase();
+      if (status === "inactive" || status === "off") {
+        return "<span class='surveillance-status-inactive'>Inactive</span>";
+      }
+      return "<span class='surveillance-status-active'>Active</span>";
+    }
+
+    async function loadSurveillanceRecords() {
+      const { data, error } = await supabaseClient
+        .from("surveillance_cameras")
+        .select("*")
+        .order("created_at", { ascending: false });
+
+      if (error) {
+        surveillanceRecords = [];
+        if (surveillanceTableWrap) {
+          surveillanceTableWrap.innerHTML = `<div class="empty-list">Supabase surveillance_cameras load error:<br>${escapeHtml(error.message)}<br><br>Please run the SQL table setup first.</div>`;
+        }
+        return false;
+      }
+
+      surveillanceRecords = (data || []).map(surveillanceRecordFromDb);
+      return true;
+    }
+
+    async function saveSurveillanceRecord(record) {
+      const payload = surveillanceRecordToDb(record);
+
+      if (editingSurveillanceId) {
+        const { data, error } = await supabaseClient
+          .from("surveillance_cameras")
+          .update(payload)
+          .eq("id", editingSurveillanceId)
+          .select("id")
+          .maybeSingle();
+
+        if (error) throw error;
+        if (!data || !data.id) throw new Error("Update failed: selected camera was not found in Supabase.");
+        return data.id;
+      }
+
+      const { data, error } = await supabaseClient
+        .from("surveillance_cameras")
+        .insert(payload)
+        .select("id")
+        .single();
+
+      if (error) throw error;
+      return data.id;
+    }
+
+    async function deleteSurveillanceRecord(recordId) {
+      const { error } = await supabaseClient
+        .from("surveillance_cameras")
+        .delete()
+        .eq("id", recordId);
+
+      if (error) throw error;
+      return true;
+    }
+
+    function updateSurveillanceSummary() {
+      const activeCount = surveillanceRecords.filter((record) => String(record.status || "Active").toLowerCase() === "active").length;
+      const inactiveCount = surveillanceRecords.filter((record) => String(record.status || "").toLowerCase() === "inactive").length;
+      surveillanceActiveCount.textContent = activeCount;
+      surveillanceInactiveCount.textContent = inactiveCount;
+      surveillanceTotalCount.textContent = surveillanceRecords.length;
+    }
+
+    async function openSurveillanceDashboardPage() {
+      hideAllSecurePages();
+      surveillanceDashboardPage.classList.add("active");
+      await loadSurveillanceRecords();
+      updateSurveillanceSummary();
+    }
+
+    function clearSurveillanceForm() {
+      surveillanceEntryForm.reset();
+      editingSurveillanceId = null;
+      surveillanceAddTitle.textContent = "Add New Camera";
+      surveillanceSaveBtn.textContent = "Save Camera";
+      surveillanceClearBtn.style.display = "";
+      surveillanceSaveBtn.style.gridColumn = "";
+      surveillanceStatus.value = "Active";
+      surveillanceIpReserved.value = "Yes";
+      surveillancePreview.innerHTML = "[CCTV] Form cleared. Ready to save new camera data.";
+      surveillanceCameraName.focus();
+    }
+
+    function openSurveillanceAddPage(options = {}) {
+      hideAllSecurePages();
+      surveillanceAddPage.classList.add("active");
+
+      if (options.mode === "edit" && options.record) {
+        editingSurveillanceId = options.record.id;
+        surveillanceAddTitle.textContent = "Update Camera Data";
+        surveillanceSaveBtn.textContent = "Update Camera";
+        surveillanceClearBtn.style.display = "none";
+        surveillanceSaveBtn.style.gridColumn = "1 / -1";
+        surveillanceCameraName.value = options.record.cameraName || "";
+        surveillanceIpAddress.value = options.record.ipAddress || "";
+        surveillanceMacAddress.value = options.record.macAddress || "";
+        surveillanceSlotNo.value = options.record.slotNo || "";
+        surveillanceDvrNo.value = options.record.dvrNo || "";
+        surveillanceBrand.value = options.record.brand || "";
+        surveillanceStatus.value = options.record.status || "Active";
+        surveillanceIpReserved.value = options.record.ipReserved || "Yes";
+        surveillancePassword.value = options.record.cameraPassword || "";
+        surveillanceRemarks.value = options.record.remarks || "";
+        surveillancePreview.innerHTML = `[EDIT MODE] Updating Camera: ${escapeHtml(options.record.cameraName || "-")}<br>[SYS] Last Update will auto change after update.`;
+      } else {
+        clearSurveillanceForm();
+        surveillancePreview.innerHTML = "[CCTV] Ready to save camera inventory data.";
+      }
+
+      setTimeout(() => surveillanceCameraName.focus(), 140);
+    }
+
+    async function openSurveillanceListPage() {
+      hideAllSecurePages();
+      surveillanceListPage.classList.add("active");
+      surveillanceTableWrap.innerHTML = "<div class='empty-list'>Loading camera inventory data...</div>";
+      const ok = await loadSurveillanceRecords();
+      if (ok) renderSurveillanceList();
+    }
+
+    function renderSurveillanceList() {
+      let records = [...surveillanceRecords];
+      const searchValue = (surveillanceSearchInput?.value || "").trim().toLowerCase();
+      const searchType = surveillanceSearchType?.value || "cameraName";
+
+      if (searchValue) {
+        records = records.filter((record) => String(record[searchType] || "").toLowerCase().includes(searchValue));
+      }
+
+      if (!records.length) {
+        surveillanceTableWrap.innerHTML = "<div class='empty-list'>No camera data found.<br>Click <b>Add New →</b> to create your first camera entry.</div>";
+        return;
+      }
+
+      const rows = records.map((record, index) => `
+        <tr>
+          <td style="text-align:center;">${index + 1}</td>
+          <td>${escapeHtml(record.cameraName || "-")}</td>
+          <td>${escapeHtml(record.ipAddress || "-")}</td>
+          <td>${escapeHtml(record.macAddress || "-")}</td>
+          <td>${escapeHtml(record.slotNo || "-")}</td>
+          <td>${escapeHtml(record.dvrNo || "-")}</td>
+          <td>${escapeHtml(record.brand || "-")}</td>
+          <td>${surveillanceStatusPill(record.status)}</td>
+          <td>${escapeHtml(record.ipReserved || "-")}</td>
+          <td>${escapeHtml(record.cameraPassword || "-")}</td>
+          <td>${escapeHtml(formatSurveillanceDate(record.lastUpdate))}</td>
+          <td>
+            <div class="sid-card-actions">
+              <button class="sid-action-btn edit" type="button" data-surveillance-action="edit" data-id="${record.id}">Edit</button>
+              <button class="sid-action-btn remove" type="button" data-surveillance-action="remove" data-id="${record.id}">Remove</button>
+            </div>
+          </td>
+        </tr>
+      `).join("");
+
+      surveillanceTableWrap.innerHTML = `
+        <table class="surveillance-table">
+          <thead>
+            <tr>
+              <th>SL</th>
+              <th>Camera Name / Location</th>
+              <th>IP Address</th>
+              <th>MAC Address</th>
+              <th>Slot</th>
+              <th>DVR/NVR No</th>
+              <th>Brand</th>
+              <th>Status</th>
+              <th>IP Reserved</th>
+              <th>Password</th>
+              <th>Last Update</th>
+              <th>Action</th>
+            </tr>
+          </thead>
+          <tbody>${rows}</tbody>
+        </table>
+      `;
+    }
+
+    async function openSurveillancePrintPage() {
+      hideAllSecurePages();
+      surveillancePrintPage.classList.add("active");
+      surveillancePrintContent.innerHTML = "<div style='color:#111;text-align:center;padding:20px;'>Loading print output...</div>";
+      const ok = await loadSurveillanceRecords();
+      if (ok) renderSurveillancePrintOutput();
+    }
+
+    function renderSurveillancePrintOutput() {
+      if (!surveillanceRecords.length) {
+        surveillancePrintContent.innerHTML = "<div style='color:#111;text-align:center;padding:20px;border:1px dashed #888;'>No camera data found.</div>";
+        return;
+      }
+
+      const nowText = new Date().toLocaleString("en-GB", { day: "2-digit", month: "short", year: "numeric", hour: "2-digit", minute: "2-digit" });
+      const rows = surveillanceRecords.map((record, index) => `
+        <tr>
+          <td style="text-align:center;">${index + 1}</td>
+          <td>${escapeHtml(record.cameraName || "-")}</td>
+          <td>${escapeHtml(record.ipAddress || "-")}</td>
+          <td>${escapeHtml(record.macAddress || "-")}</td>
+          <td>${escapeHtml(record.slotNo || "-")}</td>
+          <td>${escapeHtml(record.dvrNo || "-")}</td>
+          <td>${escapeHtml(record.brand || "-")}</td>
+          <td>${escapeHtml(record.status || "-")}</td>
+          <td>${escapeHtml(record.ipReserved || "-")}</td>
+          <td>${escapeHtml(formatSurveillanceDate(record.lastUpdate))}</td>
+          <td>${escapeHtml(record.remarks || "-")}</td>
+        </tr>
+      `).join("");
+
+      surveillancePrintContent.innerHTML = `
+        <div style="display:flex; justify-content:space-between; color:#111; font-family:Arial,sans-serif; font-size:12px; margin:8px 0 10px;">
+          <div><b>Total Camera:</b> ${surveillanceRecords.length}</div>
+          <div><b>Print Date:</b> ${escapeHtml(nowText)}</div>
+        </div>
+        <table class="print-camera-table">
+          <thead>
+            <tr>
+              <th>SL</th>
+              <th>Camera Name / Location</th>
+              <th>IP Address</th>
+              <th>MAC Address</th>
+              <th>Slot</th>
+              <th>DVR/NVR No</th>
+              <th>Brand</th>
+              <th>Status</th>
+              <th>IP Reserved</th>
+              <th>Last Update</th>
+              <th>Remarks</th>
+            </tr>
+          </thead>
+          <tbody>${rows}</tbody>
+        </table>
+      `;
     }
 
 
@@ -4433,6 +5321,55 @@
     }
 
     managementModule.addEventListener("click", openAcSidPasswordGate);
+    changePasswordModule.addEventListener("click", openChangePasswordPage);
+    changePasswordBackBtn.addEventListener("click", backToDashboard);
+    changePasswordClearBtn.addEventListener("click", clearChangePasswordForm);
+    changePasswordForm.addEventListener("submit", (event) => {
+      event.preventDefault();
+      const oldPass = oldSystemPassword.value;
+      const newPass = newSystemPassword.value;
+      const confirmPass = confirmSystemPassword.value;
+
+      if (oldPass !== getSystemPassword()) {
+        changePasswordMsg.textContent = "Wrong old password. Password not changed.";
+        triggerWrongPassword("Wrong Password", "Password Change Blocked", "Wrong old password detected.");
+        oldSystemPassword.value = "";
+        oldSystemPassword.focus();
+        return;
+      }
+
+      if (!newPass || newPass.length < 6) {
+        changePasswordMsg.textContent = "New password must be at least 6 characters.";
+        newSystemPassword.focus();
+        return;
+      }
+
+      if (newPass !== confirmPass) {
+        changePasswordMsg.textContent = "New password and confirm password do not match.";
+        confirmSystemPassword.focus();
+        return;
+      }
+
+      setSystemPassword(newPass);
+      changePasswordForm.reset();
+      changePasswordMsg.textContent = "Password changed successfully.";
+      showSidSuccessPopup("Password Changed", "Access Control password updated successfully.", async () => {
+        backToDashboard();
+      });
+    });
+    surveillanceModule.addEventListener("click", openSurveillanceDashboardPage);
+    surveillanceBackBtn.addEventListener("click", backToDashboard);
+    surveillanceAddModule.addEventListener("click", () => openSurveillanceAddPage({ reset: true }));
+    surveillanceListModule.addEventListener("click", openSurveillanceListPage);
+    surveillancePrintModule.addEventListener("click", openSurveillancePrintPage);
+    surveillanceAddBackBtn.addEventListener("click", openSurveillanceDashboardPage);
+    surveillanceAddToListBtn.addEventListener("click", openSurveillanceListPage);
+    surveillanceListBackBtn.addEventListener("click", openSurveillanceDashboardPage);
+    surveillanceListAddBtn.addEventListener("click", () => openSurveillanceAddPage({ reset: true }));
+    surveillancePrintBackBtn.addEventListener("click", openSurveillanceDashboardPage);
+    surveillancePrintNowBtn.addEventListener("click", () => window.print());
+    surveillanceSearchInput.addEventListener("input", renderSurveillanceList);
+    surveillanceSearchType.addEventListener("change", renderSurveillanceList);
     devicePasswordModule.addEventListener("click", openDeviceMenuPage);
     deviceMenuBackBtn.addEventListener("click", backToDashboard);
     deviceAddModule.addEventListener("click", openDeviceAddPage);
@@ -4577,6 +5514,84 @@
     setupIdentityFileInput(rocketIdentityFile, rocketIdentityStatus, "Rocket identity");
     setupIdentityFileInput(simIdentityFile, simIdentityStatus, "SIM identity");
 
+
+
+    surveillanceEntryForm.addEventListener("submit", async (event) => {
+      event.preventDefault();
+
+      const cameraName = surveillanceCameraName.value.trim();
+      if (!cameraName) {
+        surveillancePreview.innerHTML = "<span class='warn'>[REQUIRED]</span> Camera Name / Location dite hobe.";
+        surveillanceCameraName.focus();
+        return;
+      }
+
+      const wasEditing = !!editingSurveillanceId;
+
+      try {
+        surveillanceSaveBtn.disabled = true;
+        surveillanceSaveBtn.textContent = wasEditing ? "Updating..." : "Saving...";
+
+        await saveSurveillanceRecord({
+          cameraName,
+          ipAddress: surveillanceIpAddress.value.trim(),
+          macAddress: surveillanceMacAddress.value.trim(),
+          slotNo: surveillanceSlotNo.value.trim(),
+          dvrNo: surveillanceDvrNo.value.trim(),
+          brand: surveillanceBrand.value.trim(),
+          status: surveillanceStatus.value,
+          ipReserved: surveillanceIpReserved.value,
+          cameraPassword: surveillancePassword.value.trim(),
+          remarks: surveillanceRemarks.value.trim()
+        });
+
+        surveillancePreview.innerHTML = [
+          `<span class='ok'>[${wasEditing ? "UPDATED" : "SAVED"}]</span> Camera data ${wasEditing ? "updated" : "saved"} successfully.`,
+          `[DATA] Camera: ${escapeHtml(cameraName)}`,
+          "[NEXT] Opening Camera List automatically..."
+        ].join("<br>");
+
+        editingSurveillanceId = null;
+        showSidSuccessPopup(wasEditing ? "Update Successful" : "Save Successful", "Opening Camera List...", async () => {
+          await openSurveillanceListPage();
+        });
+      } catch (error) {
+        console.error("Surveillance save error:", error);
+        surveillancePreview.innerHTML = `<span class='warn'>[SUPABASE ERROR]</span> ${escapeHtml(error.message)}`;
+      } finally {
+        surveillanceSaveBtn.disabled = false;
+        surveillanceSaveBtn.textContent = "Save Camera";
+      }
+    });
+
+    surveillanceClearBtn.addEventListener("click", clearSurveillanceForm);
+
+    surveillanceTableWrap.addEventListener("click", async (event) => {
+      const button = event.target.closest("button[data-surveillance-action]");
+      if (!button) return;
+
+      const recordId = button.dataset.id;
+      const record = surveillanceRecords.find((item) => item.id === recordId);
+      if (!record) return;
+
+      if (button.dataset.surveillanceAction === "edit") {
+        openSurveillanceAddPage({ mode: "edit", record });
+      }
+
+      if (button.dataset.surveillanceAction === "remove") {
+        if (!confirm(`Remove this camera from Supabase?\n\nCamera: ${record.cameraName || "-"}`)) return;
+        try {
+          button.disabled = true;
+          button.textContent = "Removing...";
+          await deleteSurveillanceRecord(recordId);
+          await openSurveillanceListPage();
+        } catch (error) {
+          alert("Supabase camera delete error: " + error.message);
+          button.disabled = false;
+          button.textContent = "Remove";
+        }
+      }
+    });
 
 
     deviceEntryForm.addEventListener("submit", async (event) => {
@@ -4872,7 +5887,7 @@
       hideAllSecurePages();
       loginShell.style.display = "grid";
       password.value = "";
-      showUsernameStep();
+      showPasswordStep();
     });
   </script>
 </body>
