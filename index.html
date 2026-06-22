@@ -3167,7 +3167,17 @@
       </div>
       <div class="surveillance-field">
         <label for="surveillanceBrand">Camera Brand</label>
-        <input id="surveillanceBrand" type="text" placeholder="Enter camera brand" autocomplete="off" />
+        <select id="surveillanceBrand">
+          <option value="">Select Brand</option>
+          <option value="CP Plus">CP Plus</option>
+          <option value="UNV">UNV</option>
+          <option value="Dahua">Dahua</option>
+          <option value="Other">Other</option>
+        </select>
+      </div>
+      <div class="surveillance-field" id="surveillanceBrandOtherWrap" style="display:none;">
+        <label for="surveillanceBrandOther">Other Brand Name</label>
+        <input id="surveillanceBrandOther" type="text" placeholder="Enter manual brand name" autocomplete="off" />
       </div>
       <div class="surveillance-field">
         <label for="surveillanceStatus">Status</label>
@@ -3672,6 +3682,8 @@
     const surveillanceSlotNo = document.getElementById("surveillanceSlotNo");
     const surveillanceDvrNo = document.getElementById("surveillanceDvrNo");
     const surveillanceBrand = document.getElementById("surveillanceBrand");
+    const surveillanceBrandOtherWrap = document.getElementById("surveillanceBrandOtherWrap");
+    const surveillanceBrandOther = document.getElementById("surveillanceBrandOther");
     const surveillanceStatus = document.getElementById("surveillanceStatus");
     const surveillanceIpReserved = document.getElementById("surveillanceIpReserved");
     const surveillancePassword = document.getElementById("surveillancePassword");
@@ -4442,6 +4454,52 @@
       return "<span class='surveillance-status-active'>Active</span>";
     }
 
+    function formatIpAddressInput(value) {
+      const digits = String(value || "").replace(/\D/g, "").slice(0, 12);
+      const parts = digits.match(/.{1,3}/g) || [];
+      return parts.join(".");
+    }
+
+    function formatMacAddressInput(value) {
+      const hex = String(value || "").replace(/[^0-9a-fA-F]/g, "").toUpperCase().slice(0, 12);
+      const parts = hex.match(/.{1,2}/g) || [];
+      return parts.join(":");
+    }
+
+    function updateSurveillanceBrandOtherVisibility() {
+      if (!surveillanceBrand || !surveillanceBrandOtherWrap || !surveillanceBrandOther) return;
+      const isOther = surveillanceBrand.value === "Other";
+      surveillanceBrandOtherWrap.style.display = isOther ? "" : "none";
+      if (!isOther) surveillanceBrandOther.value = "";
+    }
+
+    function getSurveillanceBrandValue() {
+      if (!surveillanceBrand) return "";
+      if (surveillanceBrand.value === "Other") {
+        return (surveillanceBrandOther?.value || "").trim();
+      }
+      return surveillanceBrand.value || "";
+    }
+
+    function setSurveillanceBrandValue(brandValue) {
+      const value = String(brandValue || "").trim();
+      const defaultBrands = ["CP Plus", "UNV", "Dahua"];
+      if (!surveillanceBrand || !surveillanceBrandOther) return;
+
+      if (!value) {
+        surveillanceBrand.value = "";
+        surveillanceBrandOther.value = "";
+      } else if (defaultBrands.includes(value)) {
+        surveillanceBrand.value = value;
+        surveillanceBrandOther.value = "";
+      } else {
+        surveillanceBrand.value = "Other";
+        surveillanceBrandOther.value = value;
+      }
+
+      updateSurveillanceBrandOtherVisibility();
+    }
+
     async function loadSurveillanceRecords() {
       const { data, error } = await supabaseClient
         .from("surveillance_cameras")
@@ -4518,6 +4576,7 @@
       surveillanceSaveBtn.textContent = "Save Camera";
       surveillanceClearBtn.style.display = "";
       surveillanceSaveBtn.style.gridColumn = "";
+      setSurveillanceBrandValue("");
       surveillanceStatus.value = "Active";
       surveillanceIpReserved.value = "Yes";
       surveillancePreview.innerHTML = "[CCTV] Form cleared. Ready to save new camera data.";
@@ -4539,7 +4598,7 @@
         surveillanceMacAddress.value = options.record.macAddress || "";
         surveillanceSlotNo.value = options.record.slotNo || "";
         surveillanceDvrNo.value = options.record.dvrNo || "";
-        surveillanceBrand.value = options.record.brand || "";
+        setSurveillanceBrandValue(options.record.brand || "");
         surveillanceStatus.value = options.record.status || "Active";
         surveillanceIpReserved.value = options.record.ipReserved || "Yes";
         surveillancePassword.value = options.record.cameraPassword || "";
@@ -5514,6 +5573,27 @@
     setupIdentityFileInput(rocketIdentityFile, rocketIdentityStatus, "Rocket identity");
     setupIdentityFileInput(simIdentityFile, simIdentityStatus, "SIM identity");
 
+    if (surveillanceIpAddress) {
+      surveillanceIpAddress.addEventListener("input", () => {
+        surveillanceIpAddress.value = formatIpAddressInput(surveillanceIpAddress.value);
+      });
+    }
+
+    if (surveillanceMacAddress) {
+      surveillanceMacAddress.addEventListener("input", () => {
+        surveillanceMacAddress.value = formatMacAddressInput(surveillanceMacAddress.value);
+      });
+    }
+
+    if (surveillanceBrand) {
+      surveillanceBrand.addEventListener("change", () => {
+        updateSurveillanceBrandOtherVisibility();
+        if (surveillanceBrand.value === "Other") {
+          setTimeout(() => surveillanceBrandOther.focus(), 80);
+        }
+      });
+    }
+
 
 
     surveillanceEntryForm.addEventListener("submit", async (event) => {
@@ -5523,6 +5603,12 @@
       if (!cameraName) {
         surveillancePreview.innerHTML = "<span class='warn'>[REQUIRED]</span> Camera Name / Location dite hobe.";
         surveillanceCameraName.focus();
+        return;
+      }
+
+      if (surveillanceBrand.value === "Other" && !surveillanceBrandOther.value.trim()) {
+        surveillancePreview.innerHTML = "<span class='warn'>[REQUIRED]</span> Other brand name likhte hobe.";
+        surveillanceBrandOther.focus();
         return;
       }
 
@@ -5538,7 +5624,7 @@
           macAddress: surveillanceMacAddress.value.trim(),
           slotNo: surveillanceSlotNo.value.trim(),
           dvrNo: surveillanceDvrNo.value.trim(),
-          brand: surveillanceBrand.value.trim(),
+          brand: getSurveillanceBrandValue(),
           status: surveillanceStatus.value,
           ipReserved: surveillanceIpReserved.value,
           cameraPassword: surveillancePassword.value.trim(),
