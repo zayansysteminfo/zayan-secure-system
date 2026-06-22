@@ -2237,6 +2237,74 @@
     }
 
 
+    /* Change Password System */
+    .module.change-password-module {
+      border-color: rgba(255, 200, 87, 0.62);
+      background:
+        linear-gradient(135deg, rgba(255, 200, 87, 0.11), rgba(0, 245, 255, 0.05)),
+        rgba(0, 0, 0, 0.08);
+      min-height: 132px;
+    }
+
+    .module.change-password-module::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      transform: translateX(-120%);
+      background: linear-gradient(90deg, transparent, rgba(255, 200, 87, 0.2), transparent);
+      animation: sidSweep 2.35s linear infinite;
+    }
+
+    .module.change-password-module::after {
+      content: "CHANGE";
+      color: rgba(255, 200, 87, 0.95);
+    }
+
+    .change-password-page {
+      display: none;
+      z-index: 5;
+      width: min(720px, calc(100vw - 28px));
+      max-height: calc(100vh - 28px);
+      overflow: auto;
+      padding: 34px;
+      background: linear-gradient(145deg, rgba(18, 15, 6, 0.95), rgba(2, 6, 14, 0.92));
+      border: 1px solid rgba(255, 200, 87, 0.32);
+      box-shadow: 0 0 34px rgba(255, 200, 87, 0.15), inset 0 0 24px rgba(255, 255, 255, 0.025);
+      backdrop-filter: blur(12px);
+      border-radius: 22px;
+      position: relative;
+    }
+
+    .change-password-page.active {
+      display: block;
+      animation: sidPageIn 0.35s ease;
+    }
+
+    .change-password-form {
+      margin-top: 22px;
+      display: grid;
+      gap: 16px;
+      border: 1px solid rgba(255, 200, 87, 0.24);
+      border-radius: 20px;
+      padding: 22px;
+      background: rgba(0, 0, 0, 0.18);
+    }
+
+    .change-password-form input {
+      border-color: rgba(255, 200, 87, 0.32);
+    }
+
+    .change-password-msg {
+      min-height: 22px;
+      color: var(--gold);
+      font-size: 12px;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      line-height: 1.6;
+      text-align: center;
+    }
+
+
     /* Login Alert System */
     .alert-module {
       border-color: rgba(255, 47, 109, 0.72);
@@ -2824,36 +2892,32 @@
           </svg>
         </div>
         <h2>Access Gateway</h2>
-        <p id="loginSubtitle">Enter your user name to continue</p>
+        <p id="loginSubtitle">Enter system password to continue</p>
       </div>
 
       <div class="stepper">
         <div class="step-dot active" id="stepOneDot"></div>
-        <div class="step-dot" id="stepTwoDot"></div>
+        <div class="step-dot active" id="stepTwoDot" style="display:none;"></div>
       </div>
 
             <form id="secureLoginForm" autocomplete="off">
+        <input id="username" type="hidden" value="System Admin" />
         <input type="text" name="fake_username" autocomplete="username" style="position:absolute; left:-9999px; opacity:0; height:0; width:0;" tabindex="-1" />
         <input type="password" name="fake_password" autocomplete="new-password" style="position:absolute; left:-9999px; opacity:0; height:0; width:0;" tabindex="-1" />
         <div class="field-area">
-          <div class="field-card" id="usernameStep">
-            <label for="username">Enter Your User Name</label>
-            <input id="username" name="zayan_user_field" type="text" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="Enter user name" />
-            <button class="primary-btn" type="button" id="usernameBtn">Verify User</button>
-          </div>
+          <div class="field-card hidden" id="usernameStep" style="display:none;"></div>
 
-          <div class="field-card hidden" id="passwordStep">
-            <label for="password">Enter User Password</label>
-            <input id="password" name="zayan_pass_field" type="password" autocomplete="new-password" readonly onfocus="this.removeAttribute('readonly');" placeholder="••••••••••••" />
+          <div class="field-card slide-in" id="passwordStep">
+            <label for="password">Enter System Password</label>
+            <input id="password" name="access_control_password_field" type="password" autocomplete="new-password" readonly onfocus="this.removeAttribute('readonly');" placeholder="••••••••••••" />
             <button class="primary-btn" type="submit">Access System</button>
-            <button class="ghost-btn" type="button" id="backBtn">Back To User Name</button>
           </div>
         </div>
       </form>
 
       <div class="terminal" id="terminal">
         [SYS] Access Control gateway initialized...<br>
-        [SYS] Waiting for user ID...<br>
+        [SYS] Waiting for system password...<br>
         [STATUS] Frontend demo mode active.
       </div>
     </section>
@@ -2889,6 +2953,11 @@
         <strong>Surveillance Management System</strong>
         <span>→ Camera inventory, active/inactive status, password list and audit print report.</span>
       </div>
+      <div class="module change-password-module" id="changePasswordModule">
+        <div class="module-logo">🔐</div>
+        <strong>Change Password</strong>
+        <span>→ Change Access Control System login password.</span>
+      </div>
     </div>
 
     <div class="footer-note">
@@ -2898,6 +2967,42 @@
 
 
 
+
+
+  <section class="change-password-page" id="changePasswordPage">
+    <div class="dashboard-head">
+      <div>
+        <div class="top-tag"><span class="pulse"></span> Password Control</div>
+        <h2 class="dark-title">Change Password</h2>
+        <p class="dark-subtitle">Change Access Control System login password. New password will save in Supabase.</p>
+      </div>
+      <button class="sid-back" id="changePasswordBackBtn">← Dashboard</button>
+    </div>
+
+    <form class="change-password-form" id="changePasswordForm" autocomplete="off">
+      <div>
+        <label for="oldSystemPassword">Old Password</label>
+        <input id="oldSystemPassword" type="password" autocomplete="new-password" placeholder="Enter old password" />
+      </div>
+      <div>
+        <label for="newSystemPassword">New Password</label>
+        <input id="newSystemPassword" type="password" autocomplete="new-password" placeholder="Enter new password" />
+      </div>
+      <div>
+        <label for="confirmSystemPassword">Confirm New Password</label>
+        <input id="confirmSystemPassword" type="password" autocomplete="new-password" placeholder="Confirm new password" />
+      </div>
+      <div class="change-password-msg" id="changePasswordMsg">Default password: Sys@3629</div>
+      <div class="device-actions">
+        <button type="submit" class="sid-save">Update Password</button>
+        <button type="button" class="sid-clear" id="changePasswordClearBtn">Clear Form</button>
+      </div>
+    </form>
+
+    <div class="footer-note">
+      Password is saved in Supabase table <b>system_settings</b>. First/default password: <b>Sys@3629</b>
+    </div>
+  </section>
 
 
   <section class="device-menu-page" id="deviceMenuPage">
@@ -3529,8 +3634,9 @@
     const intrusionAlert = document.getElementById("intrusionAlert");
     const alertTitle = document.getElementById("alertTitle");
     const alertSubtitle = document.getElementById("alertSubtitle");
-    const DEMO_USER_ID = "zayanzabit";
-    const DEMO_PASSWORD = "Zayan@123";
+    const DEFAULT_SYSTEM_PASSWORD = "Sys@3629";
+    const SYSTEM_PASSWORD_SETTING_KEY = "access_control_password";
+    let cachedSystemPassword = DEFAULT_SYSTEM_PASSWORD;
     const ACSID_MANAGEMENT_PASSWORD = "Z5ssiq##1@";
     const loginShell = document.getElementById("loginShell");
     const dashboard = document.getElementById("dashboard");
@@ -3539,6 +3645,15 @@
     const managementModule = document.getElementById("managementModule");
     const devicePasswordModule = document.getElementById("devicePasswordModule");
     const surveillanceModule = document.getElementById("surveillanceModule");
+    const changePasswordModule = document.getElementById("changePasswordModule");
+    const changePasswordPage = document.getElementById("changePasswordPage");
+    const changePasswordBackBtn = document.getElementById("changePasswordBackBtn");
+    const changePasswordForm = document.getElementById("changePasswordForm");
+    const oldSystemPassword = document.getElementById("oldSystemPassword");
+    const newSystemPassword = document.getElementById("newSystemPassword");
+    const confirmSystemPassword = document.getElementById("confirmSystemPassword");
+    const changePasswordMsg = document.getElementById("changePasswordMsg");
+    const changePasswordClearBtn = document.getElementById("changePasswordClearBtn");
     const surveillanceDashboardPage = document.getElementById("surveillanceDashboardPage");
     const surveillanceAddPage = document.getElementById("surveillanceAddPage");
     const surveillanceListPage = document.getElementById("surveillanceListPage");
@@ -3747,57 +3862,76 @@
       terminal.innerHTML = lines.join("<br>");
     }
 
+    async function loadSystemPassword() {
+      try {
+        const { data, error } = await supabaseClient
+          .from("system_settings")
+          .select("setting_value")
+          .eq("setting_key", SYSTEM_PASSWORD_SETTING_KEY)
+          .maybeSingle();
+
+        if (error) throw error;
+
+        if (!data || !data.setting_value) {
+          await saveSystemPassword(DEFAULT_SYSTEM_PASSWORD);
+          cachedSystemPassword = DEFAULT_SYSTEM_PASSWORD;
+          return cachedSystemPassword;
+        }
+
+        cachedSystemPassword = data.setting_value;
+        return cachedSystemPassword;
+      } catch (error) {
+        console.error("System password load error:", error);
+        cachedSystemPassword = DEFAULT_SYSTEM_PASSWORD;
+        return cachedSystemPassword;
+      }
+    }
+
+    async function saveSystemPassword(newPasswordValue) {
+      const { error } = await supabaseClient
+        .from("system_settings")
+        .upsert({
+          setting_key: SYSTEM_PASSWORD_SETTING_KEY,
+          setting_value: newPasswordValue,
+          updated_at: new Date().toISOString()
+        }, { onConflict: "setting_key" });
+
+      if (error) throw error;
+      cachedSystemPassword = newPasswordValue;
+      return true;
+    }
+
     function showPasswordStep() {
-      const user = username.value.trim();
-
-      if (!user) {
-        setTerminal([
-          "<span class='warn'>[WARN] User ID required.</span>",
-          "[SYS] Please enter user ID."
-        ]);
-        username.focus();
-        return;
-      }
-
-      if (user.toLowerCase() !== DEMO_USER_ID) {
-        triggerWrongPassword("Wrong User ID", "Unknown Operator Detected", "Wrong user ID detected.");
-        username.value = "";
-        username.focus();
-        return;
-      }
-
-      usernameStep.classList.add("slide-out-left");
-      usernameStep.classList.remove("slide-in");
-      passwordStep.classList.remove("hidden");
-
-      setTimeout(() => {
+      if (passwordStep) {
+        passwordStep.classList.remove("hidden");
         passwordStep.classList.add("slide-in");
-      }, 30);
-
-      stepOneDot.classList.remove("active");
-      stepTwoDot.classList.add("active");
-      loginSubtitle.textContent = "User verified. Enter password.";
+      }
+      if (stepOneDot) stepOneDot.classList.add("active");
+      if (stepTwoDot) stepTwoDot.classList.add("active");
+      loginSubtitle.textContent = "Enter system password to continue";
       setTerminal([
-        `[SYS] Operator verified: <span class='ok'>${escapeHtml(user)}</span>`,
-        "[SYS] Sliding password layer activated...",
-        "[STATUS] Awaiting secure passkey..."
+        "[SYS] Access Control gateway initialized...",
+        "[SYS] Waiting for system password..."
       ]);
-
-      setTimeout(() => password.focus(), 380);
+      setTimeout(() => password.focus(), 180);
     }
 
     function showUsernameStep() {
-      passwordStep.classList.add("hidden");
-      usernameStep.classList.remove("hidden");
-      stepTwoDot.classList.remove("active");
-      stepOneDot.classList.add("active");
-      loginSubtitle.textContent = "Enter your user name to continue";
-      password.value = "";
-      setTerminal([
-        "[SYS] Returned to username layer...",
-        "[SYS] Waiting for user ID..."
-      ]);
-      setTimeout(() => username.focus(), 260);
+      showPasswordStep();
+    }
+
+    function openChangePasswordPage() {
+      hideAllSecurePages();
+      changePasswordPage.classList.add("active");
+      changePasswordForm.reset();
+      changePasswordMsg.textContent = "Default password: Sys@3629";
+      setTimeout(() => oldSystemPassword.focus(), 120);
+    }
+
+    function clearChangePasswordForm() {
+      changePasswordForm.reset();
+      changePasswordMsg.textContent = "Form cleared.";
+      oldSystemPassword.focus();
     }
 
     function escapeHtml(text) {
@@ -3813,16 +3947,11 @@
       });
     }
 
-    usernameBtn.addEventListener("click", showPasswordStep);
-
-    username.addEventListener("keydown", (event) => {
-      if (event.key === "Enter") {
-        event.preventDefault();
-        showPasswordStep();
-      }
-    });
-
-    backBtn.addEventListener("click", showUsernameStep);
+    if (usernameBtn) usernameBtn.addEventListener("click", showPasswordStep);
+    if (username) username.value = "System Admin";
+    if (backBtn) backBtn.addEventListener("click", showUsernameStep);
+    showPasswordStep();
+    loadSystemPassword();
 
     window.addEventListener("pageshow", () => {
       password.value = "";
@@ -3909,19 +4038,21 @@
       }, 420);
     }
 
-    form.addEventListener("submit", (event) => {
+    form.addEventListener("submit", async (event) => {
       event.preventDefault();
 
       if (!password.value.trim()) {
         setTerminal([
           "<span class='warn'>[WARN] Password required.</span>",
-          "[SYS] Please enter user password."
+          "[SYS] Please enter system password."
         ]);
         password.focus();
         return;
       }
 
-      if (password.value !== DEMO_PASSWORD) {
+      const systemPassword = await loadSystemPassword();
+
+      if (password.value !== systemPassword) {
         triggerWrongPassword("Wrong Password", "Intrusion Attempt Detected", "Wrong password detected.");
         password.value = "";
         password.focus();
@@ -3931,14 +4062,14 @@
       setTerminal([
         "[SYS] Validating credential handshake...",
         "[SYS] Checking secure route...",
-        "<span class='ok'>[OK] Demo access granted.</span>"
+        "<span class='ok'>[OK] Access granted.</span>"
       ]);
 
       setTimeout(() => {
         password.value = "";
         loginShell.style.display = "none";
         dashboard.classList.add("active");
-        welcomeText.textContent = `Welcome, ${username.value.trim()} — Access Control System dashboard is ready.`;
+        welcomeText.textContent = "Welcome — Access Control System dashboard is ready.";
       }, 780);
     });
 
@@ -3948,6 +4079,7 @@
       if (acSidPasswordOverlay) acSidPasswordOverlay.classList.remove("active");
       if (sidSuccessOverlay) sidSuccessOverlay.classList.remove("active");
       dashboard.classList.remove("active");
+      changePasswordPage.classList.remove("active");
       loginAlertPage.classList.remove("active");
       managementPage.classList.remove("active");
       deviceMenuPage.classList.remove("active");
@@ -5232,6 +5364,47 @@
     }
 
     managementModule.addEventListener("click", openAcSidPasswordGate);
+    changePasswordModule.addEventListener("click", openChangePasswordPage);
+    changePasswordBackBtn.addEventListener("click", backToDashboard);
+    changePasswordClearBtn.addEventListener("click", clearChangePasswordForm);
+    changePasswordForm.addEventListener("submit", async (event) => {
+      event.preventDefault();
+      const oldPass = oldSystemPassword.value;
+      const newPass = newSystemPassword.value;
+      const confirmPass = confirmSystemPassword.value;
+      const currentPassword = await loadSystemPassword();
+
+      if (oldPass !== currentPassword) {
+        changePasswordMsg.textContent = "Wrong old password. Password not changed.";
+        triggerWrongPassword("Wrong Password", "Password Change Blocked", "Wrong old password detected.");
+        oldSystemPassword.value = "";
+        oldSystemPassword.focus();
+        return;
+      }
+
+      if (!newPass || newPass.length < 6) {
+        changePasswordMsg.textContent = "New password must be at least 6 characters.";
+        newSystemPassword.focus();
+        return;
+      }
+
+      if (newPass !== confirmPass) {
+        changePasswordMsg.textContent = "New password and confirm password do not match.";
+        confirmSystemPassword.focus();
+        return;
+      }
+
+      try {
+        await saveSystemPassword(newPass);
+        changePasswordForm.reset();
+        changePasswordMsg.textContent = "Password changed successfully.";
+        showSidSuccessPopup("Password Changed", "Access Control password updated in Supabase.", async () => {
+          backToDashboard();
+        });
+      } catch (error) {
+        changePasswordMsg.textContent = "Supabase error: " + error.message;
+      }
+    });
     surveillanceModule.addEventListener("click", openSurveillanceDashboardPage);
     surveillanceBackBtn.addEventListener("click", backToDashboard);
     surveillanceAddModule.addEventListener("click", () => openSurveillanceAddPage({ reset: true }));
