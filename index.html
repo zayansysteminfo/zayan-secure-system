@@ -2237,6 +2237,130 @@
     }
 
 
+    /* Land / Property Document Management */
+    .module.land-property-module {
+      border-color: rgba(255, 200, 87, 0.68);
+      background:
+        linear-gradient(135deg, rgba(255, 200, 87, 0.12), rgba(0, 245, 255, 0.055)),
+        rgba(0, 0, 0, 0.08);
+      min-height: 132px;
+    }
+
+    .module.land-property-module::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      transform: translateX(-120%);
+      background: linear-gradient(90deg, transparent, rgba(255, 200, 87, 0.2), transparent);
+      animation: sidSweep 2.3s linear infinite;
+    }
+
+    .module.land-property-module::after {
+      content: "LAND";
+      color: rgba(255, 200, 87, 0.95);
+    }
+
+    .land-menu-page,
+    .land-add-page,
+    .land-list-page {
+      display: none;
+      z-index: 5;
+      width: min(1480px, calc(100vw - 28px));
+      max-height: calc(100vh - 28px);
+      overflow: auto;
+      padding: 32px;
+      background: linear-gradient(145deg, rgba(18, 14, 6, 0.95), rgba(2, 6, 14, 0.92));
+      border: 1px solid rgba(255, 200, 87, 0.3);
+      box-shadow: 0 0 34px rgba(255, 200, 87, 0.14), inset 0 0 24px rgba(255, 255, 255, 0.025);
+      backdrop-filter: blur(12px);
+      border-radius: 22px;
+      position: relative;
+    }
+
+    .land-menu-page.active,
+    .land-add-page.active,
+    .land-list-page.active {
+      display: block;
+      animation: sidPageIn 0.35s ease;
+    }
+
+    .land-form {
+      margin-top: 22px;
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 16px;
+      border: 1px solid rgba(255, 200, 87, 0.24);
+      border-radius: 20px;
+      padding: 22px;
+      background: rgba(0, 0, 0, 0.18);
+    }
+
+    .land-field.full { grid-column: 1 / -1; }
+
+    .land-field input,
+    .land-field textarea {
+      width: 100%;
+      border: 1px solid rgba(255, 200, 87, 0.32);
+      background: rgba(0, 0, 0, 0.36);
+      color: #fff;
+      border-radius: 14px;
+      outline: none;
+      padding: 0 15px;
+      font-size: 15px;
+      letter-spacing: 0.6px;
+    }
+
+    .land-field input { height: 54px; }
+    .land-field input[type="file"] { height: auto; padding: 14px; cursor: pointer; }
+    .land-field textarea { min-height: 82px; padding-top: 13px; line-height: 1.5; resize: vertical; }
+
+    .land-actions {
+      grid-column: 1 / -1;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+
+    .land-table-wrap {
+      margin-top: 22px;
+      overflow: auto;
+      border: 1px solid rgba(121, 139, 178, 0.28);
+      border-radius: 18px;
+      background: rgba(255, 255, 255, 0.025);
+    }
+
+    .land-table {
+      width: 100%;
+      min-width: 980px;
+      border-collapse: collapse;
+    }
+
+    .land-table th,
+    .land-table td {
+      border: 1px solid rgba(121, 139, 178, 0.28);
+      padding: 12px 10px;
+      text-align: left;
+      color: rgba(232, 251, 255, 0.86);
+      font-size: 12px;
+      vertical-align: middle;
+      word-break: break-word;
+    }
+
+    .land-table th {
+      color: #111;
+      background: linear-gradient(90deg, #ffc857, #00f5ff);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      font-weight: 900;
+      white-space: nowrap;
+    }
+
+    @media (max-width: 900px) {
+      .land-form,
+      .land-actions { grid-template-columns: 1fr; }
+    }
+
+
     /* Change Password System */
     .module.change-password-module {
       border-color: rgba(255, 200, 87, 0.62);
@@ -2901,12 +3025,7 @@
       </div>
 
             <form id="secureLoginForm" autocomplete="off">
-        <input id="username" type="hidden" value="System Admin" />
-        <input type="text" name="fake_username" autocomplete="username" style="position:absolute; left:-9999px; opacity:0; height:0; width:0;" tabindex="-1" />
-        <input type="password" name="fake_password" autocomplete="new-password" style="position:absolute; left:-9999px; opacity:0; height:0; width:0;" tabindex="-1" />
         <div class="field-area">
-          <div class="field-card hidden" id="usernameStep" style="display:none;"></div>
-
           <div class="field-card slide-in" id="passwordStep">
             <label for="password">Enter System Password</label>
             <input id="password" name="access_control_password_field" type="password" autocomplete="new-password" readonly onfocus="this.removeAttribute('readonly');" placeholder="••••••••••••" />
@@ -2953,6 +3072,11 @@
         <strong>Surveillance Management System</strong>
         <span>→ Camera inventory, active/inactive status, password list and audit print report.</span>
       </div>
+      <div class="module land-property-module" id="landPropertyModule">
+        <div class="module-logo">📄</div>
+        <strong>Land / Property Document Management</strong>
+        <span>→ Add land tax PDF, Khatian No, owner name and land area with print/save output.</span>
+      </div>
       <div class="module change-password-module" id="changePasswordModule">
         <div class="module-logo">🔐</div>
         <strong>Change Password</strong>
@@ -2967,6 +3091,98 @@
 
 
 
+  <section class="land-menu-page" id="landMenuPage">
+    <div class="dashboard-head">
+      <div>
+        <div class="top-tag"><span class="pulse"></span> Land Document</div>
+        <h2 class="dark-title">Land / Property Document Management</h2>
+        <p class="dark-subtitle">Khatian No wise land tax PDF and property document archive.</p>
+      </div>
+      <button class="sid-back" id="landMenuBackBtn">← Dashboard</button>
+    </div>
+
+    <div class="module-grid">
+      <div class="module land-property-module" id="landAddModule">
+        <strong>Add Land Document</strong>
+        <span>→ Add Khatian No, owner name, land area and upload PDF.</span>
+      </div>
+    </div>
+
+    <div class="footer-note">
+      Search rule: Data Entry List থেকে Khatian No দিলে related uploaded PDF দেখা যাবে.
+    </div>
+  </section>
+
+  <section class="land-add-page" id="landAddPage">
+    <div class="sid-head">
+      <div class="sid-title-wrap">
+        <div class="top-tag"><span class="pulse"></span> Add Document</div>
+        <h2 class="dark-title">Add Land / Property Document</h2>
+        <p class="dark-subtitle">Upload only PDF file for land tax / property document archive.</p>
+      </div>
+      <div class="sid-nav-group">
+        <button class="sid-back" id="landAddBackBtn">← Land Menu</button>
+        <button class="sid-next" id="landAddToListBtn">Data Entry List →</button>
+      </div>
+    </div>
+
+    <form class="land-form" id="landEntryForm">
+      <div class="land-field">
+        <label for="landKhatianNo">Khatian No <span class="required-star">*</span></label>
+        <input id="landKhatianNo" type="text" placeholder="Enter Khatian No" autocomplete="off" />
+      </div>
+      <div class="land-field">
+        <label for="landOwnerName">Malik / Owner Name <span class="required-star">*</span></label>
+        <input id="landOwnerName" type="text" placeholder="Enter owner name" autocomplete="off" />
+      </div>
+      <div class="land-field full">
+        <label for="landArea">Jaygar Poriman / Land Area</label>
+        <input id="landArea" type="text" placeholder="Example: 12 Shotok / 0.35 Acre" autocomplete="off" />
+      </div>
+      <div class="land-field full">
+        <label for="landPdfFile">Upload PDF <span class="required-star">*</span></label>
+        <input id="landPdfFile" type="file" accept="application/pdf,.pdf" />
+      </div>
+      <div class="land-field full">
+        <label for="landRemarks">Remarks</label>
+        <textarea id="landRemarks" placeholder="Any note about land tax / document"></textarea>
+      </div>
+      <div class="land-actions">
+        <button type="submit" class="sid-save" id="landSaveBtn">Save Document</button>
+        <button type="button" class="sid-clear" id="landClearBtn">Clear Form</button>
+      </div>
+    </form>
+
+    <div class="sid-preview" id="landPreview">[LAND] Ready to save land/property document data.</div>
+  </section>
+
+  <section class="land-list-page" id="landListPage">
+    <div class="sid-head">
+      <div class="sid-title-wrap">
+        <div class="top-tag"><span class="pulse"></span> Data Entry List</div>
+        <h2 class="dark-title">Land / Property Data Entry List</h2>
+        <p class="dark-subtitle">Search Khatian No and open related PDF. Print/save single or all records.</p>
+      </div>
+      <div class="sid-nav-group">
+        <button class="sid-back" id="landListBackBtn">← Land Menu</button>
+        <button class="sid-next" id="landListAddBtn">Add Document →</button>
+        <button class="sid-next" id="landPrintAllBtn">Print / Save All</button>
+      </div>
+    </div>
+
+    <div class="search-panel">
+      <select id="landSearchType">
+        <option value="khatianNo">Khatian No</option>
+        <option value="ownerName">Owner Name</option>
+        <option value="landArea">Land Area</option>
+      </select>
+      <input id="landSearchInput" type="text" placeholder="Search land/property documents..." autocomplete="off" />
+    </div>
+
+    <div class="land-table-wrap" id="landTableWrap">
+      <div class="empty-list">No land/property document found.</div>
+    </div>
+  </section>
 
 
   <section class="change-password-page" id="changePasswordPage">
@@ -3619,12 +3835,8 @@
     setInterval(drawMatrix, 46);
     window.addEventListener("resize", resizeCanvas);
 
-    const usernameStep = document.getElementById("usernameStep");
     const passwordStep = document.getElementById("passwordStep");
-    const username = document.getElementById("username");
     const password = document.getElementById("password");
-    const usernameBtn = document.getElementById("usernameBtn");
-    const backBtn = document.getElementById("backBtn");
     const terminal = document.getElementById("terminal");
     const loginSubtitle = document.getElementById("loginSubtitle");
     const stepOneDot = document.getElementById("stepOneDot");
@@ -3654,6 +3866,29 @@
     const confirmSystemPassword = document.getElementById("confirmSystemPassword");
     const changePasswordMsg = document.getElementById("changePasswordMsg");
     const changePasswordClearBtn = document.getElementById("changePasswordClearBtn");
+    const landPropertyModule = document.getElementById("landPropertyModule");
+    const landMenuPage = document.getElementById("landMenuPage");
+    const landAddPage = document.getElementById("landAddPage");
+    const landListPage = document.getElementById("landListPage");
+    const landMenuBackBtn = document.getElementById("landMenuBackBtn");
+    const landAddModule = document.getElementById("landAddModule");
+    const landAddBackBtn = document.getElementById("landAddBackBtn");
+    const landAddToListBtn = document.getElementById("landAddToListBtn");
+    const landListBackBtn = document.getElementById("landListBackBtn");
+    const landListAddBtn = document.getElementById("landListAddBtn");
+    const landPrintAllBtn = document.getElementById("landPrintAllBtn");
+    const landEntryForm = document.getElementById("landEntryForm");
+    const landKhatianNo = document.getElementById("landKhatianNo");
+    const landOwnerName = document.getElementById("landOwnerName");
+    const landArea = document.getElementById("landArea");
+    const landPdfFile = document.getElementById("landPdfFile");
+    const landRemarks = document.getElementById("landRemarks");
+    const landSaveBtn = document.getElementById("landSaveBtn");
+    const landClearBtn = document.getElementById("landClearBtn");
+    const landPreview = document.getElementById("landPreview");
+    const landSearchType = document.getElementById("landSearchType");
+    const landSearchInput = document.getElementById("landSearchInput");
+    const landTableWrap = document.getElementById("landTableWrap");
     const surveillanceDashboardPage = document.getElementById("surveillanceDashboardPage");
     const surveillanceAddPage = document.getElementById("surveillanceAddPage");
     const surveillanceListPage = document.getElementById("surveillanceListPage");
@@ -3790,12 +4025,14 @@
     const SUPABASE_PUBLISHABLE_KEY = "sb_publishable_ZGiMSERlIw57pJDxEM210Q_WA4Nm3pg";
     const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY);
     const IDENTITY_BUCKET = "identity-documents";
+    const LAND_DOCUMENT_BUCKET = "land-documents";
 
     let sidRecords = [];
     let loginAlerts = [];
     let accountUsesHistory = [];
     let devicePasswordRecords = [];
     let surveillanceRecords = [];
+    let landPropertyRecords = [];
     let editingSurveillanceId = null;
     let loginAlertAutoRefreshTimer = null;
     let editingSidId = null;
@@ -3916,10 +4153,6 @@
       setTimeout(() => password.focus(), 180);
     }
 
-    function showUsernameStep() {
-      showPasswordStep();
-    }
-
     function openChangePasswordPage() {
       hideAllSecurePages();
       changePasswordPage.classList.add("active");
@@ -3947,9 +4180,6 @@
       });
     }
 
-    if (usernameBtn) usernameBtn.addEventListener("click", showPasswordStep);
-    if (username) username.value = "System Admin";
-    if (backBtn) backBtn.addEventListener("click", showUsernameStep);
     showPasswordStep();
     loadSystemPassword();
 
@@ -4080,6 +4310,9 @@
       if (sidSuccessOverlay) sidSuccessOverlay.classList.remove("active");
       dashboard.classList.remove("active");
       changePasswordPage.classList.remove("active");
+      landMenuPage.classList.remove("active");
+      landAddPage.classList.remove("active");
+      landListPage.classList.remove("active");
       loginAlertPage.classList.remove("active");
       managementPage.classList.remove("active");
       deviceMenuPage.classList.remove("active");
@@ -4268,6 +4501,245 @@
       startLoginAlertAutoRefresh();
     }
 
+
+
+    function landRecordFromDb(row) {
+      return {
+        id: row.id,
+        khatianNo: row.khatian_no || "",
+        ownerName: row.owner_name || "",
+        landArea: row.land_area || "",
+        pdfFileName: row.pdf_file_name || "",
+        pdfFilePath: row.pdf_file_path || "",
+        pdfFileUrl: row.pdf_file_url || "",
+        remarks: row.remarks || "",
+        createdAt: row.created_at || "",
+        updatedAt: row.updated_at || ""
+      };
+    }
+
+    function formatLandDate(value) {
+      if (!value) return "-";
+      const date = new Date(value);
+      if (Number.isNaN(date.getTime())) return value;
+      return date.toLocaleDateString("en-GB", { day: "2-digit", month: "short", year: "numeric" });
+    }
+
+    async function uploadLandPdf(khatianValue, fileInput) {
+      const file = fileInput.files && fileInput.files[0];
+      if (!file) throw new Error("PDF file is required.");
+
+      const isPdf = file.type === "application/pdf" || /\.pdf$/i.test(file.name);
+      if (!isPdf) throw new Error("Only PDF file is allowed.");
+
+      const safeKhatian = String(khatianValue || "unknown").replace(/[^a-zA-Z0-9_-]/g, "_");
+      const safeFileName = file.name.replace(/[^a-zA-Z0-9._-]/g, "_");
+      const filePath = `${safeKhatian}/${Date.now()}_${safeFileName}`;
+
+      const { error: uploadError } = await supabaseClient.storage
+        .from(LAND_DOCUMENT_BUCKET)
+        .upload(filePath, file, {
+          cacheControl: "3600",
+          upsert: true,
+          contentType: file.type || "application/pdf"
+        });
+
+      if (uploadError) throw uploadError;
+
+      const { data: publicData } = supabaseClient.storage
+        .from(LAND_DOCUMENT_BUCKET)
+        .getPublicUrl(filePath);
+
+      return {
+        fileName: file.name,
+        filePath,
+        fileUrl: publicData.publicUrl
+      };
+    }
+
+    async function loadLandPropertyRecords() {
+      const { data, error } = await supabaseClient
+        .from("land_property_documents")
+        .select("*")
+        .order("created_at", { ascending: false });
+
+      if (error) {
+        landPropertyRecords = [];
+        landTableWrap.innerHTML = `<div class="empty-list">Supabase land_property_documents load error:<br>${escapeHtml(error.message)}<br><br>Please run the SQL table setup first.</div>`;
+        return false;
+      }
+
+      landPropertyRecords = (data || []).map(landRecordFromDb);
+      return true;
+    }
+
+    async function saveLandPropertyRecord(record) {
+      const uploadedPdf = await uploadLandPdf(record.khatianNo, landPdfFile);
+
+      const { error } = await supabaseClient
+        .from("land_property_documents")
+        .insert({
+          khatian_no: record.khatianNo,
+          owner_name: record.ownerName,
+          land_area: record.landArea || null,
+          pdf_file_name: uploadedPdf.fileName,
+          pdf_file_path: uploadedPdf.filePath,
+          pdf_file_url: uploadedPdf.fileUrl,
+          remarks: record.remarks || null,
+          updated_at: new Date().toISOString()
+        });
+
+      if (error) throw error;
+      return true;
+    }
+
+    async function deleteLandPropertyRecord(recordId) {
+      const { error } = await supabaseClient
+        .from("land_property_documents")
+        .delete()
+        .eq("id", recordId);
+
+      if (error) throw error;
+      return true;
+    }
+
+    function openLandMenuPage() {
+      hideAllSecurePages();
+      landMenuPage.classList.add("active");
+    }
+
+    function clearLandForm() {
+      landEntryForm.reset();
+      landPreview.innerHTML = "[LAND] Form cleared. Ready to save land/property document data.";
+      landKhatianNo.focus();
+    }
+
+    function openLandAddPage() {
+      hideAllSecurePages();
+      landAddPage.classList.add("active");
+      clearLandForm();
+      landPreview.innerHTML = "[LAND] Ready to save land/property document data.";
+    }
+
+    async function openLandListPage() {
+      hideAllSecurePages();
+      landListPage.classList.add("active");
+      landTableWrap.innerHTML = "<div class='empty-list'>Loading land/property data...</div>";
+      const ok = await loadLandPropertyRecords();
+      if (ok) renderLandPropertyList();
+    }
+
+    function getFilteredLandRecords() {
+      const searchValue = (landSearchInput?.value || "").trim().toLowerCase();
+      const searchType = landSearchType?.value || "khatianNo";
+      let records = [...landPropertyRecords];
+
+      if (searchValue) {
+        records = records.filter((record) => String(record[searchType] || "").toLowerCase().includes(searchValue));
+      }
+
+      return records;
+    }
+
+    function renderLandPropertyList() {
+      const records = getFilteredLandRecords();
+
+      if (!records.length) {
+        landTableWrap.innerHTML = "<div class='empty-list'>No land/property document found.<br>Click <b>Add Document →</b> to create your first entry.</div>";
+        return;
+      }
+
+      const rows = records.map((record, index) => `
+        <tr>
+          <td style="text-align:center;">${index + 1}</td>
+          <td>${escapeHtml(record.khatianNo || "-")}</td>
+          <td>${escapeHtml(record.ownerName || "-")}</td>
+          <td>${escapeHtml(record.landArea || "-")}</td>
+          <td>${escapeHtml(record.pdfFileName || "-")}</td>
+          <td>${escapeHtml(formatLandDate(record.createdAt || record.updatedAt))}</td>
+          <td>
+            <div class="sid-card-actions">
+              ${record.pdfFileUrl ? `<a class="identity-view-btn" href="${escapeHtml(record.pdfFileUrl)}" target="_blank" rel="noopener">View PDF</a>` : ""}
+              <button class="sid-action-btn view" type="button" data-land-action="print" data-id="${record.id}">Print</button>
+              <button class="sid-action-btn remove" type="button" data-land-action="remove" data-id="${record.id}">Remove</button>
+            </div>
+          </td>
+        </tr>
+      `).join("");
+
+      landTableWrap.innerHTML = `
+        <table class="land-table">
+          <thead>
+            <tr>
+              <th>SL</th>
+              <th>Khatian No</th>
+              <th>Malik / Owner Name</th>
+              <th>Jaygar Poriman / Land Area</th>
+              <th>PDF File</th>
+              <th>Entry Date</th>
+              <th>Action</th>
+            </tr>
+          </thead>
+          <tbody>${rows}</tbody>
+        </table>
+      `;
+    }
+
+    function buildLandPrintHtml(records, titleText) {
+      const nowText = new Date().toLocaleString("en-GB", { day: "2-digit", month: "short", year: "numeric", hour: "2-digit", minute: "2-digit" });
+      const rows = records.map((record, index) => `
+        <tr>
+          <td style="text-align:center;">${index + 1}</td>
+          <td>${escapeHtml(record.khatianNo || "-")}</td>
+          <td>${escapeHtml(record.ownerName || "-")}</td>
+          <td>${escapeHtml(record.landArea || "-")}</td>
+          <td>${escapeHtml(record.pdfFileName || "-")}</td>
+          <td>${escapeHtml(formatLandDate(record.createdAt || record.updatedAt))}</td>
+          <td>${escapeHtml(record.remarks || "-")}</td>
+        </tr>
+      `).join("");
+
+      return `<!DOCTYPE html>
+<html>
+<head>
+  <title>${escapeHtml(titleText)}</title>
+  <style>
+    body{font-family:Arial,sans-serif;color:#111;margin:0;padding:8mm;background:#fff;}
+    h1,h2{text-align:center;margin:0;text-transform:uppercase;}
+    h1{font-size:20px;} h2{font-size:17px;margin-top:5px;}
+    .meta{display:flex;justify-content:space-between;margin:12px 0;font-size:12px;}
+    table{width:100%;border-collapse:collapse;font-size:11px;}
+    th,td{border:1px solid #333;padding:6px;vertical-align:top;}
+    th{background:#e8eef7;text-align:center;text-transform:uppercase;}
+    .sign{display:grid;grid-template-columns:repeat(3,1fr);gap:40px;margin-top:46px;text-align:center;font-size:12px;}
+    .sign div{border-top:1px solid #222;padding-top:8px;}
+    @page{size:A4 landscape;margin:8mm;}
+  </style>
+</head>
+<body>
+  <h1>A&amp;O Apparels Pvt Ltd</h1>
+  <h2>${escapeHtml(titleText)}</h2>
+  <div class="meta"><div><b>Total Records:</b> ${records.length}</div><div><b>Print Date:</b> ${escapeHtml(nowText)}</div></div>
+  <table>
+    <thead><tr><th>SL</th><th>Khatian No</th><th>Malik / Owner Name</th><th>Land Area</th><th>PDF File</th><th>Entry Date</th><th>Remarks</th></tr></thead>
+    <tbody>${rows || '<tr><td colspan="7" style="text-align:center;">No data found</td></tr>'}</tbody>
+  </table>
+  <div class="sign"><div>Prepared By</div><div>Checked By</div><div>Approved By</div></div>
+  <script>window.onload=function(){window.print();};<\/script>
+</body>
+</html>`;
+    }
+
+    function printLandRecords(records, titleText) {
+      const printWindow = window.open("", "_blank");
+      if (!printWindow) {
+        alert("Please allow popup to print/save PDF.");
+        return;
+      }
+      printWindow.document.open();
+      printWindow.document.write(buildLandPrintHtml(records, titleText));
+      printWindow.document.close();
+    }
 
 
     function deviceRecordFromDb(row) {
@@ -5363,6 +5835,75 @@
       return "•".repeat(Math.min(pinValue.length, 8));
     }
 
+    landPropertyModule.addEventListener("click", openLandMenuPage);
+    landMenuBackBtn.addEventListener("click", backToDashboard);
+    landAddModule.addEventListener("click", openLandAddPage);
+    landAddBackBtn.addEventListener("click", openLandMenuPage);
+    landAddToListBtn.addEventListener("click", openLandListPage);
+    landListBackBtn.addEventListener("click", openLandMenuPage);
+    landListAddBtn.addEventListener("click", openLandAddPage);
+    landPrintAllBtn.addEventListener("click", () => printLandRecords(getFilteredLandRecords(), "Land / Property Data Entry List"));
+    landSearchInput.addEventListener("input", renderLandPropertyList);
+    landSearchType.addEventListener("change", renderLandPropertyList);
+    landClearBtn.addEventListener("click", clearLandForm);
+    landEntryForm.addEventListener("submit", async (event) => {
+      event.preventDefault();
+
+      const record = {
+        khatianNo: landKhatianNo.value.trim(),
+        ownerName: landOwnerName.value.trim(),
+        landArea: landArea.value.trim(),
+        remarks: landRemarks.value.trim()
+      };
+
+      if (!record.khatianNo) { landPreview.innerHTML = "<span class='warn'>[WARN]</span> Khatian No required."; landKhatianNo.focus(); return; }
+      if (!record.ownerName) { landPreview.innerHTML = "<span class='warn'>[WARN]</span> Owner name required."; landOwnerName.focus(); return; }
+      if (!landPdfFile.files || !landPdfFile.files[0]) { landPreview.innerHTML = "<span class='warn'>[WARN]</span> PDF file required."; landPdfFile.focus(); return; }
+
+      try {
+        landSaveBtn.disabled = true;
+        landSaveBtn.textContent = "Saving...";
+        landPreview.innerHTML = "[LAND] Uploading PDF and saving Supabase data...";
+        await saveLandPropertyRecord(record);
+        landEntryForm.reset();
+        landPreview.innerHTML = "<span class='ok'>[SAVED]</span> Land/property document saved successfully. Opening Data Entry List...";
+        showSidSuccessPopup("Save Successful", "Opening Land Data Entry List...", async () => {
+          await openLandListPage();
+        });
+      } catch (error) {
+        console.error("Land document save error:", error);
+        landPreview.innerHTML = `<span class='warn'>[SUPABASE ERROR]</span> ${escapeHtml(error.message)}`;
+      } finally {
+        landSaveBtn.disabled = false;
+        landSaveBtn.textContent = "Save Document";
+      }
+    });
+
+    landTableWrap.addEventListener("click", async (event) => {
+      const button = event.target.closest("button[data-land-action]");
+      if (!button) return;
+      const id = button.getAttribute("data-id");
+      const action = button.getAttribute("data-land-action");
+      const record = landPropertyRecords.find((item) => String(item.id) === String(id));
+      if (!record) return;
+
+      if (action === "print") {
+        printLandRecords([record], "Land / Property Single Record");
+        return;
+      }
+
+      if (action === "remove") {
+        if (!confirm("Remove this land/property record from Supabase?")) return;
+        try {
+          await deleteLandPropertyRecord(id);
+          await loadLandPropertyRecords();
+          renderLandPropertyList();
+        } catch (error) {
+          alert("Remove failed: " + error.message);
+        }
+      }
+    });
+
     managementModule.addEventListener("click", openAcSidPasswordGate);
     changePasswordModule.addEventListener("click", openChangePasswordPage);
     changePasswordBackBtn.addEventListener("click", backToDashboard);
@@ -5935,7 +6476,7 @@
       hideAllSecurePages();
       loginShell.style.display = "grid";
       password.value = "";
-      showUsernameStep();
+      showPasswordStep();
     });
   </script>
 </body>
