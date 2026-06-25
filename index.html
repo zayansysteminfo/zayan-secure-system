@@ -2361,6 +2361,172 @@
     }
 
 
+    /* Administrator Notes View Design */
+    .note-view-overlay {
+      position: fixed;
+      inset: 0;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 21;
+      padding: 18px;
+      background:
+        radial-gradient(circle at center, rgba(255, 200, 87, 0.18), rgba(0, 0, 0, 0.86) 58%),
+        rgba(0, 0, 0, 0.68);
+      backdrop-filter: blur(10px);
+    }
+
+    .note-view-overlay.active {
+      display: flex;
+      animation: alertFade 0.22s ease;
+    }
+
+    .note-view-card {
+      width: min(780px, 100%);
+      max-height: calc(100vh - 42px);
+      overflow: auto;
+      border-radius: 26px;
+      border: 1px solid rgba(255, 200, 87, 0.46);
+      background:
+        linear-gradient(145deg, rgba(23, 18, 8, 0.98), rgba(3, 8, 16, 0.98));
+      box-shadow: 0 0 46px rgba(255, 200, 87, 0.24), inset 0 0 30px rgba(0, 245, 255, 0.035);
+      padding: 28px;
+      position: relative;
+      overflow-x: hidden;
+    }
+
+    .note-view-card::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background:
+        repeating-linear-gradient(90deg, rgba(255, 200, 87, 0.035) 0 1px, transparent 1px 28px),
+        repeating-linear-gradient(0deg, rgba(0, 245, 255, 0.025) 0 1px, transparent 1px 28px);
+      pointer-events: none;
+    }
+
+    .note-view-inner {
+      position: relative;
+      z-index: 2;
+    }
+
+    .note-view-top {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 14px;
+      margin-bottom: 18px;
+    }
+
+    .note-view-icon {
+      width: 62px;
+      height: 62px;
+      border-radius: 18px;
+      display: grid;
+      place-items: center;
+      font-size: 30px;
+      border: 1px solid rgba(255, 200, 87, 0.48);
+      background: rgba(255, 200, 87, 0.09);
+      box-shadow: 0 0 22px rgba(255, 200, 87, 0.18);
+      flex: 0 0 auto;
+    }
+
+    .note-view-title {
+      min-width: 0;
+      flex: 1;
+    }
+
+    .note-view-title small {
+      display: block;
+      color: rgba(255, 200, 87, 0.86);
+      font-size: 11px;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      margin-bottom: 8px;
+    }
+
+    .note-view-title h3 {
+      color: #fff6d8;
+      font-size: clamp(24px, 5vw, 38px);
+      line-height: 1.08;
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      word-break: break-word;
+      text-shadow: 0 0 18px rgba(255, 200, 87, 0.28);
+    }
+
+    .note-view-close {
+      width: 44px;
+      height: 44px;
+      border-radius: 13px;
+      border: 1px solid rgba(255, 47, 109, 0.48);
+      background: rgba(255, 47, 109, 0.08);
+      color: var(--red);
+      cursor: pointer;
+      font-size: 22px;
+      font-weight: 900;
+      transition: 0.22s ease;
+      flex: 0 0 auto;
+    }
+
+    .note-view-close:hover {
+      transform: translateY(-2px);
+      background: rgba(255, 47, 109, 0.16);
+      box-shadow: 0 0 18px rgba(255, 47, 109, 0.22);
+    }
+
+    .note-view-meta {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 12px;
+      margin: 18px 0;
+    }
+
+    .note-view-meta div {
+      border: 1px solid rgba(255, 200, 87, 0.22);
+      border-radius: 15px;
+      padding: 13px 14px;
+      background: rgba(255, 255, 255, 0.035);
+    }
+
+    .note-view-meta span {
+      display: block;
+      color: rgba(232, 251, 255, 0.52);
+      font-size: 10px;
+      letter-spacing: 1.3px;
+      text-transform: uppercase;
+      margin-bottom: 7px;
+    }
+
+    .note-view-meta strong {
+      color: #f5f8ff;
+      font-size: 13px;
+      word-break: break-word;
+    }
+
+    .note-view-body {
+      border: 1px solid rgba(0, 245, 255, 0.18);
+      border-radius: 20px;
+      background:
+        linear-gradient(145deg, rgba(255, 200, 87, 0.055), rgba(0, 245, 255, 0.035)),
+        rgba(0, 0, 0, 0.22);
+      padding: 20px;
+      color: rgba(232, 251, 255, 0.9);
+      font-size: 15px;
+      line-height: 1.8;
+      white-space: pre-wrap;
+      word-break: break-word;
+      min-height: 160px;
+    }
+
+    @media (max-width: 620px) {
+      .note-view-card { padding: 18px; border-radius: 18px; }
+      .note-view-top { flex-wrap: wrap; }
+      .note-view-meta { grid-template-columns: 1fr; }
+      .note-view-close { margin-left: auto; }
+    }
+
+
     /* Change Password System */
     .module.change-password-module {
       border-color: rgba(255, 200, 87, 0.62);
@@ -2900,11 +3066,11 @@
     <div class="acsid-password-card" id="acSidPasswordCard">
       <div class="acsid-password-inner">
         <div class="acsid-password-icon">🔐</div>
-        <h3>AC/SID Access Lock</h3>
-        <p>Enter management password to open AC/SID Management.</p>
+        <h3>Administrator Access Lock</h3>
+        <p>Enter administrator password to open Administration dashboard.</p>
         <form id="acSidPasswordForm" autocomplete="off">
           <label for="acSidPasswordInput">Management Password</label>
-          <input id="acSidPasswordInput" type="password" autocomplete="new-password" placeholder="Enter AC/SID password" />
+          <input id="acSidPasswordInput" type="password" autocomplete="new-password" placeholder="Enter Administrator password" />
           <div class="acsid-password-actions">
             <button class="primary-btn" type="submit">Unlock</button>
             <button class="ghost-btn" type="button" id="acSidPasswordCancelBtn">Cancel</button>
@@ -3054,8 +3220,8 @@
 
     <div class="module-grid">
       <div class="module management-module" id="managementModule">
-        <strong>AC/SID Management</strong>
-        <span>→ Open SID account management section.</span>
+        <strong>Administrator</strong>
+        <span>→ Open administration dashboard with protected access.</span>
       </div>
       <div class="module alert-module" id="loginAlertModule">
         <div class="module-logo">🛡️</div>
@@ -3515,15 +3681,41 @@
   <section class="management-page" id="managementPage">
     <div class="dashboard-head">
       <div>
-        <div class="top-tag"><span class="pulse"></span> Management</div>
-        <h2>AC/SID Management</h2>
-        <p>Choose your SID data action below.</p>
+        <div class="top-tag"><span class="pulse"></span> Administration</div>
+        <h2>Administrator Dashboard</h2>
+        <p>Choose your administration function below.</p>
       </div>
       <button class="logout" id="managementBackBtn">← Dashboard</button>
     </div>
 
     <div class="module-grid">
-      <div class="module sid-module">
+      <div class="module sid-module" id="sidManagementModule">
+        <strong>SID AC Management</strong>
+        <span>→ Open SID account management section without extra password.</span>
+      </div>
+      <div class="module history-module" id="notesModule">
+        <strong>Notes</strong>
+        <span>→ Add, view and remove administrator notes.</span>
+      </div>
+    </div>
+
+    <div class="footer-note">
+      Administrator section: SID AC Management and Notes are available after administrator password unlock.
+    </div>
+  </section>
+
+  <section class="management-page" id="sidManagementPage">
+    <div class="dashboard-head">
+      <div>
+        <div class="top-tag"><span class="pulse"></span> SID AC Management</div>
+        <h2>SID AC Management</h2>
+        <p>Choose your SID data action below.</p>
+      </div>
+      <button class="logout" id="sidManagementBackBtn">← Administrator</button>
+    </div>
+
+    <div class="module-grid">
+      <div class="module sid-module" id="sidAddDataModule">
         <strong>Add Sid Data</strong>
         <span>→ Add new SID account information and secure PIN/UID details.</span>
       </div>
@@ -3538,9 +3730,83 @@
     </div>
 
     <div class="footer-note">
-      AC/SID Management section: add, search, view, edit and remove SID records.
+      SID AC Management section: add, search, view, edit and remove SID records.
     </div>
   </section>
+
+  <section class="history-add-page" id="notesAddPage">
+    <div class="sid-head">
+      <div class="sid-title-wrap">
+        <div class="top-tag"><span class="pulse"></span> Notes</div>
+        <h2 class="dark-title">Add Notes</h2>
+        <p class="dark-subtitle">Write administrator note and save to Supabase.</p>
+      </div>
+      <div class="sid-nav-group">
+        <button class="sid-back" id="notesAddBackBtn">← Administrator</button>
+        <button class="sid-next" id="notesAddToListBtn">Note List →</button>
+      </div>
+    </div>
+
+    <form class="history-form" id="notesEntryForm">
+      <div class="history-field full">
+        <label for="noteNameInput">Note Name <span class="required-star">*</span></label>
+        <input id="noteNameInput" type="text" placeholder="Enter note name" autocomplete="off" />
+      </div>
+
+      <div class="sid-field full">
+        <label for="noteTextInput">Note <span class="required-star">*</span></label>
+        <textarea id="noteTextInput" placeholder="Write note here..."></textarea>
+      </div>
+
+      <div class="history-actions">
+        <button type="submit" class="sid-save" id="notesSaveBtn">Save Note</button>
+        <button type="button" class="sid-clear" id="notesClearBtn">Clear</button>
+      </div>
+    </form>
+
+    <div class="sid-preview" id="notesPreview">
+      [NOTES] Ready to save administrator note.
+    </div>
+  </section>
+
+  <section class="history-list-page" id="notesListPage">
+    <div class="sid-head">
+      <div class="sid-title-wrap">
+        <div class="top-tag"><span class="pulse"></span> Note List</div>
+        <h2 class="dark-title">Administrator Note List</h2>
+        <p class="dark-subtitle">Saved notes list with View and Remove options.</p>
+      </div>
+      <div class="sid-nav-group">
+        <button class="sid-back" id="notesListBackBtn">← Administrator</button>
+        <button class="sid-next" id="notesListAddBtn">Add Note →</button>
+      </div>
+    </div>
+
+    <div class="history-list-wrap" id="notesListWrap">
+      <div class="empty-list">No note found.</div>
+    </div>
+  </section>
+
+
+  <div class="note-view-overlay" id="noteViewOverlay" aria-live="polite">
+    <div class="note-view-card">
+      <div class="note-view-inner">
+        <div class="note-view-top">
+          <div class="note-view-icon">📝</div>
+          <div class="note-view-title">
+            <small>Administrator Note</small>
+            <h3 id="noteViewName">-</h3>
+          </div>
+          <button class="note-view-close" id="noteViewCloseBtn" type="button" aria-label="Close note view">×</button>
+        </div>
+        <div class="note-view-meta">
+          <div><span>Created</span><strong id="noteViewCreated">-</strong></div>
+          <div><span>Last Update</span><strong id="noteViewUpdated">-</strong></div>
+        </div>
+        <div class="note-view-body" id="noteViewText">-</div>
+      </div>
+    </div>
+  </div>
 
 
   <section class="history-menu-page" id="historyMenuPage">
@@ -3550,7 +3816,7 @@
         <h2 class="dark-title">Account Uses History</h2>
         <p class="dark-subtitle">Add account monthly use data and view saved history list.</p>
       </div>
-      <button class="sid-back" id="historyMenuBackBtn">← AC/SID</button>
+      <button class="sid-back" id="historyMenuBackBtn">← SID AC</button>
     </div>
 
     <div class="module-grid">
@@ -3634,7 +3900,7 @@
           Clean Rocket and SIM information entry panel
         </p>
       </div>
-      <div class="sid-nav-group"><button class="sid-back" id="sidBackBtn">← AC/SID</button><button class="sid-next" id="sidToListBtn">SID Data List →</button></div>
+      <div class="sid-nav-group"><button class="sid-back" id="sidBackBtn">← SID AC</button><button class="sid-next" id="sidToListBtn">SID Data List →</button></div>
     </div>
 
     <div class="sid-entry-card">
@@ -3749,7 +4015,7 @@
         <p class="dark-subtitle">Saved account information list • View, edit and remove available</p>
       </div>
       <div class="sid-nav-group">
-        <button class="sid-back" id="listBackBtn">← AC/SID</button>
+        <button class="sid-back" id="listBackBtn">← SID AC</button>
         <button class="sid-next" id="listAddBtn">Add Sid Data →</button>
       </div>
     </div>
@@ -3853,6 +4119,7 @@
     const loginShell = document.getElementById("loginShell");
     const dashboard = document.getElementById("dashboard");
     const managementPage = document.getElementById("managementPage");
+    const sidManagementPage = document.getElementById("sidManagementPage");
     const loginAlertPage = document.getElementById("loginAlertPage");
     const managementModule = document.getElementById("managementModule");
     const devicePasswordModule = document.getElementById("devicePasswordModule");
@@ -3966,7 +4233,28 @@
     const alertPcCount = document.getElementById("alertPcCount");
     const alertLastTime = document.getElementById("alertLastTime");
     const managementBackBtn = document.getElementById("managementBackBtn");
-    const sidModule = document.querySelector(".sid-module");
+    const sidManagementModule = document.getElementById("sidManagementModule");
+    const sidManagementBackBtn = document.getElementById("sidManagementBackBtn");
+    const notesModule = document.getElementById("notesModule");
+    const notesAddPage = document.getElementById("notesAddPage");
+    const notesListPage = document.getElementById("notesListPage");
+    const notesAddBackBtn = document.getElementById("notesAddBackBtn");
+    const notesAddToListBtn = document.getElementById("notesAddToListBtn");
+    const notesListBackBtn = document.getElementById("notesListBackBtn");
+    const notesListAddBtn = document.getElementById("notesListAddBtn");
+    const notesEntryForm = document.getElementById("notesEntryForm");
+    const noteNameInput = document.getElementById("noteNameInput");
+    const noteTextInput = document.getElementById("noteTextInput");
+    const notesClearBtn = document.getElementById("notesClearBtn");
+    const notesPreview = document.getElementById("notesPreview");
+    const notesListWrap = document.getElementById("notesListWrap");
+    const noteViewOverlay = document.getElementById("noteViewOverlay");
+    const noteViewName = document.getElementById("noteViewName");
+    const noteViewCreated = document.getElementById("noteViewCreated");
+    const noteViewUpdated = document.getElementById("noteViewUpdated");
+    const noteViewText = document.getElementById("noteViewText");
+    const noteViewCloseBtn = document.getElementById("noteViewCloseBtn");
+    const sidModule = document.getElementById("sidAddDataModule");
     const sidListModule = document.querySelector(".sid-list-module");
     const historyModule = document.getElementById("historyModule");
     const historyMenuPage = document.getElementById("historyMenuPage");
@@ -4030,6 +4318,7 @@
     let sidRecords = [];
     let loginAlerts = [];
     let accountUsesHistory = [];
+    let adminNotesRecords = [];
     let devicePasswordRecords = [];
     let surveillanceRecords = [];
     let landPropertyRecords = [];
@@ -4315,6 +4604,9 @@
       landListPage.classList.remove("active");
       loginAlertPage.classList.remove("active");
       managementPage.classList.remove("active");
+      sidManagementPage.classList.remove("active");
+      notesAddPage.classList.remove("active");
+      notesListPage.classList.remove("active");
       deviceMenuPage.classList.remove("active");
       deviceAddPage.classList.remove("active");
       deviceListPage.classList.remove("active");
@@ -5606,11 +5898,11 @@
       const enteredPassword = acSidPasswordInput.value;
 
       if (enteredPassword !== ACSID_MANAGEMENT_PASSWORD) {
-        acSidPasswordMsg.textContent = "Wrong AC/SID password. Access blocked.";
+        acSidPasswordMsg.textContent = "Wrong administrator password. Access blocked.";
         acSidPasswordCard.classList.remove("shake");
         void acSidPasswordCard.offsetWidth;
         acSidPasswordCard.classList.add("shake");
-        triggerWrongPassword("Wrong AC/SID Password", "Management Access Blocked", "Wrong AC/SID Management password detected.");
+        triggerWrongPassword("Wrong Administrator Password", "Administration Access Blocked", "Wrong administrator password detected.");
         acSidPasswordInput.value = "";
         acSidPasswordInput.focus();
         return;
@@ -5639,6 +5931,137 @@
       hideAllSecurePages();
       managementPage.classList.add("active");
     }
+
+
+    function openSidManagementPage() {
+      hideAllSecurePages();
+      sidManagementPage.classList.add("active");
+    }
+
+    function clearNotesForm() {
+      notesEntryForm.reset();
+      notesPreview.innerHTML = "[NOTES] Form cleared. Ready to save administrator note.";
+      noteNameInput.focus();
+    }
+
+    function openNotesAddPage() {
+      hideAllSecurePages();
+      notesAddPage.classList.add("active");
+      clearNotesForm();
+      notesPreview.innerHTML = "[NOTES] Ready to save administrator note.";
+    }
+
+    function adminNoteFromDb(row) {
+      return {
+        id: row.id,
+        noteName: row.note_name || "",
+        noteText: row.note_text || "",
+        createdAt: row.created_at || "",
+        updatedAt: row.updated_at || ""
+      };
+    }
+
+    function formatNoteDate(value) {
+      if (!value) return "-";
+      const date = new Date(value);
+      if (Number.isNaN(date.getTime())) return value;
+      return date.toLocaleString("en-GB", {
+        day: "2-digit",
+        month: "short",
+        year: "numeric",
+        hour: "2-digit",
+        minute: "2-digit"
+      });
+    }
+
+    async function loadAdminNotes() {
+      const { data, error } = await supabaseClient
+        .from("admin_notes")
+        .select("*")
+        .order("created_at", { ascending: false });
+
+      if (error) {
+        adminNotesRecords = [];
+        notesListWrap.innerHTML = `<div class="empty-list">Supabase admin_notes load error:<br>${escapeHtml(error.message)}<br><br>Please run the Notes SQL table setup first.</div>`;
+        return false;
+      }
+
+      adminNotesRecords = (data || []).map(adminNoteFromDb);
+      return true;
+    }
+
+    async function saveAdminNote(record) {
+      const { error } = await supabaseClient
+        .from("admin_notes")
+        .insert({
+          note_name: record.noteName,
+          note_text: record.noteText,
+          updated_at: new Date().toISOString()
+        });
+
+      if (error) throw error;
+      return true;
+    }
+
+    async function deleteAdminNote(recordId) {
+      const { error } = await supabaseClient
+        .from("admin_notes")
+        .delete()
+        .eq("id", recordId);
+
+      if (error) throw error;
+      return true;
+    }
+
+    async function openNotesListPage() {
+      hideAllSecurePages();
+      notesListPage.classList.add("active");
+      notesListWrap.innerHTML = "<div class='empty-list'>Loading notes...</div>";
+      const ok = await loadAdminNotes();
+      if (ok) renderAdminNotesList();
+    }
+
+    function renderAdminNotesList() {
+      if (!adminNotesRecords.length) {
+        notesListWrap.innerHTML = "<div class='empty-list'>No note found.<br>Click <b>Add Note →</b> to create your first note.</div>";
+        return;
+      }
+
+      notesListWrap.innerHTML = adminNotesRecords.map((item) => `
+        <div class="history-card">
+          <div>
+            <small>Note Name</small>
+            <strong>${escapeHtml(item.noteName || "-")}</strong>
+          </div>
+          <div>
+            <small>Saved Time</small>
+            <strong>${escapeHtml(formatNoteDate(item.createdAt || item.updatedAt))}</strong>
+          </div>
+          <div>
+            <small>Note Preview</small>
+            <strong>${escapeHtml((item.noteText || "-").slice(0, 80))}${(item.noteText || "").length > 80 ? "..." : ""}</strong>
+          </div>
+          <div class="sid-card-actions">
+            <button class="sid-action-btn view" type="button" data-note-view="${item.id}">View</button>
+            <button class="sid-action-btn remove" type="button" data-note-remove="${item.id}">Remove</button>
+          </div>
+        </div>
+      `).join("");
+    }
+
+    function openAdminNoteView(note) {
+      if (!note) return;
+      noteViewName.textContent = note.noteName || "-";
+      noteViewCreated.textContent = formatNoteDate(note.createdAt);
+      noteViewUpdated.textContent = formatNoteDate(note.updatedAt || note.createdAt);
+      noteViewText.textContent = note.noteText || "-";
+      noteViewOverlay.classList.add("active");
+    }
+
+    function closeAdminNoteView() {
+      noteViewOverlay.classList.remove("active");
+    }
+
 
     function updateAccountStatusView() {
       return;
@@ -5998,19 +6421,80 @@
     });
 
     managementBackBtn.addEventListener("click", backToDashboard);
+    sidManagementModule.addEventListener("click", openSidManagementPage);
+    sidManagementBackBtn.addEventListener("click", backToManagement);
+    notesModule.addEventListener("click", openNotesAddPage);
+    notesAddBackBtn.addEventListener("click", backToManagement);
+    notesAddToListBtn.addEventListener("click", openNotesListPage);
+    notesListBackBtn.addEventListener("click", backToManagement);
+    notesListAddBtn.addEventListener("click", openNotesAddPage);
+    notesClearBtn.addEventListener("click", clearNotesForm);
+    notesEntryForm.addEventListener("submit", async (event) => {
+      event.preventDefault();
+      const noteName = noteNameInput.value.trim();
+      const noteText = noteTextInput.value.trim();
+
+      if (!noteName) {
+        notesPreview.innerHTML = "<span class='warn'>[WARN] Note Name is required.</span>";
+        noteNameInput.focus();
+        return;
+      }
+
+      if (!noteText) {
+        notesPreview.innerHTML = "<span class='warn'>[WARN] Note text is required.</span>";
+        noteTextInput.focus();
+        return;
+      }
+
+      try {
+        await saveAdminNote({ noteName, noteText });
+        notesEntryForm.reset();
+        showSidSuccessPopup("Note Saved", "Opening Note List...", openNotesListPage);
+      } catch (error) {
+        notesPreview.innerHTML = "<span class='warn'>[ERROR] " + escapeHtml(error.message) + "</span>";
+      }
+    });
+    notesListWrap.addEventListener("click", async (event) => {
+      const viewBtn = event.target.closest("button[data-note-view]");
+      const removeBtn = event.target.closest("button[data-note-remove]");
+
+      if (viewBtn) {
+        const noteId = Number(viewBtn.dataset.noteView);
+        const note = adminNotesRecords.find((item) => Number(item.id) === noteId);
+        if (!note) return;
+        openAdminNoteView(note);
+        return;
+      }
+
+      if (removeBtn) {
+        const noteId = Number(removeBtn.dataset.noteRemove);
+        if (!confirm("Remove this note from Supabase?")) return;
+        try {
+          await deleteAdminNote(noteId);
+          await loadAdminNotes();
+          renderAdminNotesList();
+        } catch (error) {
+          alert("Remove failed: " + error.message);
+        }
+      }
+    });
+    noteViewCloseBtn.addEventListener("click", closeAdminNoteView);
+    noteViewOverlay.addEventListener("click", (event) => {
+      if (event.target === noteViewOverlay) closeAdminNoteView();
+    });
     sidModule.addEventListener("click", () => openSidPage({ reset: true }));
     sidListModule.addEventListener("click", openSidListPage);
     historyModule.addEventListener("click", openHistoryMenuPage);
     historyAddModule.addEventListener("click", openHistoryAddPage);
     historyListModule.addEventListener("click", openHistoryListPage);
-    historyMenuBackBtn.addEventListener("click", backToManagement);
+    historyMenuBackBtn.addEventListener("click", openSidManagementPage);
     historyAddBackBtn.addEventListener("click", openHistoryMenuPage);
     historyAddToListBtn.addEventListener("click", openHistoryListPage);
     historyListBackBtn.addEventListener("click", openHistoryMenuPage);
     historyListAddBtn.addEventListener("click", openHistoryAddPage);
-    sidBackBtn.addEventListener("click", backToManagement);
+    sidBackBtn.addEventListener("click", openSidManagementPage);
     sidToListBtn.addEventListener("click", openSidListPage);
-    listBackBtn.addEventListener("click", backToManagement);
+    listBackBtn.addEventListener("click", openSidManagementPage);
     listAddBtn.addEventListener("click", () => openSidPage({ reset: true }));
     viewBackBtn.addEventListener("click", openSidListPage);
 
