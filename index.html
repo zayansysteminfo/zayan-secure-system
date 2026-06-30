@@ -3069,7 +3069,7 @@
         <h3>Administrator Access Lock</h3>
         <p>Enter administrator password to open Administration dashboard.</p>
         <form id="acSidPasswordForm" autocomplete="off">
-          <label for="acSidPasswordInput">Management Password</label>
+          <label for="acSidPasswordInput">Administrator Password</label>
           <input id="acSidPasswordInput" type="password" autocomplete="new-password" placeholder="Enter Administrator password" />
           <div class="acsid-password-actions">
             <button class="primary-btn" type="submit">Unlock</button>
@@ -3374,7 +3374,7 @@
         <label for="confirmSystemPassword">Confirm New Password</label>
         <input id="confirmSystemPassword" type="password" autocomplete="new-password" placeholder="Confirm new password" />
       </div>
-      <div class="change-password-msg" id="changePasswordMsg">Default password: Sys@3629</div>
+      <div class="change-password-msg" id="changePasswordMsg">Select password change option.</div>
       <div class="device-actions">
         <button type="submit" class="sid-save">Update Password</button>
         <button type="button" class="sid-clear" id="changePasswordClearBtn">Clear Form</button>
@@ -3382,7 +3382,7 @@
     </form>
 
     <div class="footer-note">
-      Password is saved in Supabase table <b>system_settings</b>. First/default password: <b>Sys@3629</b>
+      Password is saved in Supabase table <b>system_settings</b>. Password is not stored inside HTML/JavaScript.
     </div>
   </section>
 
@@ -3696,6 +3696,10 @@
       <div class="module history-module" id="notesModule">
         <strong>Notes</strong>
         <span>→ Add, view and remove administrator notes.</span>
+      </div>
+      <div class="module change-password-module" id="adminChangePasswordModule">
+        <strong>Change Administrator Password</strong>
+        <span>→ Change administrator dashboard password after unlock.</span>
       </div>
     </div>
 
@@ -4112,10 +4116,11 @@
     const intrusionAlert = document.getElementById("intrusionAlert");
     const alertTitle = document.getElementById("alertTitle");
     const alertSubtitle = document.getElementById("alertSubtitle");
-    const DEFAULT_SYSTEM_PASSWORD = "Sys@3629";
-    const SYSTEM_PASSWORD_SETTING_KEY = "access_control_password";
-    let cachedSystemPassword = DEFAULT_SYSTEM_PASSWORD;
-    const ACSID_MANAGEMENT_PASSWORD = "Z5ssiq##1@";
+    const SYSTEM_PASSWORD_SETTING_KEY = "system_password";
+    const ADMIN_PASSWORD_SETTING_KEY = "administrator_password";
+    let cachedSystemPassword = "";
+    let cachedAdminPassword = "";
+    let changePasswordMode = "system";
     const loginShell = document.getElementById("loginShell");
     const dashboard = document.getElementById("dashboard");
     const managementPage = document.getElementById("managementPage");
@@ -4236,6 +4241,7 @@
     const sidManagementModule = document.getElementById("sidManagementModule");
     const sidManagementBackBtn = document.getElementById("sidManagementBackBtn");
     const notesModule = document.getElementById("notesModule");
+    const adminChangePasswordModule = document.getElementById("adminChangePasswordModule");
     const notesAddPage = document.getElementById("notesAddPage");
     const notesListPage = document.getElementById("notesListPage");
     const notesAddBackBtn = document.getElementById("notesAddBackBtn");
@@ -4388,43 +4394,54 @@
       terminal.innerHTML = lines.join("<br>");
     }
 
-    async function loadSystemPassword() {
+    async function loadPasswordSetting(settingKey) {
       try {
         const { data, error } = await supabaseClient
           .from("system_settings")
           .select("setting_value")
-          .eq("setting_key", SYSTEM_PASSWORD_SETTING_KEY)
+          .eq("setting_key", settingKey)
           .maybeSingle();
 
         if (error) throw error;
-
-        if (!data || !data.setting_value) {
-          await saveSystemPassword(DEFAULT_SYSTEM_PASSWORD);
-          cachedSystemPassword = DEFAULT_SYSTEM_PASSWORD;
-          return cachedSystemPassword;
-        }
-
-        cachedSystemPassword = data.setting_value;
-        return cachedSystemPassword;
+        return data && data.setting_value ? data.setting_value : "";
       } catch (error) {
-        console.error("System password load error:", error);
-        cachedSystemPassword = DEFAULT_SYSTEM_PASSWORD;
-        return cachedSystemPassword;
+        console.error("Password setting load error:", error);
+        return "";
       }
     }
 
-    async function saveSystemPassword(newPasswordValue) {
+    async function savePasswordSetting(settingKey, newPasswordValue) {
       const { error } = await supabaseClient
         .from("system_settings")
         .upsert({
-          setting_key: SYSTEM_PASSWORD_SETTING_KEY,
+          setting_key: settingKey,
           setting_value: newPasswordValue,
           updated_at: new Date().toISOString()
         }, { onConflict: "setting_key" });
 
       if (error) throw error;
-      cachedSystemPassword = newPasswordValue;
+
+      if (settingKey === SYSTEM_PASSWORD_SETTING_KEY) cachedSystemPassword = newPasswordValue;
+      if (settingKey === ADMIN_PASSWORD_SETTING_KEY) cachedAdminPassword = newPasswordValue;
       return true;
+    }
+
+    async function loadSystemPassword() {
+      cachedSystemPassword = await loadPasswordSetting(SYSTEM_PASSWORD_SETTING_KEY);
+      return cachedSystemPassword;
+    }
+
+    async function loadAdminPassword() {
+      cachedAdminPassword = await loadPasswordSetting(ADMIN_PASSWORD_SETTING_KEY);
+      return cachedAdminPassword;
+    }
+
+    async function saveSystemPassword(newPasswordValue) {
+      return savePasswordSetting(SYSTEM_PASSWORD_SETTING_KEY, newPasswordValue);
+    }
+
+    async function saveAdminPassword(newPasswordValue) {
+      return savePasswordSetting(ADMIN_PASSWORD_SETTING_KEY, newPasswordValue);
     }
 
     function showPasswordStep() {
@@ -4442,17 +4459,30 @@
       setTimeout(() => password.focus(), 180);
     }
 
-    function openChangePasswordPage() {
+    function openChangePasswordPage(mode = "system") {
+      changePasswordMode = mode === "admin" ? "admin" : "system";
       hideAllSecurePages();
       changePasswordPage.classList.add("active");
       changePasswordForm.reset();
-      changePasswordMsg.textContent = "Default password: Sys@3629";
+
+      const title = changePasswordPage.querySelector(".dark-title");
+      const subtitle = changePasswordPage.querySelector(".dark-subtitle");
+      if (changePasswordMode === "admin") {
+        if (title) title.textContent = "Change Administrator Password";
+        if (subtitle) subtitle.textContent = "Change administrator dashboard password. New password will save in Supabase.";
+        changePasswordMsg.textContent = "Administrator password change mode.";
+      } else {
+        if (title) title.textContent = "Change System Password";
+        if (subtitle) subtitle.textContent = "Change Access Control System login password. New password will save in Supabase.";
+        changePasswordMsg.textContent = "System password change mode.";
+      }
+
       setTimeout(() => oldSystemPassword.focus(), 120);
     }
 
     function clearChangePasswordForm() {
       changePasswordForm.reset();
-      changePasswordMsg.textContent = "Form cleared.";
+      changePasswordMsg.textContent = changePasswordMode === "admin" ? "Administrator password change mode." : "System password change mode.";
       oldSystemPassword.focus();
     }
 
@@ -4471,6 +4501,7 @@
 
     showPasswordStep();
     loadSystemPassword();
+    loadAdminPassword();
 
     window.addEventListener("pageshow", () => {
       password.value = "";
@@ -4570,6 +4601,14 @@
       }
 
       const systemPassword = await loadSystemPassword();
+
+      if (!systemPassword) {
+        setTerminal([
+          "<span class='warn'>[ERROR] System password not configured in Supabase.</span>",
+          "[SYS] Please run the system_settings SQL setup first."
+        ]);
+        return;
+      }
 
       if (password.value !== systemPassword) {
         triggerWrongPassword("Wrong Password", "Intrusion Attempt Detected", "Wrong password detected.");
@@ -5893,11 +5932,17 @@
       acSidPasswordCard.classList.remove("shake");
     }
 
-    function verifyAcSidPassword(event) {
+    async function verifyAcSidPassword(event) {
       event.preventDefault();
       const enteredPassword = acSidPasswordInput.value;
+      const adminPassword = await loadAdminPassword();
 
-      if (enteredPassword !== ACSID_MANAGEMENT_PASSWORD) {
+      if (!adminPassword) {
+        acSidPasswordMsg.textContent = "Administrator password not configured in Supabase.";
+        return;
+      }
+
+      if (enteredPassword !== adminPassword) {
         acSidPasswordMsg.textContent = "Wrong administrator password. Access blocked.";
         acSidPasswordCard.classList.remove("shake");
         void acSidPasswordCard.offsetWidth;
@@ -6328,15 +6373,24 @@
     });
 
     managementModule.addEventListener("click", openAcSidPasswordGate);
-    changePasswordModule.addEventListener("click", openChangePasswordPage);
-    changePasswordBackBtn.addEventListener("click", backToDashboard);
+    changePasswordModule.addEventListener("click", () => openChangePasswordPage("system"));
+    if (adminChangePasswordModule) adminChangePasswordModule.addEventListener("click", () => openChangePasswordPage("admin"));
+    changePasswordBackBtn.addEventListener("click", () => {
+      if (changePasswordMode === "admin") backToManagement();
+      else backToDashboard();
+    });
     changePasswordClearBtn.addEventListener("click", clearChangePasswordForm);
     changePasswordForm.addEventListener("submit", async (event) => {
       event.preventDefault();
       const oldPass = oldSystemPassword.value;
       const newPass = newSystemPassword.value;
       const confirmPass = confirmSystemPassword.value;
-      const currentPassword = await loadSystemPassword();
+      const currentPassword = changePasswordMode === "admin" ? await loadAdminPassword() : await loadSystemPassword();
+
+      if (!currentPassword) {
+        changePasswordMsg.textContent = "Password not configured in Supabase. Please run SQL setup first.";
+        return;
+      }
 
       if (oldPass !== currentPassword) {
         changePasswordMsg.textContent = "Wrong old password. Password not changed.";
@@ -6359,11 +6413,17 @@
       }
 
       try {
-        await saveSystemPassword(newPass);
+        if (changePasswordMode === "admin") {
+          await saveAdminPassword(newPass);
+        } else {
+          await saveSystemPassword(newPass);
+        }
+
         changePasswordForm.reset();
         changePasswordMsg.textContent = "Password changed successfully.";
-        showSidSuccessPopup("Password Changed", "Access Control password updated in Supabase.", async () => {
-          backToDashboard();
+        showSidSuccessPopup("Password Changed", (changePasswordMode === "admin" ? "Administrator password" : "System password") + " updated in Supabase.", async () => {
+          if (changePasswordMode === "admin") backToManagement();
+          else backToDashboard();
         });
       } catch (error) {
         changePasswordMsg.textContent = "Supabase error: " + error.message;
