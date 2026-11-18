@@ -550,6 +550,12 @@
       border: 1px solid rgba(255, 47, 109, 0.24);
       background: linear-gradient(135deg, rgba(41, 13, 24, 0.92), rgba(9, 13, 23, 0.94));
       box-shadow: 0 12px 24px rgba(0, 0, 0, 0.24);
+      animation: alertSlideIn 0.3s ease;
+    }
+
+    @keyframes alertSlideIn {
+      from { opacity: 0; transform: translateY(-10px); }
+      to { opacity: 1; transform: translateY(0); }
     }
 
     .alert-card small {
@@ -772,7 +778,7 @@
 
         <div class="code-strip" id="codeStrip">
           &gt; booting zayanzabit alert node...<br>
-          &gt; connecting failed-password watcher...<br>
+          &gt; connecting live failed-password watcher...<br>
           &gt; waiting for operator authentication...
         </div>
       </div>
@@ -844,7 +850,7 @@
     </div>
 
     <div class="footer-note">
-      Auto-refresh active every 10 seconds. PC failed login attempts recorded in Supabase table <b>login_alerts</b> will trigger an instant buzzer alert.
+      Live Realtime + 5s auto-sync active. Any failed login attempt sent to Supabase table <b>login_alerts</b> will immediately pop up and trigger a buzzer sound.
     </div>
   </section>
 
@@ -916,6 +922,7 @@
     let cachedSystemPassword = "";
     let loginAlerts = [];
     let loginAlertAutoRefreshTimer = null;
+    let realtimeChannel = null;
 
     // Terminal Boot Ticker
     const bootLines = [
@@ -950,7 +957,7 @@
         const osc = ctx.createOscillator();
         const gain = ctx.createGain();
         osc.type = "sawtooth";
-        osc.frequency.setValueAtTime(160, ctx.currentTime);
+        osc.frequency.setValueAtTime(180, ctx.currentTime);
         osc.frequency.exponentialRampToValueAtTime(70, ctx.currentTime + 0.45);
         gain.gain.setValueAtTime(0.3, ctx.currentTime);
         gain.gain.exponentialRampToValueAtTime(0.0001, ctx.currentTime + 0.45);
@@ -1052,6 +1059,10 @@
     // Logout Action
     logoutBtn.addEventListener("click", () => {
       stopAutoRefresh();
+      if (realtimeChannel) {
+        supabaseClient.removeChannel(realtimeChannel);
+        realtimeChannel = null;
+      }
       loginAlertPage.classList.remove("active");
       loginShell.style.display = "grid";
       passwordInput.value = "";
@@ -1225,7 +1236,29 @@
       }
     });
 
-    // Auto-refresh Timer (every 10 seconds)
+    // Setup Live Realtime Subscription (Instant Alert)
+    function setupRealtimeListener() {
+      if (realtimeChannel) {
+        supabaseClient.removeChannel(realtimeChannel);
+      }
+
+      realtimeChannel = supabaseClient
+        .channel("login-alerts-realtime")
+        .on(
+          "postgres_changes",
+          { event: "INSERT", schema: "public", table: "login_alerts" },
+          (payload) => {
+            console.log("Realtime failed login alert received:", payload.new);
+            playWrongPasswordSound();
+            loadLoginAlerts();
+          }
+        )
+        .subscribe((status) => {
+          console.log("Supabase Realtime status:", status);
+        });
+    }
+
+    // Auto-refresh Timer (every 5 seconds fallback)
     function stopAutoRefresh() {
       if (loginAlertAutoRefreshTimer) {
         clearInterval(loginAlertAutoRefreshTimer);
@@ -1245,12 +1278,13 @@
         if (loginAlerts.length > prevCount) {
           playWrongPasswordSound();
         }
-      }, 10000);
+      }, 5000);
     }
 
     async function openLoginAlertDashboard() {
       alertListWrap.innerHTML = "<div class='empty-list'>Loading login alerts from Supabase...</div>";
       await loadLoginAlerts();
+      setupRealtimeListener();
       startAutoRefresh();
     }
 
