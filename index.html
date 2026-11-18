@@ -568,4 +568,656 @@
       text-transform: uppercase;
       color: #ff7f9a;
       background: rgba(255, 47, 109, 0.12);
-      border: 1px solid rgba(255
+      border: 1px solid rgba(255, 47, 109, 0.38);
+    }
+
+    .sid-action-btn.remove {
+      height: 38px;
+      padding: 0 16px;
+      border-radius: 11px;
+      border: 1px solid rgba(255, 76, 110, 0.46);
+      color: #ff6f8b;
+      background: rgba(255, 76, 110, 0.08);
+      cursor: pointer;
+      font-weight: 800;
+      letter-spacing: 1px;
+      transition: 0.22s ease;
+    }
+
+    .sid-action-btn.remove:hover {
+      background: rgba(255, 76, 110, 0.2);
+      box-shadow: 0 0 18px rgba(255, 76, 110, 0.28);
+      transform: translateY(-2px);
+    }
+
+    .empty-list {
+      padding: 30px;
+      border: 1px dashed rgba(255, 47, 109, 0.35);
+      border-radius: 18px;
+      color: rgba(220, 231, 255, 0.65);
+      text-align: center;
+      background: rgba(255, 47, 109, 0.02);
+      line-height: 1.7;
+    }
+
+    .footer-note {
+      margin-top: 24px;
+      padding: 14px 16px;
+      border-radius: 14px;
+      border: 1px solid rgba(255, 47, 109, 0.25);
+      color: rgba(255, 140, 170, 0.9);
+      background: rgba(255, 47, 109, 0.05);
+      font-size: 12px;
+      line-height: 1.6;
+    }
+
+    /* Wrong Password Alert Overlay */
+    .intrusion-alert {
+      position: fixed;
+      inset: 0;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 20;
+      background:
+        radial-gradient(circle at center, rgba(255, 47, 109, 0.18), rgba(0, 0, 0, 0.92) 54%),
+        rgba(0, 0, 0, 0.82);
+      backdrop-filter: blur(8px);
+    }
+
+    .intrusion-alert.active { display: flex; animation: alertFade 0.22s ease; }
+
+    @keyframes alertFade { from { opacity: 0; } to { opacity: 1; } }
+
+    .danger-triangle {
+      width: min(430px, 88vw);
+      aspect-ratio: 1 / 0.88;
+      position: relative;
+      display: grid;
+      place-items: center;
+      clip-path: polygon(50% 4%, 96% 92%, 4% 92%);
+      background: linear-gradient(180deg, rgba(255, 47, 109, 0.26), rgba(60, 0, 20, 0.92));
+      border: 2px solid var(--red);
+      box-shadow: 0 0 34px rgba(255, 47, 109, 0.7), 0 0 80px rgba(255, 47, 109, 0.36);
+    }
+
+    .skull-alert {
+      position: relative;
+      z-index: 2;
+      text-align: center;
+      transform: translateY(34px);
+      color: #fff;
+    }
+
+    .skull-alert .skull {
+      font-size: clamp(70px, 16vw, 110px);
+      display: block;
+      animation: skullPulse 0.48s ease-in-out infinite alternate;
+    }
+
+    .skull-alert strong {
+      display: block;
+      margin-top: 8px;
+      color: var(--red);
+      font-size: clamp(18px, 5vw, 26px);
+      letter-spacing: 3px;
+      text-transform: uppercase;
+    }
+
+    .skull-alert span {
+      display: block;
+      margin-top: 6px;
+      color: rgba(255, 255, 255, 0.75);
+      font-size: 12px;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+    }
+
+    @keyframes skullPulse {
+      from { transform: scale(0.96); opacity: 0.82; }
+      to { transform: scale(1.04); opacity: 1; }
+    }
+
+    .login-panel.shake {
+      animation: panelShake 0.38s linear;
+      border-color: rgba(255, 47, 109, 0.65);
+    }
+
+    @keyframes panelShake {
+      0%, 100% { transform: translateX(0); }
+      15% { transform: translateX(-8px); }
+      30% { transform: translateX(8px); }
+      45% { transform: translateX(-6px); }
+      60% { transform: translateX(6px); }
+      75% { transform: translateX(-3px); }
+    }
+
+    @media (max-width: 980px) {
+      .shell { grid-template-columns: 1fr; }
+      .alert-card, .alert-toolbar, .alert-summary-grid { grid-template-columns: 1fr; }
+      .dashboard-head { flex-direction: column; gap: 14px; }
+      .logout { width: 100%; }
+    }
+  </style>
+</head>
+<body>
+  <canvas id="matrixCanvas"></canvas>
+  <div class="scanline"></div>
+  <div class="orb one"></div>
+  <div class="orb two"></div>
+  <div class="orb three"></div>
+
+  <!-- Intrusion Alert Popup -->
+  <div class="intrusion-alert" id="intrusionAlert" aria-live="assertive">
+    <div class="danger-triangle">
+      <div class="skull-alert">
+        <span class="skull">☠</span>
+        <strong id="alertTitle">Wrong Password</strong>
+        <span id="alertSubtitle">Intrusion Attempt Detected</span>
+      </div>
+    </div>
+  </div>
+
+  <audio id="loginAlertSound" src="eritnhut1992-buzzer-or-wrong-answer-20582.mp3" preload="auto"></audio>
+
+  <!-- Login Shell -->
+  <main class="shell" id="loginShell">
+    <section class="brand-panel">
+      <div>
+        <div class="top-tag"><span class="pulse"></span> Private Encrypted System</div>
+
+        <div class="main-logo" aria-label="Zayanzabit Logo">
+          <svg class="zb-logo" viewBox="0 0 720 210" role="img">
+            <defs>
+              <linearGradient id="zbGradient" x1="0" y1="0" x2="1" y2="1">
+                <stop offset="0%" stop-color="#00f5ff"/>
+                <stop offset="50%" stop-color="#00ff88"/>
+                <stop offset="100%" stop-color="#9b5cff"/>
+              </linearGradient>
+              <linearGradient id="zbText" x1="0" y1="0" x2="1" y2="0">
+                <stop offset="0%" stop-color="#e8fbff"/>
+                <stop offset="55%" stop-color="#00f5ff"/>
+                <stop offset="100%" stop-color="#00ff88"/>
+              </linearGradient>
+            </defs>
+            <g transform="translate(30 25)">
+              <path d="M78 0 L154 44 L154 132 L78 176 L2 132 L2 44 Z" fill="rgba(0,245,255,0.08)" stroke="url(#zbGradient)" stroke-width="6"/>
+              <path d="M45 50 H113 L48 126 H116" fill="none" stroke="#00f5ff" stroke-width="14" stroke-linecap="round" stroke-linejoin="round"/>
+              <path d="M124 49 L124 127 M124 49 C154 49 154 88 124 88 M124 88 C160 88 160 127 124 127" fill="none" stroke="#00ff88" stroke-width="13" stroke-linecap="round" stroke-linejoin="round"/>
+            </g>
+            <text x="215" y="94" fill="url(#zbText)" font-family="Courier New, monospace" font-size="52" font-weight="800" letter-spacing="3">ZAYANZABIT</text>
+            <text x="219" y="137" fill="rgba(232,251,255,0.72)" font-family="Courier New, monospace" font-size="19" letter-spacing="9">SECURE DIGITAL VAULT</text>
+            <line x1="218" y1="158" x2="670" y2="158" stroke="rgba(0,245,255,0.35)" stroke-width="2"/>
+            <text x="219" y="186" fill="rgba(0,255,136,0.72)" font-family="Courier New, monospace" font-size="15" letter-spacing="3">A&amp;O LOGIN ALERT MONITOR</text>
+          </svg>
+        </div>
+
+        <div class="brand-title">
+          <h1>Access <span>Control System</span></h1>
+          <p>Office PC Failed Login Monitoring &amp; Live Intrusion Detection Dashboard</p>
+        </div>
+
+        <div class="code-strip" id="codeStrip">
+          &gt; booting zayanzabit alert node...<br>
+          &gt; connecting failed-password watcher...<br>
+          &gt; waiting for operator authentication...
+        </div>
+      </div>
+
+      <div class="mini-stats">
+        <div class="stat"><strong>256-BIT</strong><span>Visual Security</span></div>
+        <div class="stat"><strong>LIVE</strong><span>Office PC Alerts</span></div>
+        <div class="stat"><strong>PROTECTED</strong><span>Encrypted Access</span></div>
+      </div>
+    </section>
+
+    <section class="login-panel">
+      <div class="login-head">
+        <div class="logo-mark">
+          <svg viewBox="0 0 120 120">
+            <path d="M60 6 L106 33 L106 87 L60 114 L14 87 L14 33 Z" fill="rgba(0,245,255,0.08)" stroke="#00f5ff" stroke-width="5"/>
+            <path d="M38 40 H76 L39 82 H78" fill="none" stroke="#00f5ff" stroke-width="10" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M82 40 L82 82 M82 40 C99 40 99 61 82 61 M82 61 C103 61 103 82 82 82" fill="none" stroke="#00ff88" stroke-width="9" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </div>
+        <h2>Security Gateway</h2>
+        <p>Enter system password to open Alert System</p>
+      </div>
+
+      <form id="secureLoginForm" autocomplete="off">
+        <div class="field-area">
+          <label for="password">Enter System Password</label>
+          <input id="password" name="access_control_password_field" type="password" autocomplete="new-password" placeholder="••••••••••••" />
+          <button class="primary-btn" type="submit">Access Alert System</button>
+        </div>
+      </form>
+
+      <div class="terminal" id="terminal">
+        [SYS] A&amp;O Alert Gateway initialized...<br>
+        [SYS] Waiting for system password...
+      </div>
+    </section>
+  </main>
+
+  <!-- A&O Login Alert Dashboard (Opens directly after login) -->
+  <section class="login-alert-page" id="loginAlertPage">
+    <div class="dashboard-head">
+      <div>
+        <div class="top-tag"><span class="pulse"></span> Security Monitor Active</div>
+        <h2 class="dark-title">🛡️ A&amp;O Login Alert System</h2>
+        <p class="dark-subtitle">Failed password alert dashboard • Office PC monitoring • Supabase log view</p>
+      </div>
+      <button class="logout" id="logoutBtn" type="button">LOG OUT</button>
+    </div>
+
+    <div class="alert-summary-grid">
+      <div class="alert-stat"><span>Total Alerts</span><strong id="alertTotalCount">0</strong></div>
+      <div class="alert-stat"><span>Today Alerts</span><strong id="alertTodayCount">0</strong></div>
+      <div class="alert-stat"><span>PC Count</span><strong id="alertPcCount">0</strong></div>
+      <div class="alert-stat"><span>Last Alert</span><strong id="alertLastTime">-</strong></div>
+    </div>
+
+    <div class="alert-toolbar">
+      <input id="alertSearchInput" type="text" placeholder="Search PC name, user, IP or message..." autocomplete="off" />
+      <div style="display:flex; gap:10px; flex-wrap:wrap; justify-content:flex-end;">
+        <button class="alert-sound-test-btn" id="alertSoundTestBtn" type="button">Test Sound</button>
+        <button class="alert-refresh-btn" id="alertRefreshBtn" type="button">Refresh Alerts</button>
+      </div>
+    </div>
+
+    <div class="alert-list-wrap" id="alertListWrap">
+      <div class="empty-list">Loading login alerts...</div>
+    </div>
+
+    <div class="footer-note">
+      Auto-refresh active every 10 seconds. PC failed login attempts recorded in Supabase table <b>login_alerts</b> will trigger an instant buzzer alert.
+    </div>
+  </section>
+
+  <!-- Supabase JS Library -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+  <script>
+    // Matrix Rain Effect
+    const canvas = document.getElementById("matrixCanvas");
+    const ctx = canvas.getContext("2d");
+    let width, height, columns, drops;
+    const characters = "0101010101A&OLOGINSECURITYSYSTEMALERTROOTADMIN";
+
+    function resizeCanvas() {
+      width = canvas.width = window.innerWidth;
+      height = canvas.height = window.innerHeight;
+      columns = Math.floor(width / 17);
+      drops = Array.from({ length: columns }, () => Math.floor(Math.random() * height / 17));
+    }
+
+    function drawMatrix() {
+      ctx.fillStyle = "rgba(2, 4, 10, 0.095)";
+      ctx.fillRect(0, 0, width, height);
+      ctx.font = "15px Courier New";
+      for (let i = 0; i < drops.length; i++) {
+        const char = characters[Math.floor(Math.random() * characters.length)];
+        const x = i * 17;
+        const y = drops[i] * 17;
+        ctx.fillStyle = Math.random() > 0.985 ? "#ff2f6d" : (Math.random() > 0.5 ? "#00f5ff" : "#00ff88");
+        ctx.fillText(char, x, y);
+        if (y > height && Math.random() > 0.975) drops[i] = 0;
+        drops[i]++;
+      }
+    }
+
+    resizeCanvas();
+    setInterval(drawMatrix, 46);
+    window.addEventListener("resize", resizeCanvas);
+
+    // Elements
+    const loginShell = document.getElementById("loginShell");
+    const loginPanel = document.querySelector(".login-panel");
+    const loginAlertPage = document.getElementById("loginAlertPage");
+    const secureLoginForm = document.getElementById("secureLoginForm");
+    const passwordInput = document.getElementById("password");
+    const terminal = document.getElementById("terminal");
+    const logoutBtn = document.getElementById("logoutBtn");
+    const intrusionAlert = document.getElementById("intrusionAlert");
+    const alertTitle = document.getElementById("alertTitle");
+    const alertSubtitle = document.getElementById("alertSubtitle");
+    const alertListWrap = document.getElementById("alertListWrap");
+    const alertSearchInput = document.getElementById("alertSearchInput");
+    const alertRefreshBtn = document.getElementById("alertRefreshBtn");
+    const alertSoundTestBtn = document.getElementById("alertSoundTestBtn");
+    const alertTotalCount = document.getElementById("alertTotalCount");
+    const alertTodayCount = document.getElementById("alertTodayCount");
+    const alertPcCount = document.getElementById("alertPcCount");
+    const alertLastTime = document.getElementById("alertLastTime");
+    const loginAlertSound = document.getElementById("loginAlertSound");
+    const codeStrip = document.getElementById("codeStrip");
+
+    // Supabase Config
+    const SUPABASE_URL = "https://heifnbpbzyoyvipbftwq.supabase.co";
+    const SUPABASE_PUBLISHABLE_KEY = "sb_publishable_ZGiMSERlIw57pJDxEM210Q_WA4Nm3pg";
+    const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY);
+
+    const SYSTEM_PASSWORD_SETTING_KEY = "system_password";
+    let cachedSystemPassword = "";
+    let loginAlerts = [];
+    let loginAlertAutoRefreshTimer = null;
+
+    // Terminal Boot Ticker
+    const bootLines = [
+      "&gt; scanning encrypted tunnel...",
+      "&gt; binary firewall status: active",
+      "&gt; listening for failed PC auth alerts...",
+      "&gt; node heartbeat: stable",
+      "&gt; security gateway ready..."
+    ];
+    setInterval(() => {
+      const line = bootLines[Math.floor(Math.random() * bootLines.length)];
+      codeStrip.innerHTML = `${line}<br>${codeStrip.innerHTML}`.split("<br>").slice(0, 4).join("<br>");
+    }, 2200);
+
+    function setTerminal(lines) {
+      terminal.innerHTML = lines.join("<br>");
+    }
+
+    function escapeHtml(text) {
+      return String(text || "").replace(/[&<>"']/g, function (match) {
+        const entities = { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#039;" };
+        return entities[match];
+      });
+    }
+
+    // Audio synthesizer fallback
+    function playBuzzerSynth() {
+      try {
+        const AudioCtx = window.AudioContext || window.webkitAudioContext;
+        if (!AudioCtx) return;
+        const ctx = new AudioCtx();
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+        osc.type = "sawtooth";
+        osc.frequency.setValueAtTime(160, ctx.currentTime);
+        osc.frequency.exponentialRampToValueAtTime(70, ctx.currentTime + 0.45);
+        gain.gain.setValueAtTime(0.3, ctx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.0001, ctx.currentTime + 0.45);
+        osc.connect(gain);
+        gain.connect(ctx.destination);
+        osc.start();
+        osc.stop(ctx.currentTime + 0.46);
+      } catch (e) {
+        console.warn("Audio synth error:", e);
+      }
+    }
+
+    function playWrongPasswordSound() {
+      if (loginAlertSound) {
+        loginAlertSound.currentTime = 0;
+        loginAlertSound.play().catch(() => playBuzzerSynth());
+      } else {
+        playBuzzerSynth();
+      }
+    }
+
+    function triggerWrongPassword(title = "Wrong Password", subtitle = "Intrusion Attempt Detected") {
+      playWrongPasswordSound();
+      alertTitle.textContent = title;
+      alertSubtitle.textContent = subtitle;
+
+      loginPanel.classList.remove("shake");
+      void loginPanel.offsetWidth;
+      loginPanel.classList.add("shake");
+
+      intrusionAlert.classList.add("active");
+      setTerminal([
+        "<span class='warn'>[ALERT] Wrong password detected.</span>",
+        "<span class='warn'>[LOCK] Intrusion pattern blocked.</span>"
+      ]);
+
+      setTimeout(() => intrusionAlert.classList.remove("active"), 1700);
+      setTimeout(() => loginPanel.classList.remove("shake"), 420);
+    }
+
+    // Password Fetching from Supabase
+    async function loadSystemPassword() {
+      try {
+        const { data, error } = await supabaseClient
+          .from("system_settings")
+          .select("setting_value")
+          .eq("setting_key", SYSTEM_PASSWORD_SETTING_KEY)
+          .maybeSingle();
+
+        if (error) throw error;
+        if (data && data.setting_value) {
+          cachedSystemPassword = data.setting_value;
+          return cachedSystemPassword;
+        }
+      } catch (err) {
+        console.warn("Password fetch error:", err);
+      }
+      return cachedSystemPassword;
+    }
+
+    // Form Login Submit
+    secureLoginForm.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const enteredPassword = passwordInput.value.trim();
+
+      if (!enteredPassword) {
+        setTerminal(["<span class='warn'>[WARN] Please enter system password.</span>"]);
+        passwordInput.focus();
+        return;
+      }
+
+      setTerminal(["[SYS] Validating credentials with Supabase..."]);
+      const validPassword = await loadSystemPassword();
+
+      if (!validPassword) {
+        setTerminal([
+          "<span class='warn'>[ERROR] System password not configured in system_settings table.</span>"
+        ]);
+        return;
+      }
+
+      if (enteredPassword !== validPassword) {
+        triggerWrongPassword("Access Denied", "Invalid System Password");
+        passwordInput.value = "";
+        passwordInput.focus();
+        return;
+      }
+
+      // Success Login -> Directly Open A&O Alert System
+      setTerminal(["<span class='ok'>[OK] Access Granted. Loading A&O Alert System...</span>"]);
+      setTimeout(() => {
+        passwordInput.value = "";
+        loginShell.style.display = "none";
+        loginAlertPage.classList.add("active");
+        openLoginAlertDashboard();
+      }, 600);
+    });
+
+    // Logout Action
+    logoutBtn.addEventListener("click", () => {
+      stopAutoRefresh();
+      loginAlertPage.classList.remove("active");
+      loginShell.style.display = "grid";
+      passwordInput.value = "";
+      setTerminal([
+        "[SYS] Operator logged out.",
+        "[SYS] Waiting for system password..."
+      ]);
+      passwordInput.focus();
+    });
+
+    // Alert Time Formatter
+    function formatAlertTime(value) {
+      if (!value) return "-";
+      const date = new Date(value);
+      if (Number.isNaN(date.getTime())) return value;
+      return date.toLocaleString("en-GB", {
+        day: "2-digit",
+        month: "short",
+        year: "numeric",
+        hour: "2-digit",
+        minute: "2-digit"
+      });
+    }
+
+    // Update Top Summary Stats
+    function updateAlertSummary(records) {
+      const todayKey = new Date().toISOString().slice(0, 10);
+      const todayCount = records.filter(item => String(item.alert_time || item.created_at || "").slice(0, 10) === todayKey).length;
+      const pcCount = new Set(records.map(item => item.pc_name || item.computer_name || "").filter(Boolean)).size;
+
+      alertTotalCount.textContent = records.length;
+      alertTodayCount.textContent = todayCount;
+      alertPcCount.textContent = pcCount;
+      alertLastTime.textContent = records[0] ? formatAlertTime(records[0].alert_time || records[0].created_at) : "-";
+    }
+
+    // Load Login Alerts from Supabase
+    async function loadLoginAlerts() {
+      const { data, error } = await supabaseClient
+        .from("login_alerts")
+        .select("*")
+        .order("alert_time", { ascending: false })
+        .limit(200);
+
+      if (error) {
+        console.error("Login alert load error:", error);
+        loginAlerts = [];
+        alertListWrap.innerHTML = `<div class="empty-list">Supabase login_alerts load error:<br>${escapeHtml(error.message)}</div>`;
+        updateAlertSummary([]);
+        return false;
+      }
+
+      loginAlerts = data || [];
+      renderLoginAlerts();
+      return true;
+    }
+
+    // Render Alert Cards
+    function renderLoginAlerts() {
+      const searchValue = (alertSearchInput.value || "").trim().toLowerCase();
+      let displayAlerts = [...loginAlerts];
+
+      if (searchValue) {
+        displayAlerts = displayAlerts.filter(item => {
+          return [
+            item.pc_name,
+            item.computer_name,
+            item.user_name,
+            item.ip_address,
+            item.alert_message,
+            item.message,
+            item.status
+          ].some(val => String(val || "").toLowerCase().includes(searchValue));
+        });
+      }
+
+      updateAlertSummary(displayAlerts);
+
+      if (!displayAlerts.length) {
+        alertListWrap.innerHTML = "<div class='empty-list'>No login alert records found.</div>";
+        return;
+      }
+
+      alertListWrap.innerHTML = displayAlerts.map(alert => {
+        const pcName = alert.pc_name || alert.computer_name || "Unknown PC";
+        const userName = alert.user_name || "Unknown User";
+        const alertTime = alert.alert_time || alert.created_at || "";
+        const ipAddress = alert.ip_address || "N/A";
+        const message = alert.alert_message || alert.message || "Failed login attempt detected";
+        const status = alert.status || "FAILED LOGIN";
+
+        return `
+          <div class="alert-card">
+            <div>
+              <small>PC Name</small>
+              <strong>${escapeHtml(pcName)}</strong>
+              <small>User: ${escapeHtml(userName)}</small>
+            </div>
+            <div>
+              <small>Status</small>
+              <span class="alert-pill">⚠ ${escapeHtml(status)}</span>
+            </div>
+            <div>
+              <small>Failed Time</small>
+              <strong>${escapeHtml(formatAlertTime(alertTime))}</strong>
+            </div>
+            <div>
+              <small>IP / Message</small>
+              <strong>${escapeHtml(ipAddress)}</strong>
+              <small>${escapeHtml(message)}</small>
+            </div>
+            <div style="display:flex; justify-content:flex-end;">
+              <button class="sid-action-btn remove" type="button" data-alert-remove="${alert.id}">Remove</button>
+            </div>
+          </div>
+        `;
+      }).join("");
+    }
+
+    // Remove Alert from Supabase
+    alertListWrap.addEventListener("click", async (e) => {
+      const removeBtn = e.target.closest("[data-alert-remove]");
+      if (!removeBtn) return;
+      const alertId = removeBtn.getAttribute("data-alert-remove");
+      if (!confirm("Are you sure you want to remove this alert record?")) return;
+
+      removeBtn.disabled = true;
+      removeBtn.textContent = "...";
+      try {
+        const { error } = await supabaseClient.from("login_alerts").delete().eq("id", alertId);
+        if (error) throw error;
+        await loadLoginAlerts();
+      } catch (err) {
+        alert("Failed to remove: " + err.message);
+        removeBtn.disabled = false;
+        removeBtn.textContent = "Remove";
+      }
+    });
+
+    // Auto-refresh Timer (every 10 seconds)
+    function stopAutoRefresh() {
+      if (loginAlertAutoRefreshTimer) {
+        clearInterval(loginAlertAutoRefreshTimer);
+        loginAlertAutoRefreshTimer = null;
+      }
+    }
+
+    function startAutoRefresh() {
+      stopAutoRefresh();
+      loginAlertAutoRefreshTimer = setInterval(async () => {
+        if (!loginAlertPage.classList.contains("active")) {
+          stopAutoRefresh();
+          return;
+        }
+        const prevCount = loginAlerts.length;
+        await loadLoginAlerts();
+        if (loginAlerts.length > prevCount) {
+          playWrongPasswordSound();
+        }
+      }, 10000);
+    }
+
+    async function openLoginAlertDashboard() {
+      alertListWrap.innerHTML = "<div class='empty-list'>Loading login alerts from Supabase...</div>";
+      await loadLoginAlerts();
+      startAutoRefresh();
+    }
+
+    // Toolbar Listeners
+    alertSearchInput.addEventListener("input", renderLoginAlerts);
+    alertRefreshBtn.addEventListener("click", () => {
+      alertRefreshBtn.textContent = "Refreshing...";
+      loadLoginAlerts().finally(() => {
+        alertRefreshBtn.textContent = "Refresh Alerts";
+      });
+    });
+    alertSoundTestBtn.addEventListener("click", playWrongPasswordSound);
+
+    // Initial Pre-fetch
+    loadSystemPassword();
+    passwordInput.focus();
+  </script>
+</body>
+</html>
