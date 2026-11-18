@@ -488,7 +488,8 @@
     }
 
     .alert-refresh-btn,
-    .alert-sound-test-btn {
+    .alert-sound-test-btn,
+    .alert-clear-all-btn {
       height: 50px;
       padding: 0 20px;
       border-radius: 13px;
@@ -500,14 +501,14 @@
     }
 
     .alert-refresh-btn {
-      border: 1px solid rgba(255, 47, 109, 0.45);
-      background: rgba(255, 47, 109, 0.08);
-      color: var(--red);
+      border: 1px solid rgba(0, 245, 255, 0.45);
+      background: rgba(0, 245, 255, 0.08);
+      color: var(--cyan);
     }
 
     .alert-refresh-btn:hover {
-      background: rgba(255, 47, 109, 0.18);
-      box-shadow: 0 0 18px rgba(255, 47, 109, 0.25);
+      background: rgba(0, 245, 255, 0.2);
+      box-shadow: 0 0 18px rgba(0, 245, 255, 0.28);
     }
 
     .alert-sound-test-btn {
@@ -519,6 +520,18 @@
     .alert-sound-test-btn:hover {
       background: rgba(0, 255, 136, 0.16);
       box-shadow: 0 0 18px rgba(0, 255, 136, 0.25);
+    }
+
+    .alert-clear-all-btn {
+      border: 1px solid rgba(255, 47, 109, 0.65);
+      background: rgba(255, 47, 109, 0.14);
+      color: #ff6f8b;
+    }
+
+    .alert-clear-all-btn:hover {
+      background: rgba(255, 47, 109, 0.28);
+      box-shadow: 0 0 22px rgba(255, 47, 109, 0.38);
+      color: #fff;
     }
 
     .alert-list-wrap {
@@ -822,6 +835,7 @@
       <div style="display:flex; gap:10px; flex-wrap:wrap; justify-content:flex-end;">
         <button class="alert-sound-test-btn" id="alertSoundTestBtn" type="button">Test Sound</button>
         <button class="alert-refresh-btn" id="alertRefreshBtn" type="button">Refresh Alerts</button>
+        <button class="alert-clear-all-btn" id="alertClearAllBtn" type="button">Remove All Alerts</button>
       </div>
     </div>
 
@@ -885,6 +899,7 @@
     const alertSearchInput = document.getElementById("alertSearchInput");
     const alertRefreshBtn = document.getElementById("alertRefreshBtn");
     const alertSoundTestBtn = document.getElementById("alertSoundTestBtn");
+    const alertClearAllBtn = document.getElementById("alertClearAllBtn");
     const alertTotalCount = document.getElementById("alertTotalCount");
     const alertTodayCount = document.getElementById("alertTodayCount");
     const alertPcCount = document.getElementById("alertPcCount");
@@ -1156,7 +1171,7 @@
       }).join("");
     }
 
-    // Remove Alert from Supabase
+    // 1-by-1 Remove Alert from Supabase
     alertListWrap.addEventListener("click", async (e) => {
       const removeBtn = e.target.closest("[data-alert-remove]");
       if (!removeBtn) return;
@@ -1173,6 +1188,40 @@
         alert("Failed to remove: " + err.message);
         removeBtn.disabled = false;
         removeBtn.textContent = "Remove";
+      }
+    });
+
+    // Remove ALL Alerts from Supabase
+    alertClearAllBtn.addEventListener("click", async () => {
+      if (!loginAlerts || loginAlerts.length === 0) {
+        alert("No alert records found to remove.");
+        return;
+      }
+
+      const confirmed = confirm("Are you sure you want to permanently delete ALL login alert history from Supabase?\nThis action cannot be undone!");
+      if (!confirmed) return;
+
+      alertClearAllBtn.disabled = true;
+      alertClearAllBtn.textContent = "Removing All...";
+
+      try {
+        // Delete all rows from Supabase login_alerts table
+        const { error } = await supabaseClient
+          .from("login_alerts")
+          .delete()
+          .not("id", "is", null);
+
+        if (error) throw error;
+
+        loginAlerts = [];
+        renderLoginAlerts();
+        alert("All alert history has been successfully removed from Supabase.");
+      } catch (err) {
+        console.error("Clear all error:", err);
+        alert("Failed to remove all alerts: " + err.message);
+      } finally {
+        alertClearAllBtn.disabled = false;
+        alertClearAllBtn.textContent = "Remove All Alerts";
       }
     });
 
